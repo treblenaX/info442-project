@@ -4,6 +4,8 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import * as dotenv from 'dotenv';
+import * as firebase_handler from './services/FirebaseHandler.js';
 
 import indexRouter from './routes/index.js';
 import apiRouter from './routes/api/api.js';
@@ -13,6 +15,8 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
+
+dotenv.config();
 
 // const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://www.devdeck.me'];
 var app = express();
@@ -37,6 +41,8 @@ app.use(cors({
     // credentials: true
 }));
 app.use(cookieParser());
+firebase_handler.initFirebaseApp();
+
 
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(express.static('public'));
