@@ -1,5 +1,5 @@
 # Project Apollo (Name TBD)
-## Keith Ellingwood, Elbert Cheng, Brian Park, Jonathan Trinh, Christopher Kim
+### Keith Ellingwood, Elbert Cheng, Brian Park, Jonathan Trinh, Christopher Kim
 
 ## The Problem we wish to focus on
 
