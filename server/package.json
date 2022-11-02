@@ -17,6 +17,7 @@
     "express": "^4.18.2",
     "firebase": "^9.13.0",
     "firebase-admin": "^11.2.0",
+    "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "path": "^0.12.7",
     "url": "^0.11.0"

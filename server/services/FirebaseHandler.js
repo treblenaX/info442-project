@@ -1,22 +1,92 @@
 import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "firebase/firestore";
 
-var app = null;
+export default class FirebaseHandler {
+  static app = null;
+  static db = null;
 
-export const initFirebaseApp = () => {
-  console.log('[FIREBASE] Initializing Firebase connection...');
-  const firebaseConfig = {
-    apiKey: process.env.API_KEY,
-    authDomain: process.env.AUTH_DOMAIN,
-    databaseURL: process.env.DATABASE_URL,
-    projectId: process.env.PROJECT_ID,
-    storageBucket: process.env.STORAGE_BUCKET,
-    messagingSenderId: process.env.MESSAGING_SENDER_ID,
-    appId: process.env.APP_ID
-  };
-  
+  static initFirebaseApp() {
+    if (!FirebaseHandler.app) {
+      console.log('[FIREBASE] Initializing Firebase connection...');
+      const firebaseConfig = {
+        apiKey: process.env.API_KEY,
+        authDomain: process.env.AUTH_DOMAIN,
+        databaseURL: process.env.DATABASE_URL,
+        projectId: process.env.PROJECT_ID,
+        storageBucket: process.env.STORAGE_BUCKET,
+        messagingSenderId: process.env.MESSAGING_SENDER_ID,
+        appId: process.env.APP_ID
+      };
+      
+      console.log('[FIREBASE][APP] Connecting to Firebase app...');
+      FirebaseHandler.app = initializeApp(firebaseConfig);
+      console.log('[FIREBASE][APP] Connected to Firebase app!');
     
-  // Initialize Firebase
-  app = initializeApp(firebaseConfig);
-  console.log('[FIREBASE] Firebase app connection successful!');
-  // const database = getDatabase(app);
+      console.log('[FIREBASE][DB] Connecting to Firebase DB...');
+      FirebaseHandler.db = getFirestore(FirebaseHandler.app);
+      console.log('[FIREBASE][DB] Connected to Firebase DB!');
+      console.log('[FIREBASE] Firebase app connection successful!');
+    }
+  }
+
+  /**
+   * 
+   * @param {string} collectionName 
+   * @param {string} refID 
+   * @returns 
+   */
+  static async getDoc(collectionName, refID) {
+    try {
+      const docRef = doc(FirebaseHandler.db, collectionName, refID);
+      const snapshot = await getDoc(docRef);
+
+      if (snapshot.exists()) {
+        return {
+          id: snapshot.id,
+          ...snapshot.data()
+        };
+      } else {
+        throw new Error(`The document with the ID, ${refID}, is not found.`);
+      }
+    } catch (e) {
+      throw new Error('Error reading document: ' + e);
+    }
+  }
+
+  /**
+   * 
+   * @param {string} collectionName 
+   * @returns 
+   */
+  static async getCollection(collectionName) {
+    try {
+      let payload = [];
+      const snapshot = await getDocs(collection(FirebaseHandler.db, collectionName));
+      snapshot.forEach((doc) => {
+        let obj = {
+          id: doc.id,
+          ...doc.data()
+        };
+        payload.push(obj);
+      });
+      return payload;
+    } catch (e) {
+      throw new Error('Error reading documents: ' + e);
+    }
+  }
+
+  /**
+   * 
+   * @param {string} collectionName 
+   * @param {object} documentObject 
+   * @returns 
+   */
+  static async addDoc(collectionName, documentObject) {
+    try {
+      const docRef = await addDoc(collection(FirebaseHandler.db, collectionName), documentObject);
+      return docRef.id;
+    } catch (e) {
+      throw new Error('Error adding document: ' + e);
+    }
+  }
 }

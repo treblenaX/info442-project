@@ -5,7 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import * as dotenv from 'dotenv';
-import * as firebase_handler from './services/FirebaseHandler.js';
+import FirebaseHandler from './services/FirebaseHandler.js';
 
 import indexRouter from './routes/index.js';
 import apiRouter from './routes/api/api.js';
@@ -18,7 +18,7 @@ export const __dirname = dirname(__filename);
 
 dotenv.config();
 
-// const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://www.devdeck.me'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://www.devdeck.me'];
 var app = express();
 
 app.use(logger('dev'));
@@ -37,14 +37,12 @@ app.use(cors({
         return callback(null, true);
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    // origin: '*',
+    origin: '*',
     // credentials: true
 }));
 app.use(cookieParser());
-firebase_handler.initFirebaseApp();
+FirebaseHandler.initFirebaseApp();
 
-
-const oneDay = 1000 * 60 * 60 * 24;
 app.use(express.static('public'));
 app.use(express.static('uploads'));
 
