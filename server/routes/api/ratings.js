@@ -6,14 +6,19 @@ import FirebaseHandler from '../../services/FirebaseHandler.js';
 var router = express.Router();
 
 router.get('/', async function(req, res, next) {
-    const id = req.query.id;
-
-    const payload = await FirebaseHandler.getDocCollection(RATINGS_COLLECTION_NAME);
-    return res.json({
-        message: 'All rating data successfully fetched.',
-        success: true,
-        payload: payload
-    });
+    try {
+        const payload = await FirebaseHandler.getDocCollection(RATINGS_COLLECTION_NAME);
+        return res.json({
+            message: 'All rating data successfully fetched.',
+            success: true,
+            payload: payload
+        });
+    } catch (e) {
+        return res.status(500).json({
+            message: 'There was an error getting all of the ratings...',
+            error: '' + e
+        })
+    }
 });
 
 router.get('/filter', async function(req, res, next) {
