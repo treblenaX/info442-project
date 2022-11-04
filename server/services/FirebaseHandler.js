@@ -82,7 +82,8 @@ export default class FirebaseHandler {
   static async getDocCollection(collectionName) {
     try {
       let payload = [];
-      const snapshot = await getDocs(collection(FirebaseHandler.db, collectionName));
+      const ref = collection(FirebaseHandler.db, collectionName);
+      const snapshot = await getDocs(ref);
       snapshot.forEach((doc) => {
         let obj = {
           id: doc.id,
@@ -104,7 +105,8 @@ export default class FirebaseHandler {
    */
   static async addDoc(collectionName, documentObject) {
     try {
-      const docRef = await addDoc(collection(FirebaseHandler.db, collectionName), documentObject);
+      const ref = collection(FirebaseHandler.db, collectionName);
+      const docRef = await addDoc(ref, documentObject);
       return docRef.id;
     } catch (e) {
       throw new Error('Error adding document: ' + e);

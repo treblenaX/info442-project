@@ -5,7 +5,8 @@ export class Location extends Model {
     get defaults() {
         return {
             address: '',
-            coordinate: new Coordinate().toObject(),
+            latitude: '',
+            longitude: '',
             name: '',
             average_rating: 0.0
         };
