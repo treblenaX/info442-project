@@ -66,11 +66,9 @@ export default class FirebaseHandler {
           id: snapshot.id,
           ...snapshot.data()
         };
-      } else {
-        throw new Error(`The document with the ID, ${refID}, is not found.`);
       }
     } catch (e) {
-      throw new Error('Error reading document: ' + e);
+      throw new Error(e);
     }
   }
 

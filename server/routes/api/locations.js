@@ -1,10 +1,10 @@
 import express from 'express';
 import { Location } from '../../models/location.js';
+import { LOCATIONS_COLLECTION_NAME } from '../../constants/collections.js';
+import { LocationType } from '../../constants/location_type.js';
 import FirebaseHandler from '../../services/FirebaseHandler.js';
 
 var router = express.Router();
-
-const LOCATIONS_COLLECTION_NAME = 'locations';
 
 router.get('/', async function(req, res, next) {
     const id = req.query.id;
@@ -27,22 +27,24 @@ router.get('/', async function(req, res, next) {
         } catch (e) {
             return res.status(404).json({
                 message: 'Please give a valid location id.',
-                error: e
+                error: '' + e
             });
         }
     }
 });
 
 router.post('/', async function(req, res, next) {
-    const body = req.body;
+    const body = req.body;  
 
     try {
         const locationDoc = new Location({
+            location_type: LocationType.NULL,
             address: body.address,
             latitude: body.latitude,
             longitude: body.longitude,
             name: body.name,
-            average_rating: 0.0
+            average_rating: 0.0,
+            picture_urls: [] // @TODO handle image shit
         }).toObject();
 
         const docID = await FirebaseHandler.addDoc(LOCATIONS_COLLECTION_NAME, locationDoc);
@@ -64,7 +66,7 @@ router.post('/', async function(req, res, next) {
     } catch (e) {
         return res.status(500).json({
             message: 'There was an error adding a location...',
-            error: `Error: ${e}`
+            error: '' + e
         })
     }
 });

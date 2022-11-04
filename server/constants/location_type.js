@@ -1,0 +1,5 @@
+export const LocationType = {
+    BUILDING: 'BUILDING',
+    ACCESSIBILITY_POINT: 'ACCESSIBILITY_POINT',
+    NULL: 'NULL'
+}
