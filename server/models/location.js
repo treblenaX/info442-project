@@ -1,16 +1,13 @@
 import { Model } from "./base.js";
-import { Coordinates } from "./coordinates.js";
+import { Coordinate } from "./coordinate.js";
 
 export class Location extends Model {
     get defaults() {
         return {
             address: '',
-            coordinates: new Coordinates().toObject(),
+            coordinate: new Coordinate().toObject(),
             name: '',
-            average_rating: 0.0,
-            ratings: [],
-            reviews: [],
-            accessibility_points: []
+            average_rating: 0.0
         };
     }
 }

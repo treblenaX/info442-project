@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, doc, getDoc, query, where } from "firebase/firestore";
 
 export default class FirebaseHandler {
   static app = null;
@@ -29,13 +29,34 @@ export default class FirebaseHandler {
     }
   }
 
+  static async getConditionedDoc(collectionName, condition) {
+    try {
+      const ref = collection(FirebaseHandler.db, collectionName);
+      const q = query(ref, where(condition.attributeName, condition.comparator, condition.attributeValue));
+      const snapshot = await getDocs(q);
+
+      let payload = [];
+      snapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        payload.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+
+      return payload;
+    } catch (e) {
+      throw new Error(`Error querying for data: ${e}`);
+    }
+  }
+
   /**
    * 
    * @param {string} collectionName 
    * @param {string} refID 
    * @returns 
    */
-  static async getDoc(collectionName, refID) {
+  static async getSingleDoc(collectionName, refID) {
     try {
       const docRef = doc(FirebaseHandler.db, collectionName, refID);
       const snapshot = await getDoc(docRef);
@@ -58,7 +79,7 @@ export default class FirebaseHandler {
    * @param {string} collectionName 
    * @returns 
    */
-  static async getCollection(collectionName) {
+  static async getDocCollection(collectionName) {
     try {
       let payload = [];
       const snapshot = await getDocs(collection(FirebaseHandler.db, collectionName));

@@ -1,6 +1,6 @@
 import { Model } from "./base.js";
 
-export class Coordinates extends Model {
+export class User extends Model {
     get defaults() {
         return {
             latitude: null,
