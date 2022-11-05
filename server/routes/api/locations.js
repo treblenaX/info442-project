@@ -7,29 +7,51 @@ import FirebaseHandler from '../../services/FirebaseHandler.js';
 var router = express.Router();
 
 router.get('/', async function(req, res, next) {
-    const id = req.query.id;
-
-    if (!id) {  // GET all from 'locations' collection
+    try {
         const payload = await FirebaseHandler.getDocCollection(LOCATIONS_COLLECTION_NAME);
         return res.json({
             message: 'All location data successfully fetched.',
             success: true,
             payload: payload
         });
-    } else {    // GET only one specified location from 'locations'.
-        try {
-            const payload = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, id);
-            
-            return res.json({
-                message: 'Location data successfully fetched.',
-                payload: payload
-            });
-        } catch (e) {
-            return res.status(404).json({
-                message: 'Please give a valid location id.',
-                error: '' + e
-            });
+    } catch (e) {
+        return res.status(500).json({
+            message: 'There was an error getting all of the locations...',
+            error: '' + e
+        })
+    }
+});
+
+router.get('/filter', async function(req, res, next) {
+    const location_id = req.query.location_id;
+    try {
+        // ERROR - Don't allow multiple query parameters or none
+        if (Object.keys(req.query).length != 1) {
+            const error = new Error('You cannot have multiple/no query paramters here.');
+            error.code = 400;
+            throw error;
         }
+
+        let payload;
+        
+        if (location_id) {  // Get the single rating document
+            payload = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, location_id.trim());
+        } else {    // ERROR - No query details provided
+            const error = new Error('The queries are invalid.');
+            error.code = 400;
+            throw error;
+        } 
+
+        return res.status(200).json({
+            message: 'Location data successfully fetched.',
+            success: true,
+            payload: payload
+        });
+    } catch (e) {
+        return res.status(e.code).json({
+            message: 'There was an error getting the location...',
+            error: '' + e
+        });
     }
 });
 

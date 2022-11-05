@@ -26,8 +26,8 @@ router.get('/filter', async function(req, res, next) {
     const location_id = req.query.location_id;
     try {
         // ERROR - Don't allow multiple query parameters or none
-        if (req.query.length != 1) {
-            const error = new Error('The queries are invalid.');
+        if (Object.keys(req.query).length != 1) {
+            const error = new Error('You cannot have multiple/no query paramters here.');
             error.code = 400;
             throw error;
         }
