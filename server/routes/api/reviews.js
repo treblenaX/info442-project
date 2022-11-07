@@ -1,28 +1,28 @@
 import express from 'express';
-import { LOCATIONS_COLLECTION_NAME, RATINGS_COLLECTION_NAME } from '../../constants/collections.js';
-import { Rating } from '../../models/rating.js';
+import { LOCATIONS_COLLECTION_NAME, REVIEWS_COLLECTION_NAME } from '../../constants/collections.js';
+import { Review } from '../../models/review.js';
 import FirebaseHandler from '../../services/FirebaseHandler.js';
 
 var router = express.Router();
 
 router.get('/', async function(req, res, next) {
     try {
-        const payload = await FirebaseHandler.getDocCollection(RATINGS_COLLECTION_NAME);
+        const payload = await FirebaseHandler.getDocCollection(REVIEWS_COLLECTION_NAME);
         return res.json({
-            message: 'All rating data successfully fetched.',
+            message: 'All review data successfully fetched.',
             success: true,
             payload: payload
         });
     } catch (e) {
         return res.status(500).json({
-            message: 'There was an error getting all of the ratings...',
+            message: 'There was an error getting all of the reviews...',
             error: '' + e
         })
     }
 });
 
 router.get('/filter', async function(req, res, next) {
-    const rating_id = req.query.rating_id;
+    const review_id = req.query.review_id;
     const location_id = req.query.location_id;
     try {
         // ERROR - Don't allow multiple query parameters or none
@@ -34,10 +34,10 @@ router.get('/filter', async function(req, res, next) {
 
         let payload;
 
-        if (rating_id) {    // Get single rating document
-            payload = await FirebaseHandler.getSingleDoc(RATINGS_COLLECTION_NAME, rating_id.trim());
+        if (review_id) {    // Get single rating document
+            payload = await FirebaseHandler.getSingleDoc(REVIEWS_COLLECTION_NAME, review_id.trim());
         } else if (location_id) {   // Get filtered rating documents
-            payload = await FirebaseHandler.getConditionedDoc(RATINGS_COLLECTION_NAME, [{
+            payload = await FirebaseHandler.getConditionedDoc(REVIEWS_COLLECTION_NAME, [{
                 attributeName: 'location_id',
                 comparator: '==',
                 attributeValue: location_id.trim()
@@ -49,14 +49,14 @@ router.get('/filter', async function(req, res, next) {
         } 
 
         return res.status(200).json({
-            message: 'Rating data successfully fetched.',
+            message: 'Review data successfully fetched.',
             success: true,
             payload: payload
         });
     } catch (e) {
         if (!e.code) e.code = 500;
         return res.status(e.code).json({
-            message: 'There was error getting the rating...',
+            message: 'There was error getting the review...',
             error: '' + e
         });
     }
@@ -76,23 +76,24 @@ router.post('/', async function(req, res, next) {
 
         // @TODO: Make check for valid username
 
-        const ratingDoc = new Rating({
+        const reviewDoc = new Review({
             location_id: body.location_id,
             username: body.username,
-            value: body.rating
+            blurb: body.blurb,
+            picture_urls: body.picture_urls
         }).toObject();
 
-        const docID = await FirebaseHandler.addDoc(RATINGS_COLLECTION_NAME, ratingDoc);
+        const docID = await FirebaseHandler.addDoc(REVIEWS_COLLECTION_NAME, reviewDoc);
 
         // If no ID is returned, then the FirebaseHandler failed in adding the document
         if (!docID) {
-            const error = new Error('Failed to add rating to Firestore.');
+            const error = new Error('Failed to add review to Firestore.');
             error.code = 500;
             throw error;
         }
 
         return res.status(200).json({
-            message: 'New rating information successfully saved!',
+            message: 'New review information successfully saved!',
             success: true,
             payload: {
                 id: docID
@@ -101,7 +102,7 @@ router.post('/', async function(req, res, next) {
     } catch (e) {
         if (!e.code) e.code = 500;
         return res.status(e.code).json({
-            message: 'There was an error adding a rating...',
+            message: 'There was an error adding a review...',
             error: '' + e
         })
     }

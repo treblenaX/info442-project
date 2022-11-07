@@ -27,7 +27,7 @@ router.get('/filter', async function(req, res, next) {
     try {
         // ERROR - Don't allow multiple query parameters or none
         if (Object.keys(req.query).length != 1) {
-            const error = new Error('You cannot have multiple/no query paramters here.');
+            const error = new Error('You cannot have multiple/no query parameters here.');
             error.code = 400;
             throw error;
         }
