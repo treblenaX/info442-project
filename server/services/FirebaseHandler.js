@@ -29,10 +29,12 @@ export default class FirebaseHandler {
     }
   }
 
-  static async getConditionedDoc(collectionName, condition) {
+  static async getConditionedDoc(collectionName, conditionsArray) {
     try {
+      // Turn condition objects into 'where' clauses
+      const wheresArr = conditionsArray.map((condition) => where(condition.attributeName, condition.comparator, condition.attributeValue));
       const ref = collection(FirebaseHandler.db, collectionName);
-      const q = query(ref, where(condition.attributeName, condition.comparator, condition.attributeValue));
+      const q = query(ref, ...wheresArr);
       const snapshot = await getDocs(q);
 
       let payload = [];

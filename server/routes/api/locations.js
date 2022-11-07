@@ -48,6 +48,7 @@ router.get('/filter', async function(req, res, next) {
             payload: payload
         });
     } catch (e) {
+        if (!e.code) e.code = 500;
         return res.status(e.code).json({
             message: 'There was an error getting the location...',
             error: '' + e
@@ -86,6 +87,7 @@ router.post('/', async function(req, res, next) {
             }
         });
     } catch (e) {
+        if (!e.code) e.code = 500;
         return res.status(500).json({
             message: 'There was an error adding a location...',
             error: '' + e

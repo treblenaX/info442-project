@@ -37,11 +37,11 @@ router.get('/filter', async function(req, res, next) {
         if (rating_id) {    // Get single rating document
             payload = await FirebaseHandler.getSingleDoc(RATINGS_COLLECTION_NAME, rating_id.trim());
         } else if (location_id) {   // Get filtered rating documents
-            payload = await FirebaseHandler.getConditionedDoc(RATINGS_COLLECTION_NAME, {
+            payload = await FirebaseHandler.getConditionedDoc(RATINGS_COLLECTION_NAME, [{
                 attributeName: 'location_id',
                 comparator: '==',
                 attributeValue: location_id.trim()
-            });
+            }]);
         } else {    // ERROR - No query details provided
             const error = new Error('The queries are invalid.');
             error.code = 400;
@@ -54,10 +54,11 @@ router.get('/filter', async function(req, res, next) {
             payload: payload
         });
     } catch (e) {
+        if (!e.code) e.code = 500;
         return res.status(e.code).json({
             message: 'There was error getting the rating...',
             error: '' + e
-        })
+        });
     }
 })
 
@@ -84,7 +85,6 @@ router.post('/', async function(req, res, next) {
         const docID = await FirebaseHandler.addDoc(RATINGS_COLLECTION_NAME, ratingDoc);
 
         // If no ID is returned, then the FirebaseHandler failed in adding the document
-
         if (!docID) {
             const error = new Error('Failed to add rating to Firestore.');
             error.code = 500;
@@ -99,6 +99,7 @@ router.post('/', async function(req, res, next) {
             }
         });
     } catch (e) {
+        if (!e.code) e.code = 500;
         return res.status(e.code).json({
             message: 'There was an error adding a rating...',
             error: '' + e
