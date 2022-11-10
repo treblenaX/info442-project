@@ -1,10 +1,12 @@
 import React, { Component, useEffect } from "react";
+import { ToastContainer } from 'react-toastify';
 import {
   Routes,
   Route
 } from 'react-router-dom';
 import Home from "./routes/Home";
 import "./styles/App.css";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -13,9 +15,12 @@ function App() {
   }, []);
 
   return (
-    <Routes>
-      <Route path='/' element={<Home />} />
-    </Routes>
+    <div>
+      <Routes>
+        <Route path='/' element={<Home />} />
+      </Routes>
+      <ToastContainer />
+    </div>
   )
 }
 
