@@ -1,5 +1,6 @@
 import express from 'express';
 import { LOCATIONS_COLLECTION_NAME, REVIEWS_COLLECTION_NAME } from '../../constants/collections.js';
+import { handleErrorResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
 import { Review } from '../../models/review.js';
 import FirebaseHandler from '../../services/FirebaseHandler.js';
 
@@ -8,16 +9,9 @@ var router = express.Router();
 router.get('/', async function(req, res, next) {
     try {
         const payload = await FirebaseHandler.getDocCollection(REVIEWS_COLLECTION_NAME);
-        return res.json({
-            message: 'All review data successfully fetched.',
-            success: true,
-            payload: payload
-        });
+        handleSuccessResponse(res, 'All review data successfully fetched.', payload);
     } catch (e) {
-        return res.status(500).json({
-            message: 'There was an error getting all of the reviews...',
-            error: '' + e
-        })
+        handleErrorResponse(res, e, 'There was an error getting all of the reviews...');
     }
 });
 
@@ -48,17 +42,9 @@ router.get('/filter', async function(req, res, next) {
             throw error;
         } 
 
-        return res.status(200).json({
-            message: 'Review data successfully fetched.',
-            success: true,
-            payload: payload
-        });
+        handleSuccessResponse(res, 'Review data successfully fetched.', payload);
     } catch (e) {
-        if (!e.code) e.code = 500;
-        return res.status(e.code).json({
-            message: 'There was error getting the review...',
-            error: '' + e
-        });
+        handleErrorResponse(res, e, 'There was error getting the review...');
     }
 })
 
@@ -92,19 +78,9 @@ router.post('/', async function(req, res, next) {
             throw error;
         }
 
-        return res.status(200).json({
-            message: 'New review information successfully saved!',
-            success: true,
-            payload: {
-                id: docID
-            }
-        });
+        handleSuccessResponse(res, 'New review information successfully saved!', { id: docID });
     } catch (e) {
-        if (!e.code) e.code = 500;
-        return res.status(e.code).json({
-            message: 'There was an error adding a review...',
-            error: '' + e
-        })
+        handleErrorResponse(res, e, 'There was an error adding a review...');
     }
 });
 

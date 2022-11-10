@@ -30,17 +30,9 @@ router.post('/login', async function(req, res, next) {
 
         // @TODO handle session authentication
 
-        return res.status(200).json({
-            message: 'User successfully logged in!',
-            success: true,
-            payload: user
-        })
+        handleSuccessResponse(res, 'User successfully logged in!', user);
     } catch (e) {
-        if (!e.code) e.code = 500;
-        return res.status(e.code).json({
-            message: 'There was error getting the user...',
-            error: '' + e
-        });
+        handleErrorResponse(res, e, 'There was error getting the user...');
     }
 })
 
@@ -83,20 +75,10 @@ router.post('/signup', async function(req, res, next) {
             error.code = 500;
             throw error;
         }
-
-        return res.status(200).json({
-            message: 'New user information successfully saved!',
-            success: true,
-            payload: {
-                id: docID
-            }
-        });
+        
+        handleSuccessResponse(res, 'New user information successfully saved!', { id: docID });
     } catch (e) {
-        if (!e.code) e.code = 500;
-        return res.status(e.code).json({
-            message: 'There was error signing up the error...',
-            error: '' + e
-        });
+        handleErrorResponse(res, e, 'There was error signing up the error...');
     }
 });
 
@@ -105,9 +87,7 @@ const comparePassword = async (password, storedPassword) => {
     try {
         return await bcrypt.compare(password, storedPassword);
     } catch (e) {
-        const error = new Error('Unable to compare the password.');
-        error.code = 500;
-        throw error;
+        handleErrorResponse(res, e, 'Unable to compare the password.');
     }
 }
 export default router;

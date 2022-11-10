@@ -9,16 +9,9 @@ var router = express.Router();
 router.get('/', async function(req, res, next) {
     try {
         const payload = await FirebaseHandler.getDocCollection(LOCATIONS_COLLECTION_NAME);
-        return res.json({
-            message: 'All location data successfully fetched.',
-            success: true,
-            payload: payload
-        });
+        handleSuccessResponse(res, 'All location data successfully fetched.', payload);
     } catch (e) {
-        return res.status(500).json({
-            message: 'There was an error getting all of the locations...',
-            error: '' + e
-        })
+        handleErrorResponse(res, e, 'There was an error getting all of the locations...');
     }
 });
 
@@ -42,17 +35,9 @@ router.get('/filter', async function(req, res, next) {
             throw error;
         } 
 
-        return res.status(200).json({
-            message: 'Location data successfully fetched.',
-            success: true,
-            payload: payload
-        });
+        handleSuccessResponse(res, 'Location data successfully fetched.', payload);
     } catch (e) {
-        if (!e.code) e.code = 500;
-        return res.status(e.code).json({
-            message: 'There was an error getting the location...',
-            error: '' + e
-        });
+        handleErrorResponse(res, e, 'There was an error getting the location...');
     }
 });
 
@@ -79,19 +64,9 @@ router.post('/', async function(req, res, next) {
             });
         }
 
-        return res.status(200).json({
-            message: 'New location information successfully saved!',
-            success: true,
-            payload: {
-                id: docID
-            }
-        });
+        handleSuccessResponse(res, 'New location information successfully saved!', { id: docID });
     } catch (e) {
-        if (!e.code) e.code = 500;
-        return res.status(500).json({
-            message: 'There was an error adding a location...',
-            error: '' + e
-        })
+        handleErrorResponse(res, e, 'There was an error adding a location...');
     }
 });
 
