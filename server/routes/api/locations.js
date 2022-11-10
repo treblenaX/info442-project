@@ -1,6 +1,7 @@
 import express from 'express';
 import { Location } from '../../models/location.js';
 import { LOCATIONS_COLLECTION_NAME } from '../../constants/collections.js';
+import { handleErrorResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
 import { LocationType } from '../../constants/location_type.js';
 import FirebaseHandler from '../../services/FirebaseHandler.js';
 

@@ -1,5 +1,6 @@
 import express from 'express';
 import { LOCATIONS_COLLECTION_NAME, RATINGS_COLLECTION_NAME } from '../../constants/collections.js';
+import { handleErrorResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
 import { Rating } from '../../models/rating.js';
 import FirebaseHandler from '../../services/FirebaseHandler.js';
 

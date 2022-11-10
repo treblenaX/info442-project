@@ -1,4 +1,9 @@
 import React, { Component, useEffect } from "react";
+import {
+  Routes,
+  Route
+} from 'react-router-dom';
+import Home from "./routes/Home";
 import "./styles/App.css";
 
 
@@ -8,11 +13,9 @@ function App() {
   }, []);
 
   return (
-      <div>
-        <h1>
-          Hi!
-        </h1>
-      </div>
+    <Routes>
+      <Route path='/' element={<Home />} />
+    </Routes>
   )
 }
 

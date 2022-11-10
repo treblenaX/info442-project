@@ -1,5 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
+import { handleErrorResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
 import { USERS_COLLECTION_NAME } from '../../constants/collections.js';
 import { User } from '../../models/user.js';
 import FirebaseHandler from '../../services/FirebaseHandler.js';
