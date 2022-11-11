@@ -1,6 +1,7 @@
 import express from 'express';
 import { LOCATIONS_COLLECTION_NAME, REVIEWS_COLLECTION_NAME } from '../../constants/collections.js';
 import { handleErrorResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
+import { requireAuthorization } from '../../middleware/auth.js';
 import { Review } from '../../models/review.js';
 import FirebaseHandler from '../../services/FirebaseHandler.js';
 
@@ -46,9 +47,14 @@ router.get('/filter', async function(req, res, next) {
     } catch (e) {
         handleErrorResponse(res, e, 'There was error getting the review...');
     }
-})
+});
 
-router.post('/', async function(req, res, next) {
+/** 
+ * 
+ * Authorized endpoints
+ * 
+ * */
+router.post('/', requireAuthorization, async function(req, res, next) {
     const body = req.body;  
 
     try {

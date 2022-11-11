@@ -1,9 +1,12 @@
 export const handleSuccessResponse = (res, message, payload) => {
-    return res.status(200).json({
+    const json = {
         message: message,
-        success: true,
-        payload: payload
-    });
+        success: true
+    };
+
+    if (payload) json.payload = payload;
+
+    return res.status(200).json(json);
 }
 
 export const handleErrorResponse = (res, error, message) => {

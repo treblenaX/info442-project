@@ -4,6 +4,7 @@ import { handleErrorResponse, handleSuccessResponse } from '../../handlers/respo
 import { USERS_COLLECTION_NAME } from '../../constants/collections.js';
 import { User } from '../../models/user.js';
 import FirebaseHandler from '../../services/FirebaseHandler.js';
+import { handleUserSessionEnd, handleUserSessionStart } from '../../handlers/session_handlers.js';
 
 var router = express.Router();
 
@@ -29,7 +30,8 @@ router.post('/login', async function(req, res, next) {
             throw error;
         }
 
-        // @TODO handle session authentication
+        // Start the user session
+        handleUserSessionStart(req, user);
 
         handleSuccessResponse(res, 'User successfully logged in!', user);
     } catch (e) {
@@ -81,6 +83,11 @@ router.post('/signup', async function(req, res, next) {
     } catch (e) {
         handleErrorResponse(res, e, 'There was error signing up the error...');
     }
+});
+
+router.delete('/logout', function(req, res, next) {
+    handleUserSessionEnd(req);
+    handleSuccessResponse(res, 'User successfully logged out.');
 });
 
 const encryptPassword = async (plaintext, rounds) => await bcrypt.hashSync(plaintext, await bcrypt.genSalt(rounds));

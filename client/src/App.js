@@ -10,12 +10,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
-  useEffect(() => {
-      // This is where you should load the data
-  }, []);
-
   return (
     <div>
+      {/* Notice how the components here are located in the 'routes' folder */}
       <Routes>
         <Route path='/' element={<Home />} />
       </Routes>

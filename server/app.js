@@ -5,6 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import * as dotenv from 'dotenv';
+import sessions from 'express-session';
 import FirebaseHandler from './services/FirebaseHandler.js';
 
 import indexRouter from './routes/index.js';
@@ -41,7 +42,22 @@ app.use(cors({
     // credentials: true
 }));
 app.use(cookieParser());
+
+// Firebase - database stuff
 FirebaseHandler.initFirebaseApp();
+
+// Sessions - Handles the express session stuff
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(sessions({
+    secret: 'efaelirgerlfherlkufhaekhfkuh',
+    saveUninitialized: true,
+    cookie: {
+        secure: false,
+        sameSite: "lax",
+        maxAge: oneDay
+    },
+    resave: false
+}));
 
 app.use(express.static('public'));
 app.use(express.static('uploads'));

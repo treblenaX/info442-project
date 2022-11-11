@@ -14,7 +14,8 @@ function Home() {
             .catch((err) => {   // If hit error - do this
                 toast.error('' + err);
             });
-    }, [])
+    }, []);
+
     return (
         <div>
             <h1>
