@@ -85,9 +85,11 @@ build/Release
 # production
 /client/build
 
+# environment variables
+/client/.env
+
 # misc
 .DS_Store
-/client/.env
 .env.local
 .env.development.local
 .env.test.local
