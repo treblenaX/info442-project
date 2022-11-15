@@ -1,14 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
-mapboxgl.accessToken = process.env.MAPBOX_API_KEY;
+mapboxgl.accessToken = "pk.eyJ1Ijoia2plMTIzIiwiYSI6ImNsM2Zrd3ViZjA2cW8za2xxcG5hdnQ2NGYifQ.QtV_WqQeBghSOpmhrJGUIw";
 
 function DisplayMap() {
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const [lng, setLng] = useState(-70.9);
-    const [lat, setLat] = useState(42.35);
-    const [zoom, setZoom] = useState(9);
+    const [lng, setLng] = useState(-122.30808827297321);
+    const [lat, setLat] = useState(47.656708485813695);
+    const [zoom, setZoom] = useState(14.5);
 
     // initialize map with defaults
     useEffect(() => {

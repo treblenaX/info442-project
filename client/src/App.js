@@ -5,7 +5,6 @@ import {
   Route
 } from 'react-router-dom';
 import Home from "./routes/Home";
-import Map from "./components/Map";
 import "./styles/App.css";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,7 +14,6 @@ function App() {
       {/* Notice how the components here are located in the 'routes' folder */}
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/map' element={<Map />} />
       </Routes>
       <ToastContainer />
     </div>
