@@ -1,9 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
-mapboxgl.accessToken = "pk.eyJ1Ijoia2plMTIzIiwiYSI6ImNsM2Zrd3ViZjA2cW8za2xxcG5hdnQ2NGYifQ.QtV_WqQeBghSOpmhrJGUIw";
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
 
-function DisplayMap() {
+let dummy_data = {
+
+}
+
+function DisplayMap() 
+{
+    console.log(process.env)
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(-122.30808827297321);
