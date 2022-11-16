@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { LocationService } from '../services/LocationService';
 
+import Map from "../components/Map";
+
 function Home() {
     useEffect(() => {
         // This is where you can load data
@@ -21,6 +23,7 @@ function Home() {
             <h1>
                 hi!
             </h1>
+            <Map />
         </div>
     )
 }
