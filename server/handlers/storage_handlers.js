@@ -2,7 +2,7 @@ import multer from 'multer';
 
 export default class StorageHandler {
     static storage = null;
-    static upload = null;
+    static up = null;
 
     static initStorageHandler() {
         this.storage = multer.diskStorage({
@@ -14,8 +14,8 @@ export default class StorageHandler {
             }
         });
 
-        this.upload = multer({
-            storage: storage,
+        this.up = multer({
+            storage: this.storage,
             limits: {
                 fileSize: 10000000  // 10 MB
             },
@@ -30,10 +30,10 @@ export default class StorageHandler {
     }
 
     static upload() {
-        if (!this.storage || !this.upload) {
+        if (!this.storage || !this.up) {
             this.initStorageHandler();
         }
 
-        return this.upload;
+        return this.up;
     }
 }

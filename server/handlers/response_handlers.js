@@ -16,3 +16,9 @@ export const handleErrorResponse = (res, error, message) => {
         error: '' + error
     });
 }
+
+export const handleSuccessFileResponse = (res, filename) => {
+    const tokens = filename.split('.');
+    res.set('Content-Type', `image/${tokens[tokens.length - 1]}`);
+    return res.status(200).sendFile(filename);
+}

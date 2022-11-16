@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, doc, getDoc, query, where } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, doc, getDoc, query, where, deleteDoc } from "firebase/firestore";
 
 export default class FirebaseHandler {
   static app = null;
@@ -110,6 +110,16 @@ export default class FirebaseHandler {
       return docRef.id;
     } catch (e) {
       throw new Error('Error adding document: ' + e);
+    }
+  }
+
+  static async deleteDoc(collectionName, documentID) {
+    try {
+      const ref = collection(FirebaseHandler.db, collectionName);
+      const docRef = await deleteDoc(ref, documentID);
+      return docRef.id;
+    } catch (e) {
+      throw new Error('Error deleting document: ' + e); 
     }
   }
 }
