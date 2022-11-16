@@ -6,7 +6,8 @@ export class User extends Model {
             username: '',
             password: '',
             fname: '',
-            lname: ''
+            lname: '',
+            bio: ''
         };
     }
 

@@ -3,7 +3,7 @@ import { LOCATIONS_COLLECTION_NAME, RATINGS_COLLECTION_NAME } from '../../consta
 import { handleErrorResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
 import { requireAuthorization } from '../../middleware/auth.js';
 import { Rating } from '../../models/rating.js';
-import FirebaseHandler from '../../services/FirebaseHandler.js';
+import FirebaseHandler from '../../handlers/firebase_handlers.js';
 
 var router = express.Router();
 
