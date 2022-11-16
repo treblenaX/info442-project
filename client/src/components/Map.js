@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { LocationService } from '../services/LocationService';
+import { toast } from 'react-toastify';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
@@ -13,17 +15,7 @@ let dummy_data = {
     picture_urls: []
 }
 
-let placeholder = {
-    geo: {
-        type: "Feature",
-        geometry: {
-            type: "Point",
-            coordinates: [-122.31036845141246, 47.656471273388775]
-        }
-    }
-}
-
-function DisplayMap() 
+function DisplayMap()
 {
     const mapContainer = useRef(null);
     const map = useRef(null);
@@ -44,17 +36,26 @@ function DisplayMap()
 
     // populate building points
     useEffect(() => {
-        let el = document.createElement('div');
-        el.className = 'marker';
+        LocationService.findLocations()
+            .then((payload) => {    // If successful - do this
+                for (let i = 0; i < Object.keys(payload).length; i++) {     // iterate through all points
+                    let el = document.createElement('div');
+                    el.className = 'marker';
+                    let lat = payload[i]['latitude']
+                    let long = payload[i]['longitude']
 
-        // make a marker for each feature and add to the map
-        new mapboxgl.Marker(el).setLngLat([dummy_data.latitude, dummy_data.longitude]).addTo(map.current);
+                    let marker = new mapboxgl.Marker(el).setLngLat([lat, long])
+                    marker.addTo(map.current);
+                }
+                toast.info('Successfully loaded all location data. Check console.');
+            })
+            .catch((err) => {   // If hit error - do this
+                toast.error('' + err);
+            });
     })
 
     return (
-        <div>
-            <div ref={mapContainer} className="map-container" />
-        </div>
+        <div ref={mapContainer} className="map-container" />
     );
 }
 
