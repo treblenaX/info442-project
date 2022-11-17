@@ -7,6 +7,7 @@ import {
 import Home from "./routes/Home";
 import "./styles/App.css";
 import 'react-toastify/dist/ReactToastify.css';
+import LoginForm from "./routes/Login";
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
       {/* Notice how the components here are located in the 'routes' folder */}
       <Routes>
         <Route path='/' element={<Home />} />
-      </Routes>
+        <Route path='/login' element={<LoginForm />} />
+      </Routes> 
       <ToastContainer />
     </div>
   )
