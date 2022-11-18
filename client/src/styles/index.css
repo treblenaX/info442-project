@@ -26,6 +26,15 @@ code {
   cursor: pointer;
 }
 
+.accessibility-marker {
+  background-image: url('accessibility-marker.png');
+  background-size: cover;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 .mapboxgl-popup {
   max-width: 200px;
 }

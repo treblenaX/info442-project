@@ -22,7 +22,16 @@ function DisplayMap()
             center: [lng, lat],
             zoom: zoom
         });
+        // if clicked, add marker to that location
+        map.current.on('click', addMarker);
     });
+
+    function addMarker(e) {
+        let newMarker = document.createElement('div');
+        newMarker.className = 'accessibility-marker';
+
+        new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current)
+    }
 
     // populate building points
     useEffect(() => {
