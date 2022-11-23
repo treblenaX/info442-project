@@ -1,0 +1,27 @@
+.loading-container {
+    position: sticky;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #00CFFF;
+}
+
+.loading-item {
+    flex: 1;
+}
+
+.spinner-container {
+    text-align: center;
+}
+
+.spinner-item {
+    color: white;
+    margin-bottom: 50px;
+    font-family: 'Lexend', sans-serif;
+}
+
+/* * {
+    border: solid 1px green;
+  } */

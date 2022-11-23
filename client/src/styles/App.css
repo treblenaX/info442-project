@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap');
+
 :root {
   --off-white: #fafafa;
 }
+
 .html {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Lexend', sans-serif;
 }
 
 .nav {
