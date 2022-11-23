@@ -3,7 +3,7 @@ import { Location } from '../../models/location.js';
 import { LOCATIONS_COLLECTION_NAME } from '../../constants/collections.js';
 import { handleErrorResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
 import { LocationType } from '../../constants/location_type.js';
-import FirebaseHandler from '../../services/FirebaseHandler.js';
+import FirebaseHandler from '../../handlers/firebase_handlers.js';
 import { requireAuthorization } from '../../middleware/auth.js';
 
 var router = express.Router();
@@ -18,7 +18,7 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/filter', async function(req, res, next) {
-    const location_id = req.query.location_id;
+    const locationID = req.query.location_id;
     try {
         // ERROR - Don't allow multiple query parameters or none
         if (Object.keys(req.query).length != 1) {
@@ -29,8 +29,8 @@ router.get('/filter', async function(req, res, next) {
 
         let payload;
         
-        if (location_id) {  // Get the single rating document
-            payload = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, location_id.trim());
+        if (locationID) {  // Get the single rating document
+            payload = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, locationID.trim());
         } else {    // ERROR - No query details provided
             const error = new Error('The queries are invalid.');
             error.code = 400;

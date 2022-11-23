@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import * as dotenv from 'dotenv';
 import sessions from 'express-session';
-import FirebaseHandler from './services/FirebaseHandler.js';
+import FirebaseHandler from './handlers/firebase_handlers.js';
 
 import indexRouter from './routes/index.js';
 import apiRouter from './routes/api/api.js';

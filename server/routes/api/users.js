@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { handleErrorResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
 import { USERS_COLLECTION_NAME } from '../../constants/collections.js';
 import { User } from '../../models/user.js';
-import FirebaseHandler from '../../services/FirebaseHandler.js';
+import FirebaseHandler from '../../handlers/firebase_handlers.js';
 import { handleUserSessionEnd, handleUserSessionStart } from '../../handlers/session_handlers.js';
 
 var router = express.Router();
@@ -45,6 +45,7 @@ router.post('/signup', async function(req, res, next) {
     const password = body.password.trim();
     const fname = body.fname.trim();
     const lname = body.lname.trim();
+    const bio = body.bio.trim();
 
     try {
         // Error guard - check to see if username exists
@@ -67,7 +68,8 @@ router.post('/signup', async function(req, res, next) {
             username: username,
             password: encryptedPassword,
             fname: fname,
-            lname: lname
+            lname: lname,
+            bio: bio
         }).toObject();
 
         const docID = await FirebaseHandler.addDoc(USERS_COLLECTION_NAME, userDoc);
