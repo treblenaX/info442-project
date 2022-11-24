@@ -6,6 +6,7 @@ import DisplayMap from "../components/Map";
 import DisplayLoading from '../components/Loading';
 
 export default function Home() {
+    const [reload, setReload] = useState(1);
     const [isLoaded, setLoaded] = useState(false);
     const [locationsData, setLocationsData] = useState([]);
 
@@ -23,8 +24,13 @@ export default function Home() {
 
     useEffect(() => {
         loadAllData()
-            .catch((e) => toast.error('' + e));
-    }, []);
+            .catch((e) => {
+                toast.error('' + e);
+                setTimeout(() => {
+                    setReload((prev) => (prev > 1000) ? 0 : prev + 1);
+                }, 5000);
+            });
+    }, [reload]);
 
     return (
         <div>

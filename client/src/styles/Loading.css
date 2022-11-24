@@ -1,5 +1,4 @@
 .loading-container {
-    position: sticky;
     display: flex;
     flex-flow: column;
     align-items: center;

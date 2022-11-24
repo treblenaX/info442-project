@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Form } from 'react-bootstrap';
+import { Button, Container, Form, Row, Col } from 'react-bootstrap';
 
 export default function Login() {
     const [username, setUsername] = useState('');
@@ -17,47 +17,61 @@ export default function Login() {
     }
 
     return (
-        <Form onSubmit={handleSubmit}>
-            <Form.Group size="lg" className="mb-3">
-                <Form.Label>Username</Form.Label>
-                <Form.Control 
-                    type="username" 
-                    placeholder="ex: echeng23"
-                    onChange={(e) => setUsername(e.target.value)}
-                ></Form.Control>
-            </Form.Group>
-            <Form.Group size="lg" className="mb-3">
-                <Form.Label>Password</Form.Label>
-                <Form.Control 
-                    type="password"
-                    placeholder="Enter your password..."
-                    onChange={(e) => setPassword(e.target.value)}
-                ></Form.Control>
-            </Form.Group>
-            <Button type="submit" variant="primary">
-                Submit
-            </Button>
-        </Form>
-        // <form onSubmit={submitHandler}>
-        //     <div className='form-inner'>
-        //         <h2>Login</h2>
-        //         {(error !="") ? ( <div className="error">{error}</div>) : ""}
-        //         <div className="form-group">
-        //             <label htmlFor="name">Name: </label>
-        //             <input type="text" name="name" id="name" onChange={e => setDetails({...details, name: e.target.value})} value={details.name}/>
-        //         </div>
-        //         <div className='form-group'>
-        //             <label htmlFor="email">Email: </label>
-        //             <input type="email" name="email" id="email" onChange={e => setDetails({...details, email: e.target.value})} value={details.email}/>
-        //         </div>
-
-        //         <div className='form-group'>
-        //             <label htmlFor="password">Password: </label>
-        //             <input type="password" name="password" id="password" onChange={e => setDetails({...details, password: e.target.value})} value={details.password}/>
-        //         </div>
-        //         <input type="submit" value="Login" />
-
-        //     </div>
-        // </form>
+        <Container className="page-container">
+            <Row>
+                <div className="page-item">
+                    <div>
+                        <h1>Log In</h1>
+                    </div>
+                    <Form 
+                        onSubmit={handleSubmit}
+                        className="page-item"
+                    >
+                        <Form.Group 
+                            size="lg" 
+                            className="mb-4"
+                            as={Row}
+                        >
+                            <Col xs={2}>
+                                <Form.Label>
+                                    <i class="bi bi-person-circle"></i>
+                                </Form.Label>
+                            </Col>
+                            <Col>
+                                <Form.Control 
+                                    type="username" 
+                                    placeholder="ex: echeng23"
+                                    onChange={(e) => setUsername(e.target.value)}
+                                />
+                            </Col>
+                        </Form.Group>
+                        <Form.Group 
+                            size="lg" 
+                            className="mb-3"
+                            as={Row}
+                        >
+                            <Col xs={2}>
+                                <Form.Label>
+                                    <i class="bi bi-key-fill"></i>
+                                </Form.Label>
+                            </Col>
+                            <Col>
+                                <Form.Control 
+                                    type="password"
+                                    placeholder="Enter your password..."
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </Col>
+                        </Form.Group>
+                        <Button 
+                            type="submit" 
+                            variant="primary"
+                        >
+                            Login
+                        </Button>
+                    </Form>
+                </div>
+            </Row>
+        </Container>
     )
 }
