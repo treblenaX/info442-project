@@ -77,11 +77,18 @@
   color: #011014;
   font-size: x-large;
   overflow: hidden;
-  left: 0;
-  top: 0;
 }
 
 .page-item {
   flex: 1;
   text-align: center;
 }
+
+/* Subtext */
+.page-item p {
+  font-size: small;
+}
+
+/* * {
+  border: 1px solid green;
+} */

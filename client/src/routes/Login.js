@@ -1,19 +1,35 @@
-import React, { useState } from 'react'
-import { Button, Container, Form, Row, Col } from 'react-bootstrap';
+import React, { useContext, useState } from 'react'
+import { 
+    Button, 
+    Container, 
+    Form, 
+    Row, 
+    Col 
+} from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { CredentialsContext } from '../contexts/CredentialsContext';
+import LoginService from '../services/LoginService';
 
 export default function Login() {
+    const { setCredentials } = useContext(CredentialsContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
+    
+            const form = {
+                username: username,
+                password: password
+            };
+    
+            const payload = await LoginService.login(form);
 
-        const form = {
-            username: username,
-            password: password
-        };
-
-        console.log(form);
+            setCredentials(payload);
+        } catch (e) {
+            toast.error('' + e);
+        }
     }
 
     return (
@@ -21,7 +37,7 @@ export default function Login() {
             <Row>
                 <div className="page-item">
                     <div>
-                        <h1>Log In</h1>
+                        <h1 className="mb-5">Log In</h1>
                     </div>
                     <Form 
                         onSubmit={handleSubmit}
@@ -29,15 +45,18 @@ export default function Login() {
                     >
                         <Form.Group 
                             size="lg" 
-                            className="mb-4"
+                            className="mb-1"
                             as={Row}
                         >
-                            <Col xs={2}>
+                            <Col 
+                                className="pe-0"
+                                xs={2}
+                            >
                                 <Form.Label>
                                     <i class="bi bi-person-circle"></i>
                                 </Form.Label>
                             </Col>
-                            <Col>
+                            <Col className="ps-1">
                                 <Form.Control 
                                     type="username" 
                                     placeholder="ex: echeng23"
@@ -47,15 +66,18 @@ export default function Login() {
                         </Form.Group>
                         <Form.Group 
                             size="lg" 
-                            className="mb-3"
+                            className="mb-1"
                             as={Row}
                         >
-                            <Col xs={2}>
+                            <Col 
+                                className="pe-0"
+                                xs={2}
+                            >
                                 <Form.Label>
                                     <i class="bi bi-key-fill"></i>
                                 </Form.Label>
                             </Col>
-                            <Col>
+                            <Col className="ps-1">
                                 <Form.Control 
                                     type="password"
                                     placeholder="Enter your password..."
@@ -70,6 +92,9 @@ export default function Login() {
                             Login
                         </Button>
                     </Form>
+                    <div className="page-item mt-4">
+                        <p><em>Don't have an account? Please sign up <a href="/signup">here!</a></em></p>
+                    </div>
                 </div>
             </Row>
         </Container>

@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { LocationService } from '../services/LocationService';
 import { toast } from 'react-toastify';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 

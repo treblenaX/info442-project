@@ -33,6 +33,9 @@ router.post('/login', async function(req, res, next) {
         // Start the user session
         handleUserSessionStart(req, user);
 
+        // Take out the password
+        delete user.password;
+
         handleSuccessResponse(res, 'User successfully logged in!', user);
     } catch (e) {
         handleErrorResponse(res, e, 'There was error getting the user...');
