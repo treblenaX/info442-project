@@ -1,21 +1,33 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Button, Form } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { CredentialsContext } from '../contexts/CredentialsContext';
+import LoginService from '../services/LoginService';
 
 export default function Signup() {
+    const { setCredentials } = useContext(CredentialsContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
+    
+            const form = {
+                username: 'test',
+                password: 'test123',
+                fname: 'test',
+                lname: 'testicles'
+            };
+    
+            const payload = await LoginService.signup(form);
 
-        const form = {
-            username: username,
-            password: password
-        };
-
-        console.log(form);
+            setCredentials(payload);
+        } catch (e) {
+            toast.error('' + e.message);
+        }
     }
 
     return (

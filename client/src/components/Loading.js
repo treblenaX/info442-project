@@ -11,9 +11,12 @@ import { LOADING_TEXTS } from '../constants/LoadingTexts';
 const MS_SECOND = 1000;
 
 export default function DisplayLoading() {
-    const [loadingText, setLoadingText] = useState({
-        index: 0,
-        text: LOADING_TEXTS[0]
+    const [loadingText, setLoadingText] = useState(() => {
+        const index = Math.round((Math.random() * LOADING_TEXTS.length));
+        return {
+            index: index,
+            text: LOADING_TEXTS[index]
+        }
     });
 
 

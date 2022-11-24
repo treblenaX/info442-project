@@ -21,9 +21,17 @@ router.post('/login', async function(req, res, next) {
             attributeValue: username
         }]))[0];
 
+        // ERROR - no user exists
+        if (!user) {
+            const error = new Error('Username and/or password is invalid.');
+            error.code = 401;
+            throw error;
+        }
+
         // Check if the password is correct
         const validPassword = await comparePassword(password, user.password);
 
+        // ERROR - invalid password
         if (!validPassword) {
             const error = new Error('Username and/or password is invalid.');
             error.code = 401;
@@ -48,7 +56,6 @@ router.post('/signup', async function(req, res, next) {
     const password = body.password.trim();
     const fname = body.fname.trim();
     const lname = body.lname.trim();
-    const bio = body.bio.trim();
 
     try {
         // Error guard - check to see if username exists
@@ -67,15 +74,14 @@ router.post('/signup', async function(req, res, next) {
         // Start the process of adding the user to the userbase
         const encryptedPassword = await encryptPassword(password, 10);
 
-        const userDoc = new User({
+        const user = new User({
             username: username,
             password: encryptedPassword,
             fname: fname,
-            lname: lname,
-            bio: bio
+            lname: lname
         }).toObject();
 
-        const docID = await FirebaseHandler.addDoc(USERS_COLLECTION_NAME, userDoc);
+        const docID = await FirebaseHandler.addDoc(USERS_COLLECTION_NAME, user);
 
         // If no ID is returned, then the FirebaseHandler failed in adding the document
         if (!docID) {
@@ -83,8 +89,14 @@ router.post('/signup', async function(req, res, next) {
             error.code = 500;
             throw error;
         }
+
+        // Start the user session
+        handleUserSessionStart(req, user);
+
+        // Take out the password
+        delete user.password;
         
-        handleSuccessResponse(res, 'New user information successfully saved!', { id: docID });
+        handleSuccessResponse(res, 'New user information successfully saved!', user);
     } catch (e) {
         handleErrorResponse(res, e, 'There was error signing up the error...');
     }

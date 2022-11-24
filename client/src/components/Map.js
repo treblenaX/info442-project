@@ -32,8 +32,6 @@ export default function DisplayMap(props) {
 
             new mapboxgl.Marker(el).setLngLat([lat, long]).addTo(map.current)
         }
-
-        toast.info('Successfully loaded all location data. Check console.');
     });
 
     return (

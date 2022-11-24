@@ -7,10 +7,12 @@ import {
     Col 
 } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import { CredentialsContext } from '../contexts/CredentialsContext';
 import LoginService from '../services/LoginService';
 
 export default function Login() {
+    const navigate = useNavigate();
     const { setCredentials } = useContext(CredentialsContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -26,9 +28,15 @@ export default function Login() {
     
             const payload = await LoginService.login(form);
 
+            // When user data is loaded, set it.
             setCredentials(payload);
+
+            // Announce and navigate back to the home page
+            toast.info('Successfully logged in!');
+            toast.info(`Welcome, ${payload.fname}.`);
+            navigate('/');
         } catch (e) {
-            toast.error('' + e);
+            toast.error('' + e.message);
         }
     }
 
@@ -53,7 +61,7 @@ export default function Login() {
                                 xs={2}
                             >
                                 <Form.Label>
-                                    <i class="bi bi-person-circle"></i>
+                                    <i className="bi bi-person-circle"></i>
                                 </Form.Label>
                             </Col>
                             <Col className="ps-1">
@@ -74,7 +82,7 @@ export default function Login() {
                                 xs={2}
                             >
                                 <Form.Label>
-                                    <i class="bi bi-key-fill"></i>
+                                    <i className="bi bi-key-fill"></i>
                                 </Form.Label>
                             </Col>
                             <Col className="ps-1">

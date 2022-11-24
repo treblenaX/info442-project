@@ -25,7 +25,7 @@ export default function Home() {
     useEffect(() => {
         loadAllData()
             .catch((e) => {
-                toast.error('' + e);
+                toast.error('' + e.message);
                 setTimeout(() => {
                     setReload((prev) => (prev > 1000) ? 0 : prev + 1);
                 }, 5000);
