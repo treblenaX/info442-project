@@ -1,8 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css");
+
 :root {
   --off-white: #fafafa;
 }
+
 .html {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'Lexend', sans-serif;
 }
 
 .nav {
@@ -59,3 +63,32 @@
   margin: 0 auto;
   padding: 40px;
 }
+
+/** Credential pages **/
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  max-width: 100%;
+  background-color: #EDFAFD;
+  font-family: 'Lexend', sans-serif;
+  color: #011014;
+  font-size: x-large;
+  overflow: hidden;
+}
+
+.page-item {
+  flex: 1;
+  text-align: center;
+}
+
+/* Subtext */
+.page-item p {
+  font-size: small;
+}
+
+/* * {
+  border: 1px solid green;
+} */
