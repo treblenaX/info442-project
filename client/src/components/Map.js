@@ -22,24 +22,13 @@ export default function DisplayMap(props) {
             center: [lng, lat],
             zoom: zoom
         });
+
         // if clicked, add marker to that location
         map.current.on('click', addMarker);
-    });
 
-    function addMarker(e) {
-        let newMarker = document.createElement('div');
-        newMarker.className = 'accessibility-marker';
-
-        new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current)
-    }
-
-    // populate building points
-    useEffect(() => {
-        LocationService.findLocations()
-            .then((payload) => {    // If successful - do this
-                for (let i = 0; i < Object.keys(payload).length; i++) {     // iterate through all points
-                    let el = document.createElement('div');
-                    el.className = 'marker';
+        for (let i = 0; i < Object.keys(locationsPayload).length; i++) {     // iterate through all points
+            let el = document.createElement('div');
+            el.className = 'marker';
 
             let lat = locationsPayload[i]['latitude']
             let long = locationsPayload[i]['longitude']
@@ -47,6 +36,13 @@ export default function DisplayMap(props) {
             new mapboxgl.Marker(el).setLngLat([lat, long]).addTo(map.current)
         }
     });
+
+    function addMarker(e) {
+        let newMarker = document.createElement('div');
+        newMarker.className = 'accessibility-marker';
+
+        new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current);
+    }
 
     return (
         <div ref={mapContainer} className="map-container" />
