@@ -23,6 +23,8 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route exact path='/login' element={<Login />} />
           <Route exact path='/signup' element={<Signup />} />
+          <Route exact path='/review' element={<ReviewBody />} />
+          <Route exact path='/reviewform' element={<ReviewForm />} />
         </Routes> 
       </CredentialsContext.Provider>
       <ToastContainer />
