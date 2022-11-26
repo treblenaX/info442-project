@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { LocationService } from '../services/LocationService';
 
 import Map from "../components/Map";
+import HeaderBar from '../components/HeaderBar';
 
 function Home() {
     useEffect(() => {
@@ -19,11 +20,20 @@ function Home() {
     }, []);
 
     return (
-        <div>
-            <h1>
-                hi!
-            </h1>
-            <Map />
+        
+        
+        <div>   
+         
+                <header>
+                    <HeaderBar />
+                </header>
+                
+                <main>
+                    <div>
+                        <Map />
+                    </div>  
+                </main>
+         
         </div>
     )
 }

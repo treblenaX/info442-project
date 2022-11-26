@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #32A8FE;
 }
 
 code {
@@ -13,5 +14,86 @@ code {
 }
 
 .map-container {
-  height: 400px;
+  height: 600px;
+  color: #32A8FE;
 }
+
+h1{
+  font: 'Helvetica', 'Montserrat Subrayada';
+  height: auto;
+  position: relative;
+}
+
+h1, p{
+  color: white;
+}
+
+header{
+  background-color: #32A8FE;
+  padding: 0.75em; 
+}
+.map-section{
+  background-color: #32A8FE;
+}
+
+.mapboxgl-canvas-container{
+  height: 650px;
+  color:#32A8FE;
+}
+
+.mapboxgl-control-container{
+  color:#32A8FE;
+}
+
+a{
+  color: white;
+  size: 0.25em;
+}
+
+.header-bar{
+  display: flex;
+}
+
+.header-bar-component{
+  flex: 1;
+  justify-content: space-between;
+}
+
+.app-name-section{
+  float: center;
+}
+
+.info-button-section{
+  float: left;
+  display: flex;
+}
+
+.info-button{
+  position: relative;
+  float: left;
+}
+
+.login-button-section{
+  float: right;
+  display: flex;
+
+}
+
+.login-button{
+  position: relative;
+  float: right;
+}
+
+.user-icon{
+  float: right;
+  display: right;
+}
+
+
+
+
+
+
+
+
+
