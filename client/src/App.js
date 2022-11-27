@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Login from "./routes/Login";
 import { CredentialsContext } from './contexts/CredentialsContext';
 import Signup from "./routes/Signup";
+import Signout from "./routes/Signout";
 
 function App() {
   const [credentials, setCredentials] = useState();
@@ -23,6 +24,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route exact path='/login' element={<Login />} />
           <Route exact path='/signup' element={<Signup />} />
+          <Route exact path='/signout' element={<Signout />} />
         </Routes> 
       </CredentialsContext.Provider>
       <ToastContainer />

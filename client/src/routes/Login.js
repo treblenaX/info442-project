@@ -17,10 +17,13 @@ export default function Login() {
     const { setCredentials } = useContext(CredentialsContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoggingIn, setLoggingIn] = useState(false);
 
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
+
+            setLoggingIn(true);
     
             const form = {
                 username: username,
@@ -35,8 +38,10 @@ export default function Login() {
             // Announce and navigate back to the home page
             toast.info('Successfully logged in!');
             toast.info(`Welcome, ${payload.fname}.`);
+            setLoggingIn(false);
             navigate('/');
         } catch (e) {
+            setLoggingIn(false);
             toast.error('' + e.message);
         }
     }
@@ -104,7 +109,7 @@ export default function Login() {
                                 type="submit" 
                                 variant="primary"
                             >
-                                Login
+                                { isLoggingIn ? 'Logging in...' : 'Log In'}
                             </Button>
                         </Form>
                         <div className="page-item mt-4">
