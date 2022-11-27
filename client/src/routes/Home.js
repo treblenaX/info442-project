@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import LocationService from '../services/LocationService';
 
-import DisplayMap from "../components/Map";
-import DisplayLoading from '../components/Loading';
+import Loading from '../components/Loading';
+import Map from "../components/Map";
+import HeaderBar from '../components/HeaderBar';
 
 export default function Home() {
     const [reload, setReload] = useState(1);
@@ -36,12 +37,22 @@ export default function Home() {
         <div>
             {
                 !isLoaded   // If the data is not loaded, then display the loading thing
-                    ? <DisplayLoading />
+                    ? <Loading />
                     : 
                     <div>
-                        <DisplayMap
-                            locationsPayload={locationsData}
-                        />
+                        <header>
+                            <HeaderBar 
+                                isHome={true}
+                            />
+                        </header>
+                        <main>
+                            <div>
+                                <Map 
+                                    locationsPayload={locationsData}
+                                />
+                            </div>
+
+                        </main>
                     </div>
             }
         </div>

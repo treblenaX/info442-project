@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #32A8FE;
 }
 
 code {
@@ -34,3 +35,116 @@ code {
   text-align: center;
   font-family: 'Open Sans', sans-serif;
 }
+
+h1{
+  font: 'Helvetica', 'Montserrat Subrayada';
+  height: auto;
+  position: relative;
+}
+
+h1, p{
+  color: white;
+}
+
+header{
+  background-color: #32A8FE;
+  padding: 0.75em; 
+}
+.map-section{
+  background-color: #32A8FE;
+}
+
+.mapboxgl-canvas-container{
+  height: 650px;
+  color:#32A8FE;
+}
+
+.mapboxgl-control-container{
+  color:#32A8FE;
+}
+
+a{
+  color: white;
+  size: 0.25em;
+}
+
+.header-bar{
+  display: flex;
+}
+
+.header-bar-component{
+  flex: 1;
+  justify-content: space-between;
+}
+
+.app-name-section{
+  color: #EDFAFD;
+  font-size: 36px;
+  justify-content: center;
+  float: center;
+  text-align: center;
+}
+
+.header-button {
+  width: 4rem;
+  font-size: 2rem;
+  height: 4rem;
+  color: #EDFAFD;
+}
+
+.header-button:hover {
+	transform: scale(1.1);
+	transition: .1s;
+}
+
+.clickable-button-look {
+  cursor: pointer;
+	transition: all .2s ease-in-out;
+}
+
+.clickable-button-look:hover {
+	transform: scale(1.1);
+	transition: .1s;
+}
+
+
+.info-button-section{
+  float: left;
+  display: flex;
+}
+
+.info-button{
+  width: 3rem;
+  font-size: 1.5rem;
+  height: 3rem;
+  position: relative;
+  float: left;
+}
+
+.login-button-section{
+  float: right;
+  display: flex;
+
+}
+
+.login-button{
+  position: relative;
+  float: right;
+}
+
+.user-icon{
+  width: 5rem;
+  font-size: 3rem;
+  height: 5rem;
+  float: right;
+  display: right;
+}
+
+
+
+
+
+
+
+
+
