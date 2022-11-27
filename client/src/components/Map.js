@@ -39,6 +39,8 @@ export default function DisplayMap(props) {
             let lat = locationsPayload[i]['latitude']
             let long = locationsPayload[i]['longitude']
 
+            el.addEventListener('click', buildingInfoHandler)
+
             new mapboxgl.Marker(el).setLngLat([lat, long]).addTo(map.current)
         }
     });
@@ -46,14 +48,24 @@ export default function DisplayMap(props) {
     function addMarker(e) {
         let currZoom = map.current.getZoom();
         if(currZoom >= ZOOM_THRESHOLD) { // only allow new markers at zoom threshold
-            let newMarker = document.createElement('div');
-            newMarker.className = 'accessibility-marker';
+            if(!(checkMarker(e))){ // if marker already exists, do not create new one
+                let newMarker = document.createElement('div');
+                newMarker.className = 'accessibility-marker';
 
-            new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current);
+                newMarker.addEventListener('click', featureInfoHandler)
+
+                new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current);
+            }
         } else {
             // TODO: add some sort of error message
             return
         }
+    }
+
+    // helper function, returns true if marker already exists at event location
+    // else returns false
+    function checkMarker(e) {
+        return e.originalEvent.target.classList.contains('accessibility-marker') || e.originalEvent.target.classList.contains('marker');
     }
 
     function zoomHandler() {
@@ -68,6 +80,15 @@ export default function DisplayMap(props) {
                 accessibilityPoints[i].style.display = "none"
             }
         }
+    }
+
+    function buildingInfoHandler(e) {
+        console.log("building clicked")
+        // TODO: add building info component functionality here
+    }
+
+    function featureInfoHandler(e) {
+        console.log("feature clicked")
     }
 
     return (
