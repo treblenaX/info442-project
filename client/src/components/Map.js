@@ -6,7 +6,7 @@ mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
 
 const ZOOM_THRESHOLD = 17 // zoom threshold for accessibility points
 
-export default function DisplayMap(props) {
+export default function Map(props) {
     const locationsPayload = props.locationsPayload;
     const mapContainer = useRef(null);
     const map = useRef(null);
@@ -105,6 +105,8 @@ export default function DisplayMap(props) {
     }
 
     return (
-        <div ref={mapContainer} className="map-container" />
+        <div class="map-section">
+            <div ref={mapContainer} className="map-container" />
+        </div>
     );
 }

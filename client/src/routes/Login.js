@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { CredentialsContext } from '../contexts/CredentialsContext';
 import LoginService from '../services/LoginService';
+import HeaderBar from '../components/HeaderBar';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -41,70 +42,77 @@ export default function Login() {
     }
 
     return (
-        <Container className="page-container">
-            <Row>
-                <div className="page-item">
-                    <div>
-                        <h1 className="mb-5">Log In</h1>
-                    </div>
-                    <Form 
-                        onSubmit={handleSubmit}
-                        className="page-item"
-                    >
-                        <Form.Group 
-                            size="lg" 
-                            className="mb-1"
-                            as={Row}
+        <div>
+            <header>
+                <HeaderBar 
+                    isHome={false}
+                />
+            </header>
+            <Container className="page-container">
+                <Row>
+                    <div className="page-item">
+                        <div>
+                            <h1 className="mb-5">Log In</h1>
+                        </div>
+                        <Form 
+                            onSubmit={handleSubmit}
+                            className="page-item"
                         >
-                            <Col 
-                                className="pe-0"
-                                xs={2}
+                            <Form.Group 
+                                size="lg" 
+                                className="mb-1"
+                                as={Row}
                             >
-                                <Form.Label>
-                                    <i className="bi bi-person-circle"></i>
-                                </Form.Label>
-                            </Col>
-                            <Col className="ps-1">
-                                <Form.Control 
-                                    type="username" 
-                                    placeholder="ex: echeng23"
-                                    onChange={(e) => setUsername(e.target.value)}
-                                />
-                            </Col>
-                        </Form.Group>
-                        <Form.Group 
-                            size="lg" 
-                            className="mb-1"
-                            as={Row}
-                        >
-                            <Col 
-                                className="pe-0"
-                                xs={2}
+                                <Col 
+                                    className="pe-0"
+                                    xs={2}
+                                >
+                                    <Form.Label>
+                                        <i className="bi bi-person-circle"></i>
+                                    </Form.Label>
+                                </Col>
+                                <Col className="ps-1">
+                                    <Form.Control 
+                                        type="username" 
+                                        placeholder="ex: echeng23"
+                                        onChange={(e) => setUsername(e.target.value)}
+                                    />
+                                </Col>
+                            </Form.Group>
+                            <Form.Group 
+                                size="lg" 
+                                className="mb-1"
+                                as={Row}
                             >
-                                <Form.Label>
-                                    <i className="bi bi-key-fill"></i>
-                                </Form.Label>
-                            </Col>
-                            <Col className="ps-1">
-                                <Form.Control 
-                                    type="password"
-                                    placeholder="Enter your password..."
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </Col>
-                        </Form.Group>
-                        <Button 
-                            type="submit" 
-                            variant="primary"
-                        >
-                            Login
-                        </Button>
-                    </Form>
-                    <div className="page-item mt-4">
-                        <p><em>Don't have an account? Please sign up <a href="/signup">here!</a></em></p>
+                                <Col 
+                                    className="pe-0"
+                                    xs={2}
+                                >
+                                    <Form.Label>
+                                        <i className="bi bi-key-fill"></i>
+                                    </Form.Label>
+                                </Col>
+                                <Col className="ps-1">
+                                    <Form.Control 
+                                        type="password"
+                                        placeholder="Enter your password..."
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                </Col>
+                            </Form.Group>
+                            <Button 
+                                type="submit" 
+                                variant="primary"
+                            >
+                                Login
+                            </Button>
+                        </Form>
+                        <div className="page-item mt-4">
+                            <p><em>Don't have an account? Please sign up <a href="/signup">here!</a></em></p>
+                        </div>
                     </div>
-                </div>
-            </Row>
-        </Container>
+                </Row>
+            </Container>
+        </div>
     )
 }

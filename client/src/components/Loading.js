@@ -10,7 +10,7 @@ import { LOADING_TEXTS } from '../constants/LoadingTexts';
 
 const MS_SECOND = 1000;
 
-export default function DisplayLoading() {
+export default function Loading() {
     const [loadingText, setLoadingText] = useState(() => {
         const index = Math.round((Math.random() * LOADING_TEXTS.length));
         return {
