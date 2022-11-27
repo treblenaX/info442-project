@@ -4,6 +4,8 @@ import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-load
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
 
+const ZOOM_THRESHOLD = 17 // zoom threshold for accessibility points
+
 export default function DisplayMap(props) {
     const locationsPayload = props.locationsPayload;
     const mapContainer = useRef(null);
@@ -22,9 +24,13 @@ export default function DisplayMap(props) {
             center: [lng, lat],
             zoom: zoom
         });
+        // call zoomHandler once to initialize accessibility features being hidden
+        zoomHandler()
 
         // if clicked, add marker to that location
         map.current.on('click', addMarker);
+        // handler for zoom rendering changes
+        map.current.on('zoom', zoomHandler);
 
         for (let i = 0; i < Object.keys(locationsPayload).length; i++) {     // iterate through all points
             let el = document.createElement('div');
@@ -38,10 +44,30 @@ export default function DisplayMap(props) {
     });
 
     function addMarker(e) {
-        let newMarker = document.createElement('div');
-        newMarker.className = 'accessibility-marker';
+        let currZoom = map.current.getZoom();
+        if(currZoom >= ZOOM_THRESHOLD) { // only allow new markers at zoom threshold
+            let newMarker = document.createElement('div');
+            newMarker.className = 'accessibility-marker';
 
-        new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current);
+            new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current);
+        } else {
+            // TODO: add some sort of error message
+            return
+        }
+    }
+
+    function zoomHandler() {
+        let currZoom = map.current.getZoom();
+        let accessibilityPoints = document.getElementsByClassName('accessibility-marker');
+        if(currZoom >= ZOOM_THRESHOLD) { // zoom threshold for displaying accessibility feature points
+            for(let i = 0; i < accessibilityPoints.length; i++) {
+                accessibilityPoints[i].style.display = "inline"
+            }
+        } else {
+            for(let i = 0; i < accessibilityPoints.length; i++) {
+                accessibilityPoints[i].style.display = "none"
+            }
+        }
     }
 
     return (
