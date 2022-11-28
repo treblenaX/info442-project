@@ -9,7 +9,7 @@ import "./styles/App.css";
 import 'react-toastify/dist/ReactToastify.css';
 import Login from "./routes/Login";
 import { CredentialsContext } from './contexts/CredentialsContext';
-import Signup from "./routes/SignUp";
+import Signup from "./routes/Signup";
 import Signout from "./routes/Signout";
 
 function App() {
