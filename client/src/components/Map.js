@@ -8,6 +8,7 @@ const ZOOM_THRESHOLD = 17 // zoom threshold for accessibility points
 
 export default function Map(props) {
     const locationsPayload = props.locationsPayload;
+    const featuresPayload = props.featuresPayload;
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(-122.30808827297321);
@@ -37,9 +38,6 @@ export default function Map(props) {
                 })
         );
 
-        // call zoomHandler once to initialize accessibility features being hidden
-        zoomHandler()
-
         // if clicked, add marker to that location
         map.current.on('click', addMarker);
         // handler for zoom rendering changes
@@ -56,6 +54,21 @@ export default function Map(props) {
 
             new mapboxgl.Marker(el).setLngLat([lat, long]).addTo(map.current)
         }
+
+        for (let i = 0; i < Object.keys(featuresPayload).length; i++) {     // iterate through all features
+            let fa = document.createElement('div');
+            fa.className = 'accessibility-marker';
+
+            let lat = featuresPayload[i]['latitude'];
+            let long = featuresPayload[i]['longitude'];
+            fa.id = featuresPayload[i].id; // id param passed to marker
+            fa.addEventListener('click', featureInfoHandler)
+
+            new mapboxgl.Marker(fa).setLngLat([lat, long]).addTo(map.current)
+        }
+
+        // call zoomHandler once to initialize accessibility features being hidden
+        zoomHandler()
     });
 
     function addMarker(e) {
@@ -97,12 +110,13 @@ export default function Map(props) {
 
     function buildingInfoHandler(e) {
         console.log("building clicked")
-        console.log(e.currentTarget) // to get id
+        console.log(e.currentTarget.id) // to get id
         // TODO: add building info component functionality here
     }
 
     function featureInfoHandler(e) {
         console.log("feature clicked")
+        console.log(e.currentTarget.id)
     }
 
     return (

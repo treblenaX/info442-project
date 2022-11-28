@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import LocationService from '../services/LocationService';
-import FeatureService from '../services/LocationService';
+import FeatureService from '../services/FeatureService';
 
 import Loading from '../components/Loading';
 import Map from "../components/Map";
