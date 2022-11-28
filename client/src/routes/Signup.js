@@ -50,7 +50,7 @@ export default function Signup() {
 
 
                             <Form.Group size="lg" className="mb-3" as={Row}>
-                                <Col className="ps-5">
+                                <Col className="ps-3">
                                     <Form.Control 
                                         type="fname"
                                         placeholder='First Name'
@@ -69,15 +69,7 @@ export default function Signup() {
                             
 
                             <Form.Group size="lg" className="mb-3" as={Row}>
-                                <Col 
-                                    className="pe-5"
-                                    xs={1}
-                                >
-                                    <Form.Label>
-                                        <i className="bi bi-person-circle"></i>
-                                    </Form.Label>
-                                </Col>
-                                <Col className="ps-0">
+                                <Col className="ps-3">
                                     <Form.Control 
                                         type="username" 
                                         placeholder="Enter your username..."
@@ -86,15 +78,7 @@ export default function Signup() {
                                 </Col>
                             </Form.Group>
                             <Form.Group size="lg" className="mb-3" as={Row}>
-                                <Col 
-                                    className="pe-5"
-                                    xs={1}
-                                >
-                                    <Form.Label>
-                                        <i className="bi bi-key-fill"></i>
-                                    </Form.Label>
-                                </Col>
-                                <Col className='ps-0'>
+                                <Col className='ps-3'>
                                     <Form.Control 
                                     type="password"
                                     placeholder="Enter your password..."
@@ -103,15 +87,7 @@ export default function Signup() {
                                 </Col>
                             </Form.Group>
                             <Form.Group size="lg" className="mb-3" as={Row}>
-                                <Col 
-                                    className="pe-5"
-                                    xs={1}
-                                >
-                                    <Form.Label>
-                                        <i className="bi bi-key-fill"></i>
-                                    </Form.Label>
-                                </Col>
-                                <Col className='ps-0'>
+                                <Col className='ps-3'>
                                     <Form.Control 
                                         type="password"
                                         placeholder="Confirm your password..."
