@@ -97,7 +97,7 @@ export default function Map(props) {
 
     function buildingInfoHandler(e) {
         console.log("building clicked")
-        console.log(e.currentTarget.id) // to get id
+        console.log(e.currentTarget) // to get id
         // TODO: add building info component functionality here
     }
 
