@@ -49,9 +49,9 @@ export default function Map(props) {
             let el = document.createElement('div');
             el.className = 'marker';
 
-            let lat = locationsPayload[i]['latitude']
-            let long = locationsPayload[i]['longitude']
-
+            let lat = locationsPayload[i]['latitude'];
+            let long = locationsPayload[i]['longitude'];
+            el.id = locationsPayload[i].id; // id param passed to marker
             el.addEventListener('click', buildingInfoHandler)
 
             new mapboxgl.Marker(el).setLngLat([lat, long]).addTo(map.current)
@@ -97,6 +97,7 @@ export default function Map(props) {
 
     function buildingInfoHandler(e) {
         console.log("building clicked")
+        console.log(e.currentTarget.id) // to get id
         // TODO: add building info component functionality here
     }
 
