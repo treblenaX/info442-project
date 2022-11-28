@@ -15,11 +15,22 @@ code {
 
 /* mapbox css */
 .map-container {
-  height: 800px;
+  position:fixed;
+  width: 100%;
+  height:91vh;
 }
 
 .marker {
   background-image: url('marker.png');
+  background-size: cover;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.accessibility-marker {
+  background-image: url('accessibility-marker.png');
   background-size: cover;
   width: 20px;
   height: 20px;
