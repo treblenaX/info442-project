@@ -46,20 +46,14 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
                 >MAPABLE</strong>
             </Navbar.Brand>
             <Navbar.Toggle className="m-auto"/>
-            <Navbar.Collapse>
+            <Navbar.Collapse className="m-auto">
                 <Nav>
                     {
                         (credentials)
                         ?   // Signed in
                         <>
                             <Nav.Link>
-                                <h1>
-                                    {
-                                        credentials.fname.charAt(0).toUpperCase() + credentials.fname.slice(1)
-                                            + ' '
-                                            + credentials.lname.charAt(0).toUpperCase() + credentials.lname.slice(1)
-                                    }
-                                </h1>
+                                { processFullName(credentials) }
                             </Nav.Link>
                             <Nav.Link 
                                 href="/signout"
@@ -78,7 +72,14 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
                     }
                 </Nav>
             </Navbar.Collapse>
-            <div className="m-auto"></div>
         </Navbar>
+    )
+}
+
+const processFullName = (credentials) => {
+    return (
+        <p>
+            Welcome, { credentials.fname.charAt(0).toUpperCase() + credentials.fname.slice(1) + ' ' + credentials.lname.charAt(0).toUpperCase() + credentials.lname.slice(1) }.
+        </p>
     )
 }
