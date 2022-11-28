@@ -38,8 +38,8 @@ app.use(cors({
         return callback(null, true);
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    origin: '*',
-    // credentials: true
+    // origin: '*',
+    credentials: true
 }));
 app.use(cookieParser());
 

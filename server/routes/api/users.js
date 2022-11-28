@@ -4,9 +4,25 @@ import { handleErrorResponse, handleSuccessResponse } from '../../handlers/respo
 import { USERS_COLLECTION_NAME } from '../../constants/collections.js';
 import { User } from '../../models/user.js';
 import FirebaseHandler from '../../handlers/firebase_handlers.js';
-import { handleUserSessionEnd, handleUserSessionStart } from '../../handlers/session_handlers.js';
+import { checkUserLoggedIn, handleUserSessionEnd, handleUserSessionStart } from '../../handlers/session_handlers.js';
 
 var router = express.Router();
+
+router.get('/heartbeat', async (req, res, next) => {
+    try {
+        const session = req.session;
+      
+        if (!checkUserLoggedIn) {   // If there's a cookie with no info, then it's expired
+            const error = new Error('User not logged in...');
+            error.code = 401;
+            throw error;
+        }
+      
+        handleSuccessResponse(res, 'User still logged in!', session.user);
+    } catch (e) {
+        handleErrorResponse(res, e, 'User not logged in.');
+    }
+  })
 
 router.post('/login', async function(req, res, next) {
     const body = req.body;
@@ -102,7 +118,7 @@ router.post('/signup', async function(req, res, next) {
     }
 });
 
-router.delete('/logout', function(req, res, next) {
+router.post('/logout', function(req, res, next) {
     handleUserSessionEnd(req);
     handleSuccessResponse(res, 'User successfully logged out.');
 });
