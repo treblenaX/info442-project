@@ -1,30 +1,36 @@
-import React, { useState } from "react";
-import { Button, Form, Input } from 'react-bootstrap';
+import { useState } from 'react';
+import React from "react";
 
 
-export default function ReviewForm() {
+export function AddReviewForm(props) {
   const [reviews, setReviews] = useState("");
-  const onChange = (e) => {
-    setReviews(e.target.value);
+
+  const handleChange = (e) => {
+    let newReview = e.target.value;
+    setReviews(newReview);
   };
-  const onSubmit = (e) => {
-    console.log("Form Submitted");
-  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    props.addReviewCallback(reviews)
+    console.log("Inputted: " + reviews)
+    setReviews("");
+  }
+
+  console.log("rendering with", reviews)
 
   return (
-    <div className="form-container">
-      <Form onSubmit={onSubmit}>
-        <Input
-          className="reviews-form"
-          type="text"
-          placeholder="enter your review"
-          value={reviews}
-          onChange={onChange}
-        />
-        <Button type="submit" style={{ background: "Green" }}>
-          Submit
-        </Button>
-      </Form>
-    </div>
+          <form onSubmit={handleSubmit}>
+            <input
+              className="reviews-form"
+              placeholder="enter your review"
+              value={reviews}
+              onChange={handleChange}
+            />
+            <button type="submit" style={{ background: "Green" }}>
+              Submit
+            </button>
+          </form>
   );
 }

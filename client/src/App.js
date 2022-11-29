@@ -5,13 +5,20 @@ import {
   Route
 } from 'react-router-dom';
 import Home from "./routes/Home";
-import "./styles/App.css";
+import "./styles/Test.css";
 import 'react-toastify/dist/ReactToastify.css';
 import Login from "./routes/Login";
 import { CredentialsContext } from './contexts/CredentialsContext';
 import Signup from "./routes/Signup";
-import ReviewBody from "./routes/Review";
-import ReviewForm from "./routes/ReviewForm";
+import Test from "./routes/Test";
+
+
+const SAMPLE_REVIEWS = [
+  {id:1, description: 'Test 1'},
+  {id:2, description: 'Test 2'},
+  {id:3, description: 'Test 3'}
+];
+
 
 function App() {
   const [credentials, setCredentials] = useState();
@@ -25,8 +32,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route exact path='/login' element={<Login />} />
           <Route exact path='/signup' element={<Signup />} />
-          <Route exact path='/review' element={<ReviewBody />} />
-          <Route exact path='/reviewform' element={<ReviewForm />} />
+          <Route exact path='/test' element={<Test reviews={SAMPLE_REVIEWS}/>} />
         </Routes>
       </CredentialsContext.Provider>
       <ToastContainer />
