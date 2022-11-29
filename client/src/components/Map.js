@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import ViewAccessibilityFeature from './AccessibilityFeature';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import LocationService from '../services/LocationService';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '../styles/index.css';
 
@@ -12,6 +13,7 @@ export default function Map(props) {
     const locationsPayload = props.locationsPayload;
     const setBuildingInfoID = props.setBuildingInfoID;
 
+    const featuresPayload = props.featuresPayload;
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(-122.30808827297321);
@@ -24,7 +26,7 @@ export default function Map(props) {
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: 'mapbox://styles/mapbox/streets-v11',
+            style: 'mapbox://styles/mapbox/dark-v11',
             center: [lng, lat],
             zoom: zoom
         });
@@ -41,9 +43,6 @@ export default function Map(props) {
                 })
         );
 
-        // call zoomHandler once to initialize accessibility features being hidden
-        zoomHandler()
-
         // if clicked, add marker to that location
         map.current.on('click', addMarker);
         // handler for zoom rendering changes
@@ -53,29 +52,49 @@ export default function Map(props) {
             let el = document.createElement('div');
             el.className = 'marker';
 
-            let lat = locationsPayload[i]['latitude']
-            let long = locationsPayload[i]['longitude']
-
+            let lat = locationsPayload[i]['latitude'];
+            let long = locationsPayload[i]['longitude'];
+            el.id = locationsPayload[i].id; // id param passed to marker
             el.addEventListener('click', buildingInfoHandler)
             el.id = locationsPayload[i].id
 
             new mapboxgl.Marker(el).setLngLat([lat, long]).addTo(map.current)
         }
+
+        for (let i = 0; i < Object.keys(featuresPayload).length; i++) {     // iterate through all features
+            let fa = document.createElement('div');
+            fa.classList.add(featuresPayload[i].type);
+            fa.classList.add('accessibility-marker');
+
+            let lat = featuresPayload[i]['latitude'];
+            let long = featuresPayload[i]['longitude'];
+            fa.id = featuresPayload[i].id; // id param passed to marker
+            fa.addEventListener('click', featureInfoHandler)
+
+            new mapboxgl.Marker(fa).setLngLat([lat, long]).addTo(map.current)
+        }
+
+        // call zoomHandler once to initialize accessibility features being hidden
+        zoomHandler()
     });
 
     function addMarker(e) {
         let currZoom = map.current.getZoom();
         if(currZoom >= ZOOM_THRESHOLD) { // only allow new markers at zoom threshold
             if(!(checkMarker(e))){ // if marker already exists, do not create new one
+                let coords = e.lngLat;
+                flyTo(coords)
                 let newMarker = document.createElement('div');
-                newMarker.className = 'accessibility-marker';
+                newMarker.classList.add('accessibility-marker');
 
                 newMarker.addEventListener('click', featureInfoHandler)
 
                 new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current);
             }
         } else {
-            // TODO: add some sort of error message
+            if(!(checkMarker(e))) {
+                toast.error('You need to be zoomed in to add an accessibility feature!');
+            }
             return
         }
     }
@@ -84,6 +103,14 @@ export default function Map(props) {
     // else returns false
     function checkMarker(e) {
         return e.originalEvent.target.classList.contains('accessibility-marker') || e.originalEvent.target.classList.contains('marker');
+    }
+
+    // helper function that flys to center of event on map
+    function flyTo(coords) {
+        map.current.flyTo({     // center map on new marker
+            center: coords,
+            zoom: 18
+        })
     }
 
     function zoomHandler() {
@@ -105,10 +132,14 @@ export default function Map(props) {
 
         // open the modal
         setBuildingInfoID(locationID);
+        flyTo(e.target.lngLat);
     }
 
     function featureInfoHandler(e) {
+        flyTo(e.target.lngLat)
         console.log("feature clicked")
+        console.log(e.currentTarget.id)
+        ViewAccessibilityFeature();
     }
 
     return (

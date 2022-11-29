@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import LocationService from '../services/LocationService';
+import FeatureService from '../services/FeatureService';
 
 import Loading from '../components/Loading';
 import Map from "../components/Map";
@@ -11,14 +12,17 @@ export default function Home() {
     const [reload, setReload] = useState(1);
     const [isLoaded, setLoaded] = useState(false);
     const [locationsData, setLocationsData] = useState([]);
+    const [featuresData, setFeaturesData] = useState([]);
 
     const [buildingInfoID, setBuildingInfoID] = useState();
 
     const loadAllData = async () => {
         try {
-            // Locations Data
+            // Locations Data + feature data for map
             const locationsPayload = await LocationService.findLocations()
+            const featuresPayload = await FeatureService.findFeatures()
             setLocationsData(locationsPayload);
+            setFeaturesData(featuresPayload);
 
             setLoaded(true);
         } catch (err) {
@@ -63,8 +67,9 @@ export default function Home() {
                                     
                                 </div>
                                 <Map 
-                                    locationsPayload={locationsData}
                                     setBuildingInfoID={setBuildingInfoID}
+                                    locationsPayload={locationsData} 
+                                    featuresPayload={featuresData}
                                 />
                             </div>
                         </main>
