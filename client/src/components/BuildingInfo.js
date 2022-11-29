@@ -1,6 +1,6 @@
 import '../styles/BuildingInfo.css';
 import React, { useEffect, useState } from 'react';
-import { Modal } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import { ReviewList } from './ReviewList';
 import LocationService from '../services/LocationService';
 import { toast } from 'react-toastify';
@@ -12,6 +12,7 @@ export default function BuildingInfo(props) {
     const [isLoaded, setLoaded] = useState(false);
     const [buildingPayload, setBuildingPayload] = useState();
 
+    const handleClose = () => setLoaded(false);
 
     const loadData = async () => {
         try {
@@ -31,52 +32,58 @@ export default function BuildingInfo(props) {
             .catch((e) => {
                 toast.error('' + e.message);
             });
-    }, [])
+    }, [locationID])
 
     return (
         <div>
-                <Modal show={isLoaded}>
-                    <Modal.Header>
-                        <Modal.Title className="top-modal modal-text">
-                            <h1 className="top-modal-item">
-                                <strong>
-                                    {
-                                        isLoaded
-                                        ? buildingPayload.name
-                                        : 'Loading...'
-                                    }
-                                </strong>
-                            </h1>
-                            <div className="top-modal-item top-modal-rating-icon">
-                                Insert Rating Face here
-                            </div>
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className="modal-text">
-                        <h3>
-                            {
-                                isLoaded
-                                ? <em>{buildingPayload.address}</em>
-                                : 'Loading...'
-                            }
-                        </h3>
-                        <h3>
-                            {
-                                isLoaded
-                                ? `Rating: ${buildingPayload.average_rating}`
-                                : 'Loading...'
-                            }
-                        </h3>
-                        <div>
-                            <ReviewList 
-                                locationID={locationID} 
-                                reviewType={ReviewTypes.BUILDING}
-                            />
+            <Modal show={isLoaded} onHide={handleClose}>
+                <Modal.Header>
+                    <Modal.Title className="top-modal modal-text">
+                        <h1 className="top-modal-item">
+                            <strong>
+                                {
+                                    isLoaded
+                                    ? buildingPayload.name
+                                    : 'Loading...'
+                                }
+                            </strong>
+                        </h1>
+                        <div className="top-modal-item top-modal-rating-icon">
+                            Insert Rating Face here
                         </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                    </Modal.Footer>
-                </Modal>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="modal-text">
+                    <h3>
+                        {
+                            isLoaded
+                            ? <em>{buildingPayload.address}</em>
+                            : 'Loading...'
+                        }
+                    </h3>
+                    <h3>
+                        {
+                            isLoaded
+                            ? `Rating: ${buildingPayload.average_rating}`
+                            : 'Loading...'
+                        }
+                    </h3>
+                    <div>
+                        <ReviewList 
+                            locationID={locationID} 
+                            reviewType={ReviewTypes.BUILDING}
+                        />
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button 
+                        variant="secondary"
+                        onClick={handleClose}
+                    >
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 }

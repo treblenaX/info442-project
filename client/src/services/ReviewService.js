@@ -30,6 +30,8 @@ export default class ReviewService {
             REVIEW_BASEPOINT + '/',
             {
                 method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify(request),
                 headers: {
                     'Content-Type': 'application/json'
                 }

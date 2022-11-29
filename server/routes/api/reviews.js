@@ -7,14 +7,14 @@ import FirebaseHandler from '../../handlers/firebase_handlers.js';
 
 var router = express.Router();
 
-router.get('/', async function(req, res, next) {
-    try {
-        const payload = await FirebaseHandler.getDocCollection(REVIEWS_COLLECTION_NAME);
-        handleSuccessResponse(res, 'All review data successfully fetched.', payload);
-    } catch (e) {
-        handleErrorResponse(res, e, 'There was an error getting all of the reviews...');
-    }
-});
+// router.get('/', async function(req, res, next) {
+//     try {
+//         const payload = await FirebaseHandler.getDocCollection(REVIEWS_COLLECTION_NAME);
+//         handleSuccessResponse(res, 'All review data successfully fetched.', payload);
+//     } catch (e) {
+//         handleErrorResponse(res, e, 'There was an error getting all of the reviews...');
+//     }
+// });
 
 router.get('/filter', async function(req, res, next) {
     const review_id = req.query.review_id;

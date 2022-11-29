@@ -19,7 +19,7 @@ export const __dirname = dirname(__filename);
 
 dotenv.config();
 
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://www.devdeck.me'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://mapable-info442.web.app/'];
 var app = express();
 
 app.use(logger('dev'));
@@ -50,7 +50,6 @@ FirebaseHandler.initFirebaseApp();
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(sessions({
     secret: 'efaelirgerlfherlkufhaekhfkuh',
-    saveUninitialized: true,
     cookie: {
         secure: false,
         sameSite: "lax",

@@ -11,6 +11,8 @@ var router = express.Router();
 router.get('/heartbeat', async (req, res, next) => {
     try {
         const session = req.session;
+
+        console.log(session);
       
         if (!checkUserLoggedIn) {   // If there's a cookie with no info, then it's expired
             const error = new Error('User not logged in...');
@@ -121,6 +123,11 @@ router.post('/signup', async function(req, res, next) {
 router.post('/logout', function(req, res, next) {
     handleUserSessionEnd(req);
     handleSuccessResponse(res, 'User successfully logged out.');
+});
+
+router.get('/test', function(req, res, next) {
+    console.log(req.session);
+    res.send('hello world');
 });
 
 const encryptPassword = async (plaintext, rounds) => await bcrypt.hashSync(plaintext, await bcrypt.genSalt(rounds));

@@ -14,7 +14,9 @@ export function ReviewForm(props) {
   const [reviewText, setReviewText] = useState('');
   const [isLoading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
     try {
       let payload;
 
@@ -22,6 +24,9 @@ export function ReviewForm(props) {
         username: credentials.username,
         blurb: reviewText
       };
+
+      console.log(formType);
+      console.log(base);
 
       switch (formType) {
         case ReviewTypes.BUILDING:
@@ -34,9 +39,11 @@ export function ReviewForm(props) {
           break;
       }
 
+      console.log(payload);
       if (!payload) {
         throw new Error('Null payload?');
       }
+      
     } catch (e) {
       throw new Error('Something went wrong with posting a review... ' + e);
     }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import ReviewService from '../services/ReviewService';
 import { ReviewCard } from './ReviewCard';
@@ -8,16 +9,16 @@ export function ReviewList(props) {
     const locationID = props.locationID;
     const reviewType = props.reviewType;
 
-    const [reviewsPayload, setReviewsPayload] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
+    const [reviewCards, setReviewCards] = useState([]);
+    const [sliceState, setSliceState] = useState();
 
     const loadData = async () => {
         try {
             const payload = await ReviewService.findBuildingReviews({
                 location_id: locationID
             });
-            console.log(`payload: ${payload}`);
-            setReviewsPayload(payload);
+            buildReviewCards(payload);
 
             setLoaded(true);
         } catch (e) {
@@ -26,7 +27,11 @@ export function ReviewList(props) {
     }
 
     const buildReviewCards = (payload) => {
-        return payload.map((review, index) => {
+        const sortedPayload = payload.sort((a, b) => {
+            return a.timestamp < b.timestamp;
+        });
+
+        const cards = sortedPayload.map((review, index) => {
             return (
                 <div className="m-auto">
                     <ReviewCard
@@ -35,7 +40,12 @@ export function ReviewList(props) {
                     />
                 </div>
             )
-        })
+        });
+
+        setReviewCards(cards);
+        setSliceState(cards.slice(0,3));
+
+        return cards;
     }
     
     useEffect(() => {
@@ -50,11 +60,18 @@ export function ReviewList(props) {
         <div>
             <h3><strong>Reviews:</strong></h3>
             <div>
+                <div>
                 {
                     !isLoaded
                     ? 'Loading...'
-                    : buildReviewCards(reviewsPayload)
+                    : sliceState
                 }
+                </div>
+                <Button // @TODO: Handle the toggle thing
+                    onClick={() => setSliceState((prev) => (prev.length == 3) ? reviewCards : reviewCards.slice(0,3))}
+                >
+                    Load More Reviews 
+                </Button>
             </div>
             <div>
                 <ReviewForm 
