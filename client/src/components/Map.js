@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
+import LocationService from '../services/LocationService';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
 
@@ -8,6 +9,9 @@ const ZOOM_THRESHOLD = 17 // zoom threshold for accessibility points
 
 export default function Map(props) {
     const locationsPayload = props.locationsPayload;
+    const handleSetBuildingInfoOpen = props.handleSetBuildingInfoOpen;
+    const handleSetBuildingInfo = props.handleSetBuildingInfo;
+
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(-122.30808827297321);
@@ -53,6 +57,7 @@ export default function Map(props) {
             let long = locationsPayload[i]['longitude']
 
             el.addEventListener('click', buildingInfoHandler)
+            el.id = locationsPayload[i].id
 
             new mapboxgl.Marker(el).setLngLat([lat, long]).addTo(map.current)
         }
@@ -95,9 +100,17 @@ export default function Map(props) {
         }
     }
 
-    function buildingInfoHandler(e) {
-        console.log("building clicked")
-        // TODO: add building info component functionality here
+    async function buildingInfoHandler(e) {
+        const refID = e.currentTarget.id;
+
+        // Load the data
+        const payload = await LocationService.findLocation({
+            location_id: refID
+        });
+
+        // open the modal 
+        handleSetBuildingInfoOpen(refID);
+        handleSetBuildingInfo(payload);
     }
 
     function featureInfoHandler(e) {

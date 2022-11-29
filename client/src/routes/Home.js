@@ -5,11 +5,15 @@ import LocationService from '../services/LocationService';
 import Loading from '../components/Loading';
 import Map from "../components/Map";
 import HeaderBar from '../components/HeaderBar';
+import BuildingInfo from '../components/BuildingInfo';
 
 export default function Home() {
     const [reload, setReload] = useState(1);
     const [isLoaded, setLoaded] = useState(false);
     const [locationsData, setLocationsData] = useState([]);
+
+    const [isBuildingInfoOpen, setBuildingInfoOpen] = useState(false);
+    const [buildingInfo, setBuildingInfo] = useState();
 
     const loadAllData = async () => {
         try {
@@ -47,8 +51,23 @@ export default function Home() {
                         </header>
                         <main>
                             <div>
+                                <div>
+                                    {
+                                        (isBuildingInfoOpen)
+                                        ? 
+                                        <BuildingInfo
+                                            buildingInfo={buildingInfo}
+                                            isBuildingInfoOpen={isBuildingInfoOpen}
+                                        />
+                                        :
+                                        <></>
+                                    }
+                                    
+                                </div>
                                 <Map 
                                     locationsPayload={locationsData}
+                                    handleSetBuildingInfoOpen={setBuildingInfoOpen}
+                                    handleSetBuildingInfo={setBuildingInfo}
                                 />
                             </div>
 
