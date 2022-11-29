@@ -30,6 +30,7 @@ code {
 }
 
 .accessibility-marker {
+  background-image: url('accessibility-marker.png');
   background-size: cover;
   width: 30px;
   height: 30px;
@@ -160,4 +161,9 @@ a{
   height: rem;
   float: right;
   display: right;
+}
+
+.feature-info-window {
+  background-color: white;
+  z-index: 1;
 }

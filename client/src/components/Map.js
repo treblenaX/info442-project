@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import ViewAccessibilityFeature from './AccessibilityFeature';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
@@ -21,7 +22,7 @@ export default function Map(props) {
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: 'mapbox://styles/mapbox/streets-v11',
+            style: 'mapbox://styles/mapbox/dark-v11',
             center: [lng, lat],
             zoom: zoom
         });
@@ -76,6 +77,8 @@ export default function Map(props) {
         let currZoom = map.current.getZoom();
         if(currZoom >= ZOOM_THRESHOLD) { // only allow new markers at zoom threshold
             if(!(checkMarker(e))){ // if marker already exists, do not create new one
+                let coords = e.lngLat;
+                flyTo(coords)
                 let newMarker = document.createElement('div');
                 newMarker.classList.add('accessibility-marker');
 
@@ -84,7 +87,9 @@ export default function Map(props) {
                 new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current);
             }
         } else {
-            // TODO: add some sort of error message
+            if(!(checkMarker(e))) {
+                toast.error('You need to be zoomed in to add an accessibility feature!');
+            }
             return
         }
     }
@@ -93,6 +98,14 @@ export default function Map(props) {
     // else returns false
     function checkMarker(e) {
         return e.originalEvent.target.classList.contains('accessibility-marker') || e.originalEvent.target.classList.contains('marker');
+    }
+
+    // helper function that flys to center of event on map
+    function flyTo(coords) {
+        map.current.flyTo({     // center map on new marker
+            center: coords,
+            zoom: 18
+        })
     }
 
     function zoomHandler() {
@@ -110,14 +123,17 @@ export default function Map(props) {
     }
 
     function buildingInfoHandler(e) {
+        flyTo(e.target.lngLat)
         console.log("building clicked")
         console.log(e.currentTarget.id) // to get id
         // TODO: add building info component functionality here
     }
 
     function featureInfoHandler(e) {
+        flyTo(e.target.lngLat)
         console.log("feature clicked")
         console.log(e.currentTarget.id)
+        ViewAccessibilityFeature();
     }
 
     return (
