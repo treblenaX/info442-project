@@ -30,12 +30,23 @@ code {
 }
 
 .accessibility-marker {
-  background-image: url('accessibility-marker.png');
   background-size: cover;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border-radius: 20%;
   cursor: pointer;
+}
+
+.elevator {
+  background-image: url('elevator.jpg');
+}
+
+.ramp {
+  background-image: url('ramp.jpg');
+}
+
+.automatic-door {
+  background-image: url('automatic-door.jpg');
 }
 
 .mapboxgl-popup {

@@ -57,7 +57,8 @@ export default function Map(props) {
 
         for (let i = 0; i < Object.keys(featuresPayload).length; i++) {     // iterate through all features
             let fa = document.createElement('div');
-            fa.className = 'accessibility-marker';
+            fa.classList.add(featuresPayload[i].type);
+            fa.classList.add('accessibility-marker');
 
             let lat = featuresPayload[i]['latitude'];
             let long = featuresPayload[i]['longitude'];
@@ -76,7 +77,7 @@ export default function Map(props) {
         if(currZoom >= ZOOM_THRESHOLD) { // only allow new markers at zoom threshold
             if(!(checkMarker(e))){ // if marker already exists, do not create new one
                 let newMarker = document.createElement('div');
-                newMarker.className = 'accessibility-marker';
+                newMarker.classList.add('accessibility-marker');
 
                 newMarker.addEventListener('click', featureInfoHandler)
 
