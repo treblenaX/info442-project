@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Button, Form, Input } from "reactstrap";
+import { Button, Form, Input } from 'react-bootstrap';
 
 
 export default function ReviewForm() {
   const [reviews, setReviews] = useState("");
-  const onChange = (e: any) => {
+  const onChange = (e) => {
     setReviews(e.target.value);
   };
-  const onSubmit = (e: any) => {
+  const onSubmit = (e) => {
     console.log("Form Submitted");
   };
 
