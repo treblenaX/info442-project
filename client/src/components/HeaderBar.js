@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { CredentialsContext } from '../contexts/CredentialsContext';
 import LoginService from '../services/LoginService';
 import { toast } from 'react-toastify';
+import '../styles/HeaderBar.css';
 
 export default function HeaderBar(props) { //Main bar containing logo, info popup, and user icon/picture
     const isHome = props.isHome;
@@ -25,7 +26,7 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
     }, [])
 
     return(
-        <Navbar expand={false} variant="dark">
+        <Navbar className="header-bar" expand={false} variant="dark">
             {
                 (isHome)
                 ?
@@ -35,7 +36,7 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
                     style={{
                         color: '#EDFAFD',
                     }}
-                ><i class="bi bi-info-circle-fill header-button"></i></Button>
+                ><i className="bi bi-info-circle-fill header-button"></i></Button>
                 :
                 <div className="m-auto"></div>
             }

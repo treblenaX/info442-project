@@ -1,0 +1,25 @@
+.modal-backdrop {
+    background-color: var(--off-black);
+}
+
+.modal-content {
+    background-color: var(--main-app-color);
+}
+
+.modal-text {
+    color: var(--off-white);
+}
+
+.top-modal {
+    display: flex;
+}
+
+.top-modal-item {
+    flex: 1 1 0px;
+}
+
+.top-modal-rating-icon {
+    background-color: var(--off-white);
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}

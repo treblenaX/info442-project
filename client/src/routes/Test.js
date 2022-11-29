@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import React from "react";
-import { AddReviewForm } from './ReviewForm';
-import { ReviewList } from './Review';
+import { AddReviewForm } from '../components/ReviewForm';
+import { ReviewList } from '../components/ReviewList';
+import '../styles/App.css';
 
 
 function Test(props) {
-
-
   const [reviews, setReviews] = useState(props.reviews)
 
   const addReview = (reviewDescription) => {
-
-    console.log("addReview says: " + reviewDescription);
 
     let newReview = {
       id: reviews.length + 1,
@@ -26,9 +23,6 @@ function Test(props) {
     updatedReviewArray.push(newReview);
 
     setReviews(updatedReviewArray)
-    console.log("updatedReviewArray says: " + JSON.stringify(updatedReviewArray))
-    console.log("reviews says: " + JSON.stringify(reviews))
-    console.log("props.reviews says: " + props.reviews)
   }
 
   return (

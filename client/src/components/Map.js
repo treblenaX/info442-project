@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import LocationService from '../services/LocationService';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '../styles/index.css';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
 
@@ -9,8 +10,7 @@ const ZOOM_THRESHOLD = 17 // zoom threshold for accessibility points
 
 export default function Map(props) {
     const locationsPayload = props.locationsPayload;
-    const handleSetBuildingInfoOpen = props.handleSetBuildingInfoOpen;
-    const handleSetBuildingInfo = props.handleSetBuildingInfo;
+    const setBuildingInfoID = props.setBuildingInfoID;
 
     const mapContainer = useRef(null);
     const map = useRef(null);
@@ -101,16 +101,10 @@ export default function Map(props) {
     }
 
     async function buildingInfoHandler(e) {
-        const refID = e.currentTarget.id;
+        const locationID = e.currentTarget.id;
 
-        // Load the data
-        const payload = await LocationService.findLocation({
-            location_id: refID
-        });
-
-        // open the modal 
-        handleSetBuildingInfoOpen(refID);
-        handleSetBuildingInfo(payload);
+        // open the modal
+        setBuildingInfoID(locationID);
     }
 
     function featureInfoHandler(e) {
@@ -118,7 +112,7 @@ export default function Map(props) {
     }
 
     return (
-        <div class="map-section">
+        <div className="map-section">
             <div ref={mapContainer} className="map-container" />
         </div>
     );

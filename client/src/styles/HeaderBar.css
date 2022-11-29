@@ -1,0 +1,7 @@
+.header-bar {
+    background-color: var(--main-app-color);
+}
+
+.header-text {
+    color: var(--off-white);
+}

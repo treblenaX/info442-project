@@ -12,8 +12,7 @@ export default function Home() {
     const [isLoaded, setLoaded] = useState(false);
     const [locationsData, setLocationsData] = useState([]);
 
-    const [isBuildingInfoOpen, setBuildingInfoOpen] = useState(false);
-    const [buildingInfo, setBuildingInfo] = useState();
+    const [buildingInfoID, setBuildingInfoID] = useState();
 
     const loadAllData = async () => {
         try {
@@ -53,11 +52,10 @@ export default function Home() {
                             <div>
                                 <div>
                                     {
-                                        (isBuildingInfoOpen)
+                                        (buildingInfoID)
                                         ? 
                                         <BuildingInfo
-                                            buildingInfo={buildingInfo}
-                                            isBuildingInfoOpen={isBuildingInfoOpen}
+                                            locationID={buildingInfoID}
                                         />
                                         :
                                         <></>
@@ -66,11 +64,9 @@ export default function Home() {
                                 </div>
                                 <Map 
                                     locationsPayload={locationsData}
-                                    handleSetBuildingInfoOpen={setBuildingInfoOpen}
-                                    handleSetBuildingInfo={setBuildingInfo}
+                                    setBuildingInfoID={setBuildingInfoID}
                                 />
                             </div>
-
                         </main>
                     </div>
             }
