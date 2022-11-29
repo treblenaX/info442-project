@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import ReviewService from '../services/ReviewService';
 import { ReviewCard } from './ReviewCard';
+import { ReviewForm } from './ReviewForm';
 
 export function ReviewList(props) {
     const locationID = props.locationID;
+    const reviewType = props.reviewType;
 
     const [reviewsPayload, setReviewsPayload] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
@@ -53,6 +55,12 @@ export function ReviewList(props) {
                     ? 'Loading...'
                     : buildReviewCards(reviewsPayload)
                 }
+            </div>
+            <div>
+                <ReviewForm 
+                    locationID={locationID}
+                    formType={reviewType}
+                />
             </div>
         </div>
     )

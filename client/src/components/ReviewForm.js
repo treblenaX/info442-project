@@ -1,36 +1,78 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import React from "react";
+import { Button, Form } from 'react-bootstrap';
+import ReviewService from '../services/ReviewService';
+import { ReviewTypes } from '../constants/ReviewTypes';
+import { CredentialsContext } from '../contexts/CredentialsContext';
 
 
-export function AddReviewForm(props) {
-  const [reviews, setReviews] = useState("");
+export function ReviewForm(props) {
+  const locationID = props.locationID;
+  const formType = props.formType;
 
-  const handleChange = (e) => {
-    let newReview = e.target.value;
-    setReviews(newReview);
-  };
+  const { credentials } = useContext(CredentialsContext);
+  const [reviewText, setReviewText] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    try {
+      let payload;
 
-    props.addReviewCallback(reviews)
-    console.log("Inputted: " + reviews)
-    setReviews("");
+      const base = {
+        username: credentials.username,
+        blurb: reviewText
+      };
+
+      switch (formType) {
+        case ReviewTypes.BUILDING:
+          payload = await ReviewService.postReview({
+            ...base,
+            location_id: locationID,
+          });
+          break;
+        case ReviewTypes.FEATURE:
+          break;
+      }
+
+      if (!payload) {
+        throw new Error('Null payload?');
+      }
+    } catch (e) {
+      throw new Error('Something went wrong with posting a review... ' + e);
+    }
   }
 
-  console.log("rendering with", reviews)
-
   return (
-          <form onSubmit={handleSubmit}>
-            <input
-              className="reviews-form"
-              placeholder="enter your review"
-              value={reviews}
-              onChange={handleChange}
+    <div>
+      {
+        (!credentials) // not logged in
+        ?
+        <div>
+          <em>Please log in to post a review...</em>
+        </div>
+        :
+        <Form
+          onSubmit={handleSubmit}
+        >
+          <Form.Group 
+            className="mb-3"
+            controlId="review_text_area"
+          >
+            <Form.Label>Write a review...</Form.Label>
+            <Form.Control 
+              as="textarea" 
+              rows={3} 
+              onChange={(e) => setReviewText(e.target.value)}
             />
-            <button type="submit" style={{ background: "Green" }}>
-              Submit
-            </button>
-          </form>
+          </Form.Group>
+          <Button 
+            type="submit" 
+            variant="primary"
+          >
+            { isLoading ? 'Submitting...' : 'Submit'}
+          </Button>
+        </Form>
+      }
+    </div>
   );
 }

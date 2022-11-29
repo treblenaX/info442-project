@@ -71,8 +71,7 @@ router.post('/', requireAuthorization, async function(req, res, next) {
         const reviewDoc = new Review({
             location_id: body.location_id,
             username: body.username,
-            blurb: body.blurb,
-            picture_urls: body.picture_urls
+            blurb: body.blurb
         }).toObject();
 
         const docID = await FirebaseHandler.addDoc(REVIEWS_COLLECTION_NAME, reviewDoc);

@@ -6,7 +6,7 @@ export class Review extends Model {
             location_id: '',
             username: '',
             blurb: '',
-            picture_urls: []
+            timestamp: Date.now()
         };
     }
 

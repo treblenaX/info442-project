@@ -24,4 +24,25 @@ export default class ReviewService {
             throw new Error(responsePayload.error);
         }
     }
+
+    static postReview = async (request) => {  
+        const response = await fetch(
+            REVIEW_BASEPOINT + '/',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        // Notice the 'await' function here
+        const responsePayload = await response.json();
+
+        // Notice the error handling
+        if (!responsePayload.error) {
+            return responsePayload.payload;
+        } else {
+            throw new Error(responsePayload.error);
+        }
+    }
 }

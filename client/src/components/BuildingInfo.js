@@ -4,6 +4,7 @@ import { Modal } from 'react-bootstrap';
 import { ReviewList } from './ReviewList';
 import LocationService from '../services/LocationService';
 import { toast } from 'react-toastify';
+import { ReviewTypes } from '../constants/ReviewTypes';
 
 export default function BuildingInfo(props) {
     const locationID = props.locationID;
@@ -67,7 +68,10 @@ export default function BuildingInfo(props) {
                             }
                         </h3>
                         <div>
-                            <ReviewList locationID={locationID} />
+                            <ReviewList 
+                                locationID={locationID} 
+                                reviewType={ReviewTypes.BUILDING}
+                            />
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
