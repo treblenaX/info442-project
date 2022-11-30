@@ -28,7 +28,7 @@ router.get('/filter', async function(req, res, next) {
 
         let payload;
         
-        if (locationID) {  // Get the single rating document
+        if (featureID) {  // Get the single rating document
             payload = await FirebaseHandler.getSingleDoc(FEATURES_COLLECTION_NAME, featureID.trim());
         } else {    // ERROR - No query details provided
             const error = new Error('The queries are invalid.');
@@ -36,9 +36,9 @@ router.get('/filter', async function(req, res, next) {
             throw error;
         } 
 
-        handleSuccessResponse(res, 'Location data successfully fetched.', payload);
+        handleSuccessResponse(res, 'Feature data successfully fetched.', payload);
     } catch (e) {
-        handleErrorResponse(res, e, 'There was an error getting the location...');
+        handleErrorResponse(res, e, 'There was an error getting the feature...');
     }
 });
 

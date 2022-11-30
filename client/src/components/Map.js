@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import ViewAccessibilityFeature from './AccessibilityFeature';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '../styles/index.css';
@@ -14,6 +13,8 @@ export default function Map(props) {
     const setBuildingInfoID = props.setBuildingInfoID;
 
     const featuresPayload = props.featuresPayload;
+    const setFeatureInfoID = props.setFeatureInfoID
+
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(-122.30808827297321);
@@ -132,14 +133,13 @@ export default function Map(props) {
 
         // open the modal
         setBuildingInfoID(locationID);
-        flyTo(e.target.lngLat);
     }
 
-    function featureInfoHandler(e) {
-        flyTo(e.target.lngLat)
-        console.log("feature clicked")
-        console.log(e.currentTarget.id)
-        ViewAccessibilityFeature();
+    async function featureInfoHandler(e) {
+        const featureID = e.currentTarget.id;
+
+        // open the modal
+        setFeatureInfoID(featureID);
     }
 
     return (

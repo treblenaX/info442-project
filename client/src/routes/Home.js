@@ -7,6 +7,7 @@ import Loading from '../components/Loading';
 import Map from "../components/Map";
 import HeaderBar from '../components/HeaderBar';
 import BuildingInfo from '../components/BuildingInfo';
+import FeatureInfo from '../components/FeatureInfo';
 
 export default function Home() {
     const [reload, setReload] = useState(1);
@@ -15,6 +16,7 @@ export default function Home() {
     const [featuresData, setFeaturesData] = useState([]);
 
     const [buildingInfoID, setBuildingInfoID] = useState();
+    const [featureInfoID, setFeatureInfoID] = useState();
 
     const loadAllData = async () => {
         try {
@@ -64,10 +66,19 @@ export default function Home() {
                                         :
                                         <></>
                                     }
-                                    
+                                    {
+                                        (featureInfoID)
+                                        ?
+                                        <FeatureInfo
+                                            featureID={featureInfoID}
+                                        />
+                                        :
+                                        <></>
+                                    }
                                 </div>
                                 <Map 
                                     setBuildingInfoID={setBuildingInfoID}
+                                    setFeatureInfoID={setFeatureInfoID}
                                     locationsPayload={locationsData} 
                                     featuresPayload={featuresData}
                                 />
