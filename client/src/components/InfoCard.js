@@ -24,7 +24,7 @@ export default function InfoCard() {
         </Popover.Header>
         <Popover.Body>
           <div className='pop-up'>
-            <p> Each face icon represent a building's average rating out of 5.The red upset face is an average rating of 1 to 2. The yellow neutral face face mean that a building has received an average rating of 3. Lastly, the green happy face means that a building has received an average of 4 to 5.</p>
+            <p> Each face icon represent a building's average rating out of 3.The red upset face is an average rating of 1 (or poor). The yellow neutral face face mean that a building has received an average rating of 2 (or okay). Lastly, the green happy face means that a building has received an average of 3 (or great).</p>
             
             <p></p>
             
