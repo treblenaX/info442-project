@@ -9,6 +9,7 @@ import { LocationType } from '../../constants/location_type.js';
 import FirebaseHandler from '../../handlers/firebase_handlers.js';
 import { requireAuthorization } from '../../middleware/auth.js';
 import { BuildingRatingType } from '../../constants/building_rating_type.js';
+import RatingHandler from '../../handlers/rating_handlers.js';
 
 var router = express.Router();
 
@@ -17,28 +18,7 @@ router.get('/', async function(req, res, next) {
         const payload = await FirebaseHandler.getDocCollection(LOCATIONS_COLLECTION_NAME);
 
         // Calculate all of the average ratign for all locations
-        const locationPayload = payload.map((location) => {
-            const totalRaters = location.hi_rating_users.length + location.med_rating_users.length + location.low_rating_users.length;
-            const highRaters = location.hi_rating_users.length * 5;
-            const medRaters = location.med_rating_users.length * 3;
-            const lowRaters = location.low_rating_users.length * 1;
-    
-            const maxValue = totalRaters * 5;
-            const averageValue = (highRaters + medRaters + lowRaters) / maxValue;
-            const averageRating = averageValue * 5;
-    
-            delete location.hi_rating_users;
-            delete location.med_rating_users;
-            delete location.low_rating_users;
-    
-            const modifiedLocation = {
-                average_rating: (!averageRating) ? 0 : averageRating,
-                ...location
-            }
-
-            return modifiedLocation;
-        });
-
+        const locationPayload = payload.map((location) => RatingHandler.processBuildingRating(location));
 
         handleSuccessResponse(res, 'All location data successfully fetched.', locationPayload);
     } catch (e) {
@@ -56,17 +36,19 @@ router.get('/filter', async function(req, res, next) {
             throw error;
         }
 
-        let payload;
+        let locationPayload;
         
         if (locationID) {  // Get the single rating document
-            payload = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, locationID.trim());
+            const location = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, locationID.trim());
+
+            locationPayload = RatingHandler.processBuildingRating(location);
         } else {    // ERROR - No query details provided
             const error = new Error('The queries are invalid.');
             error.code = 400;
             throw error;
         } 
 
-        handleSuccessResponse(res, 'Location data successfully fetched.', payload);
+        handleSuccessResponse(res, 'Location data successfully fetched.', locationPayload);
     } catch (e) {
         handleErrorResponse(res, e, 'There was an error getting the location...');
     }
