@@ -16,25 +16,31 @@ router.get('/', async function(req, res, next) {
     try {
         const payload = await FirebaseHandler.getDocCollection(LOCATIONS_COLLECTION_NAME);
 
-        const totalRaters = payload.hi_rating_users.length + payload.med_rating_users.length + payload.low_rating_users.length;
-        const highRaters = payload.hi_rating_users.length * 5;
-        const medRaters = payload.med_rating_users.length * 3;
-        const lowRaters = payload.low_rating_users.length * 1;
+        // Calculate all of the average ratign for all locations
+        const locationPayload = payload.map((location) => {
+            const totalRaters = location.hi_rating_users.length + location.med_rating_users.length + location.low_rating_users.length;
+            const highRaters = location.hi_rating_users.length * 5;
+            const medRaters = location.med_rating_users.length * 3;
+            const lowRaters = location.low_rating_users.length * 1;
+    
+            const maxValue = totalRaters * 5;
+            const averageValue = (highRaters + medRaters + lowRaters) / maxValue;
+            const averageRating = averageValue * 5;
+    
+            delete location.hi_rating_users;
+            delete location.med_rating_users;
+            delete location.low_rating_users;
+    
+            const modifiedLocation = {
+                average_rating: (!averageRating) ? 0 : averageRating,
+                ...location
+            }
 
-        const maxValue = totalRaters * 5;
-        const averageValue = (highRaters + medRaters + lowRaters) / maxValue;
-        const averageRating = averageValue * 5;
+            return modifiedLocation;
+        });
 
-        delete payload.hi_rating_users;
-        delete payload.med_rating_users;
-        delete payload.low_rating_users;
 
-        const location = {
-            average_rating: averageRating,
-            ...location
-        }
-
-        handleSuccessResponse(res, 'All location data successfully fetched.', payload);
+        handleSuccessResponse(res, 'All location data successfully fetched.', locationPayload);
     } catch (e) {
         handleErrorResponse(res, e, 'There was an error getting all of the locations...');
     }
