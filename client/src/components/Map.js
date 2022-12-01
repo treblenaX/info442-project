@@ -13,7 +13,9 @@ export default function Map(props) {
     const setBuildingInfoID = props.setBuildingInfoID;
 
     const featuresPayload = props.featuresPayload;
-    const setFeatureInfoID = props.setFeatureInfoID
+    const setFeatureInfoID = props.setFeatureInfoID;
+    const setNewFeatureCoords = props.setNewFeatureCoords;
+    const setNewFeature = props.setNewFeature;
 
     const mapContainer = useRef(null);
     const map = useRef(null);
@@ -79,12 +81,15 @@ export default function Map(props) {
         zoomHandler()
     });
 
-    function addMarker(e) {
+    async function addMarker(e) {
         let currZoom = map.current.getZoom();
         if(currZoom >= ZOOM_THRESHOLD) { // only allow new markers at zoom threshold
             if(!(checkMarker(e))){ // if marker already exists, do not create new one
                 let coords = e.lngLat;
                 flyTo(coords)
+
+                await newFeatureHandler(coords);
+
                 let newMarker = document.createElement('div');
                 newMarker.classList.add('accessibility-marker');
 
@@ -140,6 +145,11 @@ export default function Map(props) {
 
         // open the modal
         setFeatureInfoID(featureID);
+    }
+
+    async function newFeatureHandler(coords) {
+        setNewFeatureCoords(coords);
+        setNewFeature(true)
     }
 
     return (

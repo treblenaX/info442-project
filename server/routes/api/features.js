@@ -54,8 +54,7 @@ router.post('/', requireAuthorization, async function(req, res, next) {
         const featureDoc = new Feature({
             latitude: '',
             longitude: '',
-            rating: 0.0,
-            type: '',
+            rating: 0,
             picture_urls: [] // @TODO handle image shit
         }).toObject();
 

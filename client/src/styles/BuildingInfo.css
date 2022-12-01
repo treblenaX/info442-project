@@ -23,3 +23,15 @@
     margin-left: 0.5rem;
     margin-right: 0.5rem;
 }
+
+/* feature style stuff */
+.feature-img {
+    width: 200px;
+    height: 200px;
+    background-color: white;
+    margin-bottom: 15px;
+}
+
+.rating-container {
+    display: flex;
+}

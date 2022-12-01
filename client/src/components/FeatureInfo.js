@@ -1,12 +1,19 @@
 import '../styles/BuildingInfo.css';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import FeatureService from '../services/FeatureService';
 import { Button, Modal } from 'react-bootstrap';
+import { CredentialsContext } from '../contexts/CredentialsContext';
 
 export default function AccessibilityFeatureInfo(props) {
+    const { credentials } = useContext(CredentialsContext);
 
     const featureID = props.featureID;
+    const featureNameMap = {
+        "elevator": "Elevator",
+        "ramp": "Ramp",
+        "automatic-door": "Automatic Door"
+    }
 
     const [isLoaded, setLoaded] = useState(false);
     const [featurePayload, setFeaturePayload] = useState();
@@ -26,6 +33,34 @@ export default function AccessibilityFeatureInfo(props) {
         }
     }
 
+    function rating(change) {
+        if(!credentials) {
+            toast.error("You must be logged in to rate features!");
+        } else {
+            let newRating = featurePayload.rating + change;
+            console.log(newRating)
+
+            try {
+                let payload;
+
+                const base = {
+                    rating: newRating
+                };
+
+                payload = FeatureService.postReview({
+                    ...base,
+                    feature_id: featureID,
+                });
+
+                if (!payload) {
+                    throw new Error('Null payload?');
+                }
+            } catch (e) {
+                throw new Error('Something went wrong with posting a review... ' + e);
+            }
+        }
+    }
+
     useEffect(() => {
         loadData()
             .catch((e) => {
@@ -42,7 +77,7 @@ export default function AccessibilityFeatureInfo(props) {
                             <strong>
                                 {
                                     isLoaded
-                                    ? featurePayload.type
+                                    ? featureNameMap[featurePayload.type]
                                     : 'Loading...'
                                 }
                             </strong>
@@ -50,13 +85,21 @@ export default function AccessibilityFeatureInfo(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="modal-text">
-                    <h3>
-                        {
-                            isLoaded
-                            ? `Rating: ${featurePayload.rating}`
-                            : 'Loading...'
-                        }
-                    </h3>
+                    <div class="feature-img">
+                        <img></img>
+                    </div>
+                    <div class="rating-container">
+                        <Button onClick={() => rating(-1)}>-</Button>
+                        <h3 className="bold">
+                            {
+                                isLoaded
+                                ? featurePayload.rating
+                                : 'Loading...'
+                            }
+                        </h3>
+                        <Button onClick={() => rating(1)}>+</Button>
+                    </div>
+                    
                 </Modal.Body>
                 <Modal.Footer>
                     <Button 

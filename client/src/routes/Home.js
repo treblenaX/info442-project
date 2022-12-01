@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import LocationService from '../services/LocationService';
 import FeatureService from '../services/FeatureService';
-
 import Loading from '../components/Loading';
 import Map from "../components/Map";
 import HeaderBar from '../components/HeaderBar';
 import BuildingInfo from '../components/BuildingInfo';
 import FeatureInfo from '../components/FeatureInfo';
+import NewFeature from '../components/NewFeature';
 
 export default function Home() {
     const [reload, setReload] = useState(1);
@@ -17,6 +17,8 @@ export default function Home() {
 
     const [buildingInfoID, setBuildingInfoID] = useState();
     const [featureInfoID, setFeatureInfoID] = useState();
+    const [newFeatureCoords, setNewFeatureCoords] = useState();
+    const [newFeature, setNewFeature] = useState();
 
     const loadAllData = async () => {
         try {
@@ -75,11 +77,18 @@ export default function Home() {
                                         :
                                         <></>
                                     }
+                                    <NewFeature
+                                        coords={newFeatureCoords}
+                                        active={newFeature}
+                                        setActive={setNewFeature}
+                                    />
                                 </div>
-                                <Map 
+                                <Map
                                     setBuildingInfoID={setBuildingInfoID}
                                     setFeatureInfoID={setFeatureInfoID}
-                                    locationsPayload={locationsData} 
+                                    setNewFeatureCoords={setNewFeatureCoords}
+                                    setNewFeature={setNewFeature}
+                                    locationsPayload={locationsData}
                                     featuresPayload={featuresData}
                                 />
                             </div>
