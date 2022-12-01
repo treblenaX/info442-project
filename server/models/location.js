@@ -9,8 +9,9 @@ export class Location extends Model {
             latitude: '',
             longitude: '',
             name: '',
-            average_rating: 0.0,
-            picture_urls: []
+            hi_rating_users: [],
+            med_rating_users: [],
+            low_rating_users: []
         };
     }
 }
