@@ -7,14 +7,14 @@ export default function InfoCard() {
     <Popover id="popover-basic">
         <Popover.Header as="h3">
 
-        Face Rating Icons
+        <strong>Face Rating Icons</strong>
         <img
               className="d-block w-100"
               src={require('../styles/FaceRatingIcons.png')}
               alt="Face Rating Icon Diagram"
             />
         <p></p>
-        Accessibility Feature Icons
+        <strong>Accessibility Feature Icons</strong>
           <img
               className="d-block w-100"
               src={require('../styles/AccessibilityIcons.png')}
@@ -28,7 +28,7 @@ export default function InfoCard() {
             
             <p></p>
             
-            <p>These icons will help you find accessibility features more easily during your commute. The doors icon represents automatic doors. The "E" icon represents elevators. The wheel chair person represenets ramps. ".</p>
+            <p>These icons will help you find accessibility features more easily during your commute. The doors icon represents automatic doors. The "E" icon represents elevators. The wheel chair person represenets ramps.</p>
           </div>  
         </Popover.Body>
       </Popover>
