@@ -10,7 +10,7 @@ import { ImageType } from '../../constants/image_type.js';
 
 var router = express.Router();
 
-router.post('/', requireAuthorization, StorageHandler.upload().single('file'), async (req, res) => {
+router.post('/', StorageHandler.upload().single('file'), async (req, res) => {
     try {
         const body = req.body;
     
@@ -59,17 +59,8 @@ router.post('/', requireAuthorization, StorageHandler.upload().single('file'), a
             }
         }
     
-        // const image = FirebaseHandler.getSingleDoc(IMAGES_COLLECTION_NAME, filename.trim());
-    
-        // // Error guard - image already exists
-        // if (image) {
-        //     // Delete the image in uploads
-        //     unlinkSync(filename.join(__dirname, 'uploads', image.filename));
+        const image = FirebaseHandler.getSingleDoc(IMAGES_COLLECTION_NAME, filename.trim());
 
-        //     // Delete the image in the DB
-        //     FirebaseHandler.deleteDoc(IMAGES_COLLECTION_NAME, image.id);
-        // }
-    
         const imageDoc = new Image({
             filename: filename,
             image_type: imageType,
@@ -108,7 +99,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/filter', async function(req, res, next) {
+router.get('/metadata/filter', async function(req, res, next) {
     const imageType = req.query.image_type;
     const refID = req.query.refID;
 

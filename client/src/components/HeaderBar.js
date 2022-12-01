@@ -14,9 +14,8 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
     const checkLogInStatus = async () => {
         try {
             const payload = await LoginService.heartbeat();
-            if (payload) {
-                setCredentials(payload);
-            }
+
+            setCredentials((payload) ? payload : null);
         } catch (e) {
             toast.error('' + e)
         }
@@ -49,14 +48,18 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
             <Navbar.Toggle className="m-auto"/>
             <Navbar.Collapse className="m-auto">
                 <Nav>
+                    <hr className="rounded"></hr>
                     {
                         (credentials)
                         ?   // Signed in
                         <>
-                            <Nav.Link>
+                            <Nav.Link
+                                className="m-auto"
+                            >
                                 { processFullName(credentials) }
                             </Nav.Link>
                             <Nav.Link 
+                                className="m-auto"
                                 href="/signout"
                             >
                                 <h1>Sign Out</h1>
@@ -65,6 +68,7 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
                         :   // Need to sign in
                         <>
                             <Nav.Link 
+                                className="m-auto"
                                 href="/login"
                             >
                                 <h1>Log In</h1>

@@ -132,7 +132,7 @@ export default function Map(props) {
 
         // open the modal
         setBuildingInfoID(locationID);
-        flyTo(e.target.lngLat);
+        // flyTo(e.target.lngLat);
     }
 
     function featureInfoHandler(e) {

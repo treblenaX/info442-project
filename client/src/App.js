@@ -26,7 +26,9 @@ function App() {
           <Route exact path='/signout' element={<Signout />} />
         </Routes>
       </CredentialsContext.Provider>
-      <ToastContainer />
+      <ToastContainer 
+        position="bottom-right"
+      />
     </div>
   )
 }

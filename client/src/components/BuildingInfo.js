@@ -1,25 +1,54 @@
 import '../styles/BuildingInfo.css';
 import React, { useEffect, useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 import { ReviewList } from './ReviewList';
 import LocationService from '../services/LocationService';
 import { toast } from 'react-toastify';
 import { ReviewTypes } from '../constants/ReviewTypes';
+import ImageService from '../services/ImageService';
+import { ImageType } from '../constants/ImageTypes';
 
 export default function BuildingInfo(props) {
     const locationID = props.locationID;
 
     const [isLoaded, setLoaded] = useState(false);
     const [buildingPayload, setBuildingPayload] = useState();
+    const [buildingImageUrls, setBuildingImageUrls] = useState();
 
-    const handleClose = () => setLoaded(false);
+    const handleClose = () => {
+        setBuildingPayload();
+        setLoaded(false);
+    }
+
+    // @TODO take out for prod
+    const [imageFile, setImageFile] = useState();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const payload = await ImageService.uploadImage({
+                refID: locationID,
+                image_type: ImageType.LOCATION
+            }, imageFile);
+
+            toast.info('Image has been successfully uploaded!');
+        } catch (e) {
+            throw new Error('Cannot upload image: ' + e);
+        }
+    }
 
     const loadData = async () => {
         try {
-            const payload = await LocationService.findLocation({
+            const locationPayload = await LocationService.findLocation({
                 location_id: locationID
             });
-            setBuildingPayload(payload);
+            setBuildingPayload(locationPayload);
+
+            const imagesPayload = await ImageService.findImages({
+                refID: locationID,
+                image_type: 'LOCATION'
+            });
+            setBuildingImageUrls(imagesPayload);
 
             setLoaded(true);
         } catch (e) {
@@ -54,13 +83,39 @@ export default function BuildingInfo(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="modal-text">
-                    <h3>
+                    <p>
                         {
                             isLoaded
                             ? <em>{buildingPayload.address}</em>
                             : 'Loading...'
                         }
-                    </h3>
+                    </p>
+                    <div>
+                        <div className="building-info-image">
+                            {
+                                (!buildingImageUrls) 
+                                ? <img src={require('../images/blank_image.jpg')} />
+                                : <img src={buildingImageUrls[0]} />
+                            }
+                        </div>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group controlId="formFileLg" className="mb-3">
+                                <Form.Label>@TODO take out - image upload for building</Form.Label>
+                                <Form.Control 
+                                    type="file" 
+                                    size="sm" 
+                                    onChange={(e) => setImageFile(e.target.files[0])}
+                                />
+                            </Form.Group>
+                            <Button 
+                                type="submit" 
+                                variant="primary"
+                            >
+                                Submit
+                            </Button>
+                        </Form>
+                    </div>
+                    <hr/>
                     <h3>
                         {
                             isLoaded
@@ -68,6 +123,7 @@ export default function BuildingInfo(props) {
                             : 'Loading...'
                         }
                     </h3>
+                    <hr/>
                     <div>
                         <ReviewList 
                             locationID={locationID} 
