@@ -10,14 +10,14 @@ export default function InfoCard() {
         Face Rating Icons
         <img
               className="d-block w-100"
-              src={require('../styles/FaceRatingIcons.png')}
+              src={require('../images/FaceRatingIcons.png')}
               alt="Face Rating Icon Diagram"
             />
         <p></p>
         Accessibility Feature Icons
           <img
               className="d-block w-100"
-              src={require('../styles/AccessibilityIcons.png')}
+              src={require('../images/AccessibilityIcons.png')}
               alt="Accessibility Features Icon Diagram"
             />
             

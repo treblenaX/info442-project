@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { ReviewTypes } from '../constants/ReviewTypes';
 import ImageService from '../services/ImageService';
 import { ImageType } from '../constants/ImageTypes';
+import RatingForm from './RatingForm';
 
 export default function BuildingInfo(props) {
     const locationID = props.locationID;
@@ -116,13 +117,16 @@ export default function BuildingInfo(props) {
                         </Form>
                     </div>
                     <hr/>
-                    <h3>
+                    <div>
                         {
                             isLoaded
-                            ? `Rating: ${buildingPayload.average_rating}`
-                            : 'Loading...'
+                            ?
+                            <RatingForm 
+                                averageRating={buildingPayload.average_rating}
+                            />
+                            : <p>Loading...</p>
                         }
-                    </h3>
+                    </div>
                     <hr/>
                     <div>
                         <ReviewList 
