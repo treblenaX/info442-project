@@ -1,11 +1,51 @@
-export default InfoCard;
+import Button from 'react-bootstrap/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
 
-function InfoCard() { //info card that pops up when user click on info button
-    <div className="info-card">
-        <img src="img_avatar.png" alt="info-card" style="width:100%"></img>
-        <div className="container">
-            <h4><b>More Details</b></h4>
-            <p>Above is a diagram about our icons on our map. Each icon represents a buildings average rating out of 5 stars for its accessibility features. The red upset face means that a building has received an average rating of 1 to 2 stars. The yellow neutral face face mean that a building has received an average rating of 3 stars. Lastly, the green happy face means that a building has received an average of 4 to 5 stars.</p>
-        </div>
-    </div>
+export default function InfoCard() {
+    const infoCard = (
+    <Popover id="popover-basic">
+        <Popover.Header as="h3">
+
+        Face Rating Icons
+        <img
+              className="d-block w-100"
+              src={require('../styles/FaceRatingIcons.png')}
+              alt="Face Rating Icon Diagram"
+            />
+        <p></p>
+        Accessibility Feature Icons
+          <img
+              className="d-block w-100"
+              src={require('../styles/AccessibilityIcons.png')}
+              alt="Accessibility Features Icon Diagram"
+            />
+            
+        </Popover.Header>
+        <Popover.Body>
+          <div className='pop-up'>
+            <p> Each face icon represent a building's average rating out of 5.The red upset face is an average rating of 1 to 2. The yellow neutral face face mean that a building has received an average rating of 3. Lastly, the green happy face means that a building has received an average of 4 to 5.</p>
+            
+            <p></p>
+            
+            <p>These icons will help you find accessibility features more easily during your commute. The doors icon represents automatic doors. The "E" icon represents elevators. The wheel chair person represenets ramps. ".</p>
+          </div>  
+        </Popover.Body>
+      </Popover>
+    );
+
+  return (
+    <OverlayTrigger trigger="click" placement="bottom" overlay={infoCard}>
+        <Button 
+        variant="outlined"
+        className="m-auto clickable-button-look" 
+        style={{
+            color: '#EDFAFD',
+        }}
+    ><i className="bi bi-info-circle-fill header-button"></i></Button>
+    </OverlayTrigger>
+  );
+
+  
 }
+

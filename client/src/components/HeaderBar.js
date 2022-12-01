@@ -5,6 +5,7 @@ import { CredentialsContext } from '../contexts/CredentialsContext';
 import LoginService from '../services/LoginService';
 import { toast } from 'react-toastify';
 import '../styles/HeaderBar.css';
+import InfoCard, { InfoCardPopUp } from './InfoCard'; 
 
 export default function HeaderBar(props) { //Main bar containing logo, info popup, and user icon/picture
     const isHome = props.isHome;
@@ -30,13 +31,7 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
             {
                 (isHome)
                 ?
-                <Button 
-                    variant="outlined"
-                    className="m-auto clickable-button-look" 
-                    style={{
-                        color: '#EDFAFD',
-                    }}
-                ><i className="bi bi-info-circle-fill header-button"></i></Button>
+                <InfoCard />
                 :
                 <div className="m-auto"></div>
             }
