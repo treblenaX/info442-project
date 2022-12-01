@@ -23,6 +23,9 @@ export default function Login() {
         try {
             e.preventDefault();
 
+            // ERROR - user is missing inputs
+            if (!username || !password) throw new Error('The form is incomplete.');
+
             setLoggingIn(true);
     
             const form = {
@@ -109,7 +112,7 @@ export default function Login() {
                                 type="submit" 
                                 variant="primary"
                             >
-                                { isLoggingIn ? 'Logging in...' : 'Log In'}
+                                { isLoggingIn ? 'Logging in...' : 'Log in'}
                             </Button>
                         </Form>
                         <div className="page-item mt-4">

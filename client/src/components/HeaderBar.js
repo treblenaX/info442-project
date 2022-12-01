@@ -68,6 +68,12 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
                             >
                                 <h1>Log In</h1>
                             </Nav.Link>
+                            <Nav.Link 
+                                className="m-auto"
+                                href="/signup"
+                            >
+                                <h1>Sign Up</h1>
+                            </Nav.Link>
                         </>
                     }
                 </Nav>
