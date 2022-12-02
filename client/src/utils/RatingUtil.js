@@ -24,7 +24,7 @@ export default class RatingUtil {
     static chooseAverageRatingFace(buildingPayload) {
         const averageRating = buildingPayload.average_rating;
 
-        if (averageRating < 2) {
+        if (averageRating <= 2) {
             return <img className="m-auto" src={require('../images/upset.png')} />;
         } else if (averageRating < 4) {
             return <img src={require('../images/neutral.png')} />;

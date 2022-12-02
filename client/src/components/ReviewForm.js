@@ -9,7 +9,7 @@ import { CredentialsContext } from '../contexts/CredentialsContext';
 export function ReviewForm(props) {
   const locationID = props.locationID;
   const formType = props.formType;
-  const setListLoading = props.setListLoading;
+  const handleSetListLoading = props.handleSetListLoading;
 
   const { credentials } = useContext(CredentialsContext);
   const [reviewText, setReviewText] = useState('');
@@ -18,6 +18,8 @@ export function ReviewForm(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    setLoading(true);
+
     try {
       let payload;
 
@@ -41,7 +43,8 @@ export function ReviewForm(props) {
       }
 
       // Refresh the display list
-      setListLoading(false);
+      handleSetListLoading(true);
+      setLoading(false);
     } catch (e) {
       throw new Error('Something went wrong with posting a review... ' + e);
     }
@@ -63,8 +66,8 @@ export function ReviewForm(props) {
             className="mb-3"
             controlId="review_text_area"
           >
-            <Form.Label>
-              Write a review...
+            <Form.Label className="center-text">
+              Can you tell us about your accessibility experience at this building?
             </Form.Label>
             <Form.Control 
               as="textarea" 

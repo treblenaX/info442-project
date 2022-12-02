@@ -62,14 +62,20 @@ export default function BuildingRating(props) {
     
     return (
         <div className="m-auto">
-            <h3 className="m-auto center-text">
-                <strong>{`Rating: ${averageRating}`}</strong>
-            </h3>
+            {/* <h3 className="m-auto center-text">
+                <strong>{`Average Rating Value: ${averageRating}`}</strong>
+            </h3> */}
             {
                 (!credentials)
-                ? <></>
+                ? 
+                <p className="center-text">
+                    <em>Please log in to rate the accessibility of this building.</em>
+                </p>
                 :
                 <div className="m-auto center-text">
+                    <div>
+                        <p>How would you rate the overall accessibility of this building?</p>
+                    </div>
                     <ButtonGroup className="m-auto radio-container">
                         <ToggleButton
                             key='happy'

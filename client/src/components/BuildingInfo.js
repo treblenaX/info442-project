@@ -155,10 +155,13 @@ export default function BuildingInfo(props) {
                         <ReviewList 
                             locationID={locationID} 
                             reviewType={ReviewTypes.BUILDING}
+                            handleRefreshBuildingInfoModal={refreshBuildingInfoModal}
                         />
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer
+                    className='modal-footer'
+                >
                     <Button 
                         variant="secondary"
                         onClick={handleClose}
