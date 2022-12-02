@@ -1,5 +1,18 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, doc, getDoc, query, where, deleteDoc } from "firebase/firestore";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  getDocs,
+  doc, 
+  getDoc,
+  query, 
+  where, 
+  deleteDoc, 
+  updateDoc,
+  arrayUnion,
+  arrayRemove
+} from "firebase/firestore";
 
 export default class FirebaseHandler {
   static app = null;
@@ -120,6 +133,34 @@ export default class FirebaseHandler {
       return docRef.id;
     } catch (e) {
       throw new Error('Error deleting document: ' + e); 
+    }
+  }
+
+  static async addValueToDocArray(collectionName, documentID, attributeName, attributeValue) {
+    try {
+      const docRef = doc(FirebaseHandler.db, collectionName, documentID);
+
+      let updatedObject = {};
+      updatedObject[attributeName] = arrayUnion(attributeValue);
+
+      await updateDoc(docRef, updatedObject);
+      return true;
+    } catch (e) {
+      throw new Error('Error updating document: ' + e);
+    }
+  }
+
+  static async removeValueToDocArray(collectionName, documentID, attributeName, attributeValue) {
+    try {
+      const docRef = doc(FirebaseHandler.db, collectionName, documentID);
+
+      let updatedObject = {};
+      updatedObject[attributeName] = arrayRemove(attributeValue);
+
+      await updateDoc(docRef, updatedObject);
+      return true;
+    } catch (e) {
+      throw new Error('Error updating document: ' + e);
     }
   }
 }

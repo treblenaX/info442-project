@@ -163,3 +163,7 @@ a{
   background-color: white;
   z-index: 1;
 }
+
+.pop-up p{
+  color: black;
+}

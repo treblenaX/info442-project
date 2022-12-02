@@ -11,7 +11,7 @@ import NewFeature from '../components/NewFeature';
 
 export default function Home() {
     const [reload, setReload] = useState(1);
-    const [isLoaded, setLoaded] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const [locationsData, setLocationsData] = useState([]);
     const [featuresData, setFeaturesData] = useState([]);
 
@@ -19,6 +19,8 @@ export default function Home() {
     const [featureInfoID, setFeatureInfoID] = useState();
     const [newFeatureCoords, setNewFeatureCoords] = useState();
     const [newFeature, setNewFeature] = useState();
+    const [showBuildingInfo, setShowBuildingInfo] = useState(false);
+    const [buildingInfoRefresh, setBuildingInfoRefresh] = useState(false);
 
     const loadAllData = async () => {
         try {
@@ -28,7 +30,7 @@ export default function Home() {
             setLocationsData(locationsPayload);
             setFeaturesData(featuresPayload);
 
-            setLoaded(true);
+            setLoading(false);
         } catch (err) {
             throw new Error('Cannnot load Home data: ' + err);
         }
@@ -47,7 +49,7 @@ export default function Home() {
     return (
         <div>
             {
-                !isLoaded   // If the data is not loaded, then display the loading thing
+                isLoading   // If the data is not loaded, then display the loading thing
                     ? <Loading />
                     : 
                     <div>
@@ -63,7 +65,11 @@ export default function Home() {
                                         (buildingInfoID)
                                         ? 
                                         <BuildingInfo
+                                            handleSetShowBuildingInfo={setShowBuildingInfo}
+                                            handleSetBuildingInfoRefresh={setBuildingInfoRefresh}
                                             locationID={buildingInfoID}
+                                            showBuildingInfo={showBuildingInfo}
+                                            buildingInfoRefresh={buildingInfoRefresh}
                                         />
                                         :
                                         <></>
@@ -89,6 +95,9 @@ export default function Home() {
                                     setNewFeatureCoords={setNewFeatureCoords}
                                     setNewFeature={setNewFeature}
                                     locationsPayload={locationsData}
+                                    handleSetBuildingInfoID={setBuildingInfoID}
+                                    handleSetShowBuildingInfo={setShowBuildingInfo}
+                                    handleSetBuildingInfoRefresh={setBuildingInfoRefresh}
                                     featuresPayload={featuresData}
                                 />
                             </div>

@@ -9,6 +9,7 @@ import { CredentialsContext } from '../contexts/CredentialsContext';
 export function ReviewForm(props) {
   const locationID = props.locationID;
   const formType = props.formType;
+  const setListLoading = props.setListLoading;
 
   const { credentials } = useContext(CredentialsContext);
   const [reviewText, setReviewText] = useState('');
@@ -25,9 +26,6 @@ export function ReviewForm(props) {
         blurb: reviewText
       };
 
-      console.log(formType);
-      console.log(base);
-
       switch (formType) {
         case ReviewTypes.BUILDING:
           payload = await ReviewService.postReview({
@@ -38,12 +36,12 @@ export function ReviewForm(props) {
         case ReviewTypes.FEATURE:
           break;
       }
-
-      console.log(payload);
       if (!payload) {
         throw new Error('Null payload?');
       }
-      
+
+      // Refresh the display list
+      setListLoading(false);
     } catch (e) {
       throw new Error('Something went wrong with posting a review... ' + e);
     }
@@ -54,7 +52,7 @@ export function ReviewForm(props) {
       {
         (!credentials) // not logged in
         ?
-        <div>
+        <div className="center-text">
           <em>Please log in to post a review...</em>
         </div>
         :
@@ -65,7 +63,9 @@ export function ReviewForm(props) {
             className="mb-3"
             controlId="review_text_area"
           >
-            <Form.Label>Write a review...</Form.Label>
+            <Form.Label>
+              Write a review...
+            </Form.Label>
             <Form.Control 
               as="textarea" 
               rows={3} 

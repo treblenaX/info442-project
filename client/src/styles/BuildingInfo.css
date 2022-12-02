@@ -19,7 +19,6 @@
 }
 
 .top-modal-rating-icon {
-    background-color: var(--off-white);
     margin-left: 0.5rem;
     margin-right: 0.5rem;
 }
@@ -34,4 +33,29 @@
 
 .rating-container {
     display: flex;
+}
+
+.top-modal-rating-icon img {
+    width: 100%;
+    height: 100%;
+    max-width: 8rem;
+    max-height: 8rem;
+}
+
+
+.building-info-image {
+    position: relative;
+}
+  
+.building-info-image::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+.building-info-image img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

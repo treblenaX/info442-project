@@ -11,6 +11,7 @@ export default function Signout() {
         try {
             await LoginService.logout();
 
+            toast.info('User has successfully logged out.');
             navigate('/');
         } catch (e) {
             toast.error('' + e);

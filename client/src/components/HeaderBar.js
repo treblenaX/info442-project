@@ -5,6 +5,7 @@ import { CredentialsContext } from '../contexts/CredentialsContext';
 import LoginService from '../services/LoginService';
 import { toast } from 'react-toastify';
 import '../styles/HeaderBar.css';
+import InfoCard, { InfoCardPopUp } from './InfoCard'; 
 
 export default function HeaderBar(props) { //Main bar containing logo, info popup, and user icon/picture
     const isHome = props.isHome;
@@ -14,9 +15,8 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
     const checkLogInStatus = async () => {
         try {
             const payload = await LoginService.heartbeat();
-            if (payload) {
-                setCredentials(payload);
-            }
+
+            setCredentials((payload) ? payload : null);
         } catch (e) {
             toast.error('' + e)
         }
@@ -30,13 +30,7 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
             {
                 (isHome)
                 ?
-                <Button 
-                    variant="outlined"
-                    className="m-auto clickable-button-look" 
-                    style={{
-                        color: '#EDFAFD',
-                    }}
-                ><i className="bi bi-info-circle-fill header-button"></i></Button>
+                <InfoCard />
                 :
                 <div className="m-auto"></div>
             }
@@ -49,14 +43,18 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
             <Navbar.Toggle className="m-auto"/>
             <Navbar.Collapse className="m-auto">
                 <Nav>
+                    <hr className="rounded"></hr>
                     {
                         (credentials)
                         ?   // Signed in
                         <>
-                            <Nav.Link>
+                            <Nav.Link
+                                className="m-auto"
+                            >
                                 { processFullName(credentials) }
                             </Nav.Link>
                             <Nav.Link 
+                                className="m-auto"
                                 href="/signout"
                             >
                                 <h1>Sign Out</h1>
@@ -65,9 +63,16 @@ export default function HeaderBar(props) { //Main bar containing logo, info popu
                         :   // Need to sign in
                         <>
                             <Nav.Link 
+                                className="m-auto"
                                 href="/login"
                             >
                                 <h1>Log In</h1>
+                            </Nav.Link>
+                            <Nav.Link 
+                                className="m-auto"
+                                href="/signup"
+                            >
+                                <h1>Sign Up</h1>
                             </Nav.Link>
                         </>
                     }

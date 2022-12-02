@@ -1,73 +1,157 @@
 import '../styles/BuildingInfo.css';
 import React, { useEffect, useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { ReviewList } from './ReviewList';
 import LocationService from '../services/LocationService';
 import { toast } from 'react-toastify';
 import { ReviewTypes } from '../constants/ReviewTypes';
+import ImageService from '../services/ImageService';
+import { ImageType } from '../constants/ImageTypes';
+import RatingForm from './RatingForm';
+import Loading from './Loading';
+import RatingUtil from '../utils/RatingUtil';
 
 export default function BuildingInfo(props) {
+    const handleSetShowBuildingInfo = props.handleSetShowBuildingInfo;
+    const handleSetBuildingInfoRefresh = props.handleSetBuildingInfoRefresh;
+    const buildingInfoRefresh = props.buildingInfoRefresh;
     const locationID = props.locationID;
+    const showBuildingInfo = props.showBuildingInfo;
 
-    const [isLoaded, setLoaded] = useState(false);
     const [buildingPayload, setBuildingPayload] = useState();
+    const [buildingImageUrls, setBuildingImageUrls] = useState();
 
-    const handleClose = () => setLoaded(false);
+    const handleClose = () => {
+        handleSetShowBuildingInfo(false);
+    }
+
+    // @TODO take out for prod
+    const [imageFile, setImageFile] = useState();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const payload = await ImageService.uploadImage({
+                refID: locationID,
+                image_type: ImageType.LOCATION
+            }, imageFile);
+
+            toast.info('Image has been successfully uploaded!');
+        } catch (e) {
+            throw new Error('Cannot upload image: ' + e);
+        }
+    }
+
+    const refreshBuildingInfoModal = () => handleSetBuildingInfoRefresh(true);
 
     const loadData = async () => {
         try {
-            const payload = await LocationService.findLocation({
+            const locationPayload = await LocationService.findLocation({
                 location_id: locationID
             });
-            setBuildingPayload(payload);
+            setBuildingPayload(locationPayload);
 
-            setLoaded(true);
+            const imagesPayload = await ImageService.findImages({
+                refID: locationID,
+                image_type: 'LOCATION'
+            });
+            setBuildingImageUrls(imagesPayload);
+
+            handleSetBuildingInfoRefresh(false);
+            toast.dismiss();
         } catch (e) {
             throw new Error('Cannot load review data: ' + e);
         }
     }
 
     useEffect(() => {
-        loadData()
+        if (buildingInfoRefresh) loadData()
             .catch((e) => {
                 toast.error('' + e.message);
             });
-    }, [locationID])
+    }, [buildingInfoRefresh])
 
     return (
         <div>
-            <Modal show={isLoaded} onHide={handleClose}>
+            <Modal show={showBuildingInfo && !buildingInfoRefresh} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title className="top-modal modal-text">
-                        <h1 className="top-modal-item">
-                            <strong>
+                    <Modal.Title 
+                        className="top-modal modal-text center-text"
+                        as={Row}
+                        style={{
+                            width: '100%'
+                        }}
+                    >
+                        <Col className='m-auto'>
+                            <h1 className="top-modal-item">
+                                <strong>
+                                    {
+                                        buildingInfoRefresh
+                                        ? 'Loading...'
+                                        : buildingPayload.name
+                                    }
+                                </strong>
+                            </h1>
+                        </Col>
+                        <Col className='m-auto'>
+                            <div className="m-auto top-modal-item top-modal-rating-icon">
                                 {
-                                    isLoaded
-                                    ? buildingPayload.name
-                                    : 'Loading...'
+                                    buildingInfoRefresh
+                                    ? 'Loading...'
+                                    : RatingUtil.chooseAverageRatingFace(buildingPayload)
                                 }
-                            </strong>
-                        </h1>
-                        <div className="top-modal-item top-modal-rating-icon">
-                            Insert Rating Face here
-                        </div>
+                            </div>
+                        </Col>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="modal-text">
-                    <h3>
+                    <p>
                         {
-                            isLoaded
-                            ? <em>{buildingPayload.address}</em>
-                            : 'Loading...'
+                            buildingInfoRefresh
+                            ? 'Loading...'
+                            : <em>{buildingPayload.address}</em>
                         }
-                    </h3>
-                    <h3>
+                    </p>
+                    <div>
+                        <div className="building-info-image">
+                            {
+                                (!buildingImageUrls || buildingImageUrls.length == 0) 
+                                ? <img src={require('../images/blank_image.jpg')} />
+                                : <img src={buildingImageUrls[0]} />
+                            }
+                        </div>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group controlId="formFileLg" className="mb-3">
+                                <Form.Label>@TODO take out - image upload for building</Form.Label>
+                                <Form.Control 
+                                    type="file" 
+                                    size="sm" 
+                                    onChange={(e) => setImageFile(e.target.files[0])}
+                                />
+                            </Form.Group>
+                            <Button 
+                                type="submit" 
+                                variant="primary"
+                            >
+                                Submit
+                            </Button>
+                        </Form>
+                    </div>
+                    <hr/>
+                    <div >
                         {
-                            isLoaded
-                            ? `Rating: ${buildingPayload.average_rating}`
-                            : 'Loading...'
+                            buildingInfoRefresh
+                            ? <p>Loading...</p>
+                            :
+                            <RatingForm 
+                                averageRating={buildingPayload.average_rating}
+                                locationID={locationID}
+                                buildingPayload={buildingPayload}
+                                handleRefreshBuildingInfoModal={refreshBuildingInfoModal}
+                            />
                         }
-                    </h3>
+                    </div>
+                    <hr/>
                     <div>
                         <ReviewList 
                             locationID={locationID} 

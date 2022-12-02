@@ -1,17 +1,26 @@
 import express from 'express';
 import { Location } from '../../models/location.js';
 import { LOCATIONS_COLLECTION_NAME } from '../../constants/collections.js';
-import { handleErrorResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
+import { 
+    handleErrorResponse, 
+    handleSuccessResponse 
+} from '../../handlers/response_handlers.js';
 import { LocationType } from '../../constants/location_type.js';
 import FirebaseHandler from '../../handlers/firebase_handlers.js';
 import { requireAuthorization } from '../../middleware/auth.js';
+import { BuildingRatingType } from '../../constants/building_rating_type.js';
+import RatingHandler from '../../handlers/rating_handlers.js';
 
 var router = express.Router();
 
 router.get('/', async function(req, res, next) {
     try {
         const payload = await FirebaseHandler.getDocCollection(LOCATIONS_COLLECTION_NAME);
-        handleSuccessResponse(res, 'All location data successfully fetched.', payload);
+
+        // Calculate all of the average ratign for all locations
+        const locationPayload = payload.map((location) => RatingHandler.processBuildingRating(location));
+
+        handleSuccessResponse(res, 'All location data successfully fetched.', locationPayload);
     } catch (e) {
         handleErrorResponse(res, e, 'There was an error getting all of the locations...');
     }
@@ -27,17 +36,19 @@ router.get('/filter', async function(req, res, next) {
             throw error;
         }
 
-        let payload;
+        let locationPayload;
         
         if (locationID) {  // Get the single rating document
-            payload = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, locationID.trim());
+            const location = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, locationID.trim());
+
+            locationPayload = RatingHandler.processBuildingRating(location);
         } else {    // ERROR - No query details provided
             const error = new Error('The queries are invalid.');
             error.code = 400;
             throw error;
         } 
 
-        handleSuccessResponse(res, 'Location data successfully fetched.', payload);
+        handleSuccessResponse(res, 'Location data successfully fetched.', locationPayload);
     } catch (e) {
         handleErrorResponse(res, e, 'There was an error getting the location...');
     }
@@ -74,6 +85,108 @@ router.post('/', requireAuthorization, async function(req, res, next) {
         handleSuccessResponse(res, 'New location information successfully saved!', { id: docID });
     } catch (e) {
         handleErrorResponse(res, e, 'There was an error adding a location...');
+    }
+});
+
+router.post('/rate', requireAuthorization, async function(req, res, next) {
+    const body = req.body;
+
+    try {
+        // ERROR - no body query
+        if (!body) {
+            const error = new Error('No queries were provided.');
+            error.code = 400;
+            throw error;
+        }
+
+        const locationID = body.location_id.trim();
+        const username = body.username.trim();
+        const ratingType = BuildingRatingType[body.rating_type];
+
+        let buildingRatingType;
+
+        switch (ratingType) {
+            case BuildingRatingType.HIGH:
+                buildingRatingType = 'hi_rating_users';
+                break;
+            case BuildingRatingType.MED:
+                buildingRatingType = 'med_rating_users';
+                break;
+            case BuildingRatingType.LOW:
+                buildingRatingType = 'low_rating_users';
+                break;
+        }
+    
+        // ERROR - user has already liked the location
+        const locationDoc = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, locationID);
+
+        if (locationDoc[buildingRatingType].includes(username)) {
+            const error = new Error('User has already rated the location.');
+            error.code = 400;
+            throw error;
+        }
+
+        await FirebaseHandler.addValueToDocArray(
+            LOCATIONS_COLLECTION_NAME,
+            locationID,
+            buildingRatingType,
+            username
+        );
+        
+        handleSuccessResponse(res, 'Rating on the location successfully submitted.');
+    } catch (e) {
+        handleErrorResponse(res, e, 'There was an error liking a location...');
+    }
+});
+
+router.post('/unrate', requireAuthorization, async function(req, res, next) {
+    const body = req.body;
+
+    try {
+        // ERROR - no body query
+        if (!body) {
+            const error = new Error('No queries were provided.');
+            error.code = 400;
+            throw error;
+        }
+
+        const locationID = body.location_id.trim();
+        const username = body.username.trim();
+        const ratingType = BuildingRatingType[body.rating_type];
+
+        let buildingRatingType;
+
+        switch (ratingType) {
+            case BuildingRatingType.HIGH:
+                buildingRatingType = 'hi_rating_users';
+                break;
+            case BuildingRatingType.MED:
+                buildingRatingType = 'med_rating_users';
+                break;
+            case BuildingRatingType.LOW:
+                buildingRatingType = 'low_rating_users';
+                break;
+        }
+    
+        // ERROR - user has already unliked it
+        const locationDoc = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, locationID);
+        
+        if (!locationDoc[buildingRatingType].includes(username)) {
+            const error = new Error('User has already unrated the location.');
+            error.code = 400;
+            throw error;
+        }
+
+        await FirebaseHandler.removeValueToDocArray(
+            LOCATIONS_COLLECTION_NAME,
+            locationID,
+            buildingRatingType,
+            username
+        );
+        
+        handleSuccessResponse(res, 'Unrating on the location successfully submitted.');
+    } catch (e) {
+        handleErrorResponse(res, e, 'There was an error liking a location...');
     }
 });
 
