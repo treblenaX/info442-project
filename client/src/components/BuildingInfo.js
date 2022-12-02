@@ -1,6 +1,6 @@
 import '../styles/BuildingInfo.css';
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { ReviewList } from './ReviewList';
 import LocationService from '../services/LocationService';
 import { toast } from 'react-toastify';
@@ -9,6 +9,7 @@ import ImageService from '../services/ImageService';
 import { ImageType } from '../constants/ImageTypes';
 import RatingForm from './RatingForm';
 import Loading from './Loading';
+import RatingUtil from '../utils/RatingUtil';
 
 export default function BuildingInfo(props) {
     const handleSetShowBuildingInfo = props.handleSetShowBuildingInfo;
@@ -58,6 +59,7 @@ export default function BuildingInfo(props) {
             setBuildingImageUrls(imagesPayload);
 
             handleSetBuildingInfoRefresh(false);
+            toast.dismiss();
         } catch (e) {
             throw new Error('Cannot load review data: ' + e);
         }
@@ -74,19 +76,33 @@ export default function BuildingInfo(props) {
         <div>
             <Modal show={showBuildingInfo && !buildingInfoRefresh} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title className="top-modal modal-text">
-                        <h1 className="top-modal-item">
-                            <strong>
+                    <Modal.Title 
+                        className="top-modal modal-text center-text"
+                        as={Row}
+                        style={{
+                            width: '100%'
+                        }}
+                    >
+                        <Col className='m-auto'>
+                            <h1 className="top-modal-item">
+                                <strong>
+                                    {
+                                        buildingInfoRefresh
+                                        ? 'Loading...'
+                                        : buildingPayload.name
+                                    }
+                                </strong>
+                            </h1>
+                        </Col>
+                        <Col className='m-auto'>
+                            <div className="m-auto top-modal-item top-modal-rating-icon">
                                 {
                                     buildingInfoRefresh
                                     ? 'Loading...'
-                                    : buildingPayload.name
+                                    : RatingUtil.chooseAverageRatingFace(buildingPayload)
                                 }
-                            </strong>
-                        </h1>
-                        <div className="top-modal-item top-modal-rating-icon">
-                            Insert Rating Face here
-                        </div>
+                            </div>
+                        </Col>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="modal-text">

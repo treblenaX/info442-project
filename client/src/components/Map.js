@@ -132,6 +132,8 @@ export default function Map(props) {
     async function buildingInfoHandler(e) {
         const locationID = e.currentTarget.id;
 
+        toast.info('Loading building info... Please wait.');
+
         // open the modal
         handleSetBuildingInfoID(locationID);
         // refresh the building info data

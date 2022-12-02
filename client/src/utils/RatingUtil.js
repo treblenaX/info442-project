@@ -20,4 +20,17 @@ export default class RatingUtil {
         
         return null;
     }
+
+    static chooseAverageRatingFace(buildingPayload) {
+        const averageRating = buildingPayload.average_rating;
+        console.log(averageRating);
+
+        if (averageRating < 2) {
+            return <img className="m-auto" src={require('../images/upset.png')} />;
+        } else if (averageRating < 4) {
+            return <img src={require('../images/neutral.png')} />;
+        }
+
+        return <img className="m-auto" src={require('../images/happy.png')} />;
+    }
 }
