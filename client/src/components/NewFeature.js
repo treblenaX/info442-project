@@ -1,14 +1,16 @@
 import '../styles/BuildingInfo.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Button, Modal, DropdownButton, Dropdown } from 'react-bootstrap';
 import FeatureService from '../services/FeatureService';
+import { CredentialsContext } from '../contexts/CredentialsContext';
 import { toast } from 'react-toastify';
 
 export default function NewFeature(props) {
 
+    const { credentials } = useContext(CredentialsContext);
     const [isLoaded, setLoaded] = useState();
     const [coords, setCoords] = useState();
-    const [featureType, setFeatureType] = useState();
+    const [featureType, setFeatureType] = useState("");
     const [dropdownVal, setDropdownVal] = useState("Select a feature type");
 
     useEffect(() => {
@@ -37,6 +39,16 @@ export default function NewFeature(props) {
         e.preventDefault();
 
         try {
+            if(!(credentials)) {
+                toast.error("You must be logged in to post a new feature!")
+                return
+            }
+
+            if(featureType === "") {    // checks if type is empty
+                toast.error("You must select a feature type")
+                return
+            }
+
             let payload;
 
             const base = {
@@ -54,7 +66,7 @@ export default function NewFeature(props) {
             }
             handleClose();
         } catch (e) {
-          throw new Error('Something went wrong with posting a new feature... ' + e);
+            throw new Error('Something went wrong with posting a new feature... ' + e);
         }
     }
 
