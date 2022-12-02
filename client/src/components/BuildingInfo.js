@@ -11,9 +11,11 @@ import RatingForm from './RatingForm';
 import Loading from './Loading';
 
 export default function BuildingInfo(props) {
+    const handleSetShowBuildingInfo = props.handleSetShowBuildingInfo;
+    const handleSetBuildingInfoRefresh = props.handleSetBuildingInfoRefresh;
+    const buildingInfoRefresh = props.buildingInfoRefresh;
     const locationID = props.locationID;
     const showBuildingInfo = props.showBuildingInfo;
-    const handleSetShowBuildingInfo = props.handleSetShowBuildingInfo;
 
     const [isLoading, setLoading] = useState(true);
     const [buildingPayload, setBuildingPayload] = useState();
@@ -40,6 +42,8 @@ export default function BuildingInfo(props) {
         }
     }
 
+    const refreshBuildingInfoModal = () => handleSetBuildingInfoRefresh(true);
+
     const loadData = async () => {
         try {
             const locationPayload = await LocationService.findLocation({
@@ -53,28 +57,28 @@ export default function BuildingInfo(props) {
             });
             setBuildingImageUrls(imagesPayload);
 
-            setLoading(false);
+            handleSetBuildingInfoRefresh(false);
         } catch (e) {
             throw new Error('Cannot load review data: ' + e);
         }
     }
 
     useEffect(() => {
-        if (isLoading) loadData()
+        if (buildingInfoRefresh) loadData()
             .catch((e) => {
                 toast.error('' + e.message);
             });
-    }, [isLoading])
+    }, [buildingInfoRefresh])
 
     return (
         <div>
-            <Modal show={showBuildingInfo && !isLoading} onHide={handleClose}>
+            <Modal show={showBuildingInfo && !buildingInfoRefresh} onHide={handleClose}>
                 <Modal.Header>
                     <Modal.Title className="top-modal modal-text">
                         <h1 className="top-modal-item">
                             <strong>
                                 {
-                                    isLoading
+                                    buildingInfoRefresh
                                     ? 'Loading...'
                                     : buildingPayload.name
                                 }
@@ -88,7 +92,7 @@ export default function BuildingInfo(props) {
                 <Modal.Body className="modal-text">
                     <p>
                         {
-                            isLoading
+                            buildingInfoRefresh
                             ? 'Loading...'
                             : <em>{buildingPayload.address}</em>
                         }
@@ -121,14 +125,14 @@ export default function BuildingInfo(props) {
                     <hr/>
                     <div >
                         {
-                            isLoading
+                            buildingInfoRefresh
                             ? <p>Loading...</p>
                             :
                             <RatingForm 
                                 averageRating={buildingPayload.average_rating}
                                 locationID={locationID}
                                 buildingPayload={buildingPayload}
-                                handleSetLoading={setLoading}
+                                handleRefreshBuildingInfoModal={refreshBuildingInfoModal}
                             />
                         }
                     </div>

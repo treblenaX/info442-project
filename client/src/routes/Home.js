@@ -16,6 +16,7 @@ export default function Home() {
 
     const [buildingInfoID, setBuildingInfoID] = useState();
     const [showBuildingInfo, setShowBuildingInfo] = useState(false);
+    const [buildingInfoRefresh, setBuildingInfoRefresh] = useState(false);
 
     const loadAllData = async () => {
         try {
@@ -60,9 +61,11 @@ export default function Home() {
                                         (buildingInfoID)
                                         ? 
                                         <BuildingInfo
+                                            handleSetShowBuildingInfo={setShowBuildingInfo}
+                                            handleSetBuildingInfoRefresh={setBuildingInfoRefresh}
                                             locationID={buildingInfoID}
                                             showBuildingInfo={showBuildingInfo}
-                                            handleSetShowBuildingInfo={setShowBuildingInfo}
+                                            buildingInfoRefresh={buildingInfoRefresh}
                                         />
                                         :
                                         <></>
@@ -72,6 +75,7 @@ export default function Home() {
                                 <Map 
                                     handleSetBuildingInfoID={setBuildingInfoID}
                                     handleSetShowBuildingInfo={setShowBuildingInfo}
+                                    handleSetBuildingInfoRefresh={setBuildingInfoRefresh}
                                     locationsPayload={locationsData} 
                                     featuresPayload={featuresData}
                                 />

@@ -11,7 +11,7 @@ export default function RatingForm(props) {
     const averageRating = props.averageRating;
     const locationID = props.locationID
     const buildingPayload = props.buildingPayload;
-    const handleSetLoading = props.handleSetLoading;
+    const handleRefreshBuildingInfoModal = props.handleRefreshBuildingInfoModal;
 
     const { credentials } = useContext(CredentialsContext);
     const [radioValue, setRadioValue] = useState();
@@ -47,15 +47,13 @@ export default function RatingForm(props) {
 
             // Update the local state
             setRadioValue(value);
-            handleSetLoading(true);
+            handleRefreshBuildingInfoModal(true);
 
             toast.info('Successfully saved rating to the server... Refreshing..');
         } catch (e) {
             toast.error('' + e);
         }
     }
-
-
 
     useEffect(() => {
         // Check to see if the user has voted and select it if they have

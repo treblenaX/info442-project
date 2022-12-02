@@ -12,6 +12,7 @@ const ZOOM_THRESHOLD = 17 // zoom threshold for accessibility points
 export default function Map(props) {
     const handleSetBuildingInfoID = props.handleSetBuildingInfoID;
     const handleSetShowBuildingInfo = props.handleSetShowBuildingInfo;
+    const handleSetBuildingInfoRefresh = props.handleSetBuildingInfoRefresh
     const locationsPayload = props.locationsPayload;
     const featuresPayload = props.featuresPayload;
 
@@ -133,6 +134,9 @@ export default function Map(props) {
 
         // open the modal
         handleSetBuildingInfoID(locationID);
+        // refresh the building info data
+        handleSetBuildingInfoRefresh(true);
+        // show the modal
         handleSetShowBuildingInfo(true);
         // flyTo(e.target.lngLat);
     }
