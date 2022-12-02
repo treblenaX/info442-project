@@ -8,17 +8,19 @@ import { ReviewTypes } from '../constants/ReviewTypes';
 import ImageService from '../services/ImageService';
 import { ImageType } from '../constants/ImageTypes';
 import RatingForm from './RatingForm';
+import Loading from './Loading';
 
 export default function BuildingInfo(props) {
     const locationID = props.locationID;
+    const showBuildingInfo = props.showBuildingInfo;
+    const handleSetShowBuildingInfo = props.handleSetShowBuildingInfo;
 
-    const [isLoaded, setLoaded] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const [buildingPayload, setBuildingPayload] = useState();
     const [buildingImageUrls, setBuildingImageUrls] = useState();
 
     const handleClose = () => {
-        setBuildingPayload();
-        setLoaded(false);
+        handleSetShowBuildingInfo(false);
     }
 
     // @TODO take out for prod
@@ -51,30 +53,30 @@ export default function BuildingInfo(props) {
             });
             setBuildingImageUrls(imagesPayload);
 
-            setLoaded(true);
+            setLoading(false);
         } catch (e) {
             throw new Error('Cannot load review data: ' + e);
         }
     }
 
     useEffect(() => {
-        loadData()
+        if (isLoading) loadData()
             .catch((e) => {
                 toast.error('' + e.message);
             });
-    }, [locationID])
+    }, [isLoading])
 
     return (
         <div>
-            <Modal show={isLoaded} onHide={handleClose}>
+            <Modal show={showBuildingInfo && !isLoading} onHide={handleClose}>
                 <Modal.Header>
                     <Modal.Title className="top-modal modal-text">
                         <h1 className="top-modal-item">
                             <strong>
                                 {
-                                    isLoaded
-                                    ? buildingPayload.name
-                                    : 'Loading...'
+                                    isLoading
+                                    ? 'Loading...'
+                                    : buildingPayload.name
                                 }
                             </strong>
                         </h1>
@@ -86,9 +88,9 @@ export default function BuildingInfo(props) {
                 <Modal.Body className="modal-text">
                     <p>
                         {
-                            isLoaded
-                            ? <em>{buildingPayload.address}</em>
-                            : 'Loading...'
+                            isLoading
+                            ? 'Loading...'
+                            : <em>{buildingPayload.address}</em>
                         }
                     </p>
                     <div>
@@ -117,14 +119,17 @@ export default function BuildingInfo(props) {
                         </Form>
                     </div>
                     <hr/>
-                    <div>
+                    <div >
                         {
-                            isLoaded
-                            ?
+                            isLoading
+                            ? <p>Loading...</p>
+                            :
                             <RatingForm 
                                 averageRating={buildingPayload.average_rating}
+                                locationID={locationID}
+                                buildingPayload={buildingPayload}
+                                handleSetLoading={setLoading}
                             />
-                            : <p>Loading...</p>
                         }
                     </div>
                     <hr/>

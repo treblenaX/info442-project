@@ -10,10 +10,11 @@ mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
 const ZOOM_THRESHOLD = 17 // zoom threshold for accessibility points
 
 export default function Map(props) {
+    const handleSetBuildingInfoID = props.handleSetBuildingInfoID;
+    const handleSetShowBuildingInfo = props.handleSetShowBuildingInfo;
     const locationsPayload = props.locationsPayload;
-    const setBuildingInfoID = props.setBuildingInfoID;
-
     const featuresPayload = props.featuresPayload;
+
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(-122.30808827297321);
@@ -131,7 +132,8 @@ export default function Map(props) {
         const locationID = e.currentTarget.id;
 
         // open the modal
-        setBuildingInfoID(locationID);
+        handleSetBuildingInfoID(locationID);
+        handleSetShowBuildingInfo(true);
         // flyTo(e.target.lngLat);
     }
 

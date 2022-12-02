@@ -88,7 +88,7 @@ router.post('/', requireAuthorization, async function(req, res, next) {
     }
 });
 
-router.post('/rate/', async function(req, res, next) {
+router.post('/rate', requireAuthorization, async function(req, res, next) {
     const body = req.body;
 
     try {
@@ -117,7 +117,7 @@ router.post('/rate/', async function(req, res, next) {
                 break;
         }
     
-        // ERROR - user has already liked it
+        // ERROR - user has already liked the location
         const locationDoc = await FirebaseHandler.getSingleDoc(LOCATIONS_COLLECTION_NAME, locationID);
 
         if (locationDoc[buildingRatingType].includes(username)) {
@@ -139,7 +139,7 @@ router.post('/rate/', async function(req, res, next) {
     }
 });
 
-router.post('/unrate/', async function(req, res, next) {
+router.post('/unrate', requireAuthorization, async function(req, res, next) {
     const body = req.body;
 
     try {
