@@ -48,13 +48,14 @@ router.get('/filter', async function(req, res, next) {
  * 
  * */
 router.post('/', requireAuthorization, async function(req, res, next) {
-    const body = req.body;  
+    const body = req.body;
 
     try {
         const featureDoc = new Feature({
-            latitude: '',
-            longitude: '',
+            latitude: body.latitude,
+            longitude: body.longitude,
             rating: 0,
+            type: body.type,
             picture_urls: [] // @TODO handle image shit
         }).toObject();
 

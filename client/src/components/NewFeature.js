@@ -9,15 +9,23 @@ export default function NewFeature(props) {
     const [isLoaded, setLoaded] = useState();
     const [coords, setCoords] = useState();
     const [featureType, setFeatureType] = useState();
+    const [dropdownVal, setDropdownVal] = useState("Select a feature type");
 
     useEffect(() => {
-        console.log(props.active)
-        setLoaded(props.active);
+        setLoaded(props.active); // set active window state to active
     }, [props.active])
+
+    useEffect(() => {
+        setCoords(props.coords);
+    }, [props.coords])
+
+    const dropdownHandler = (text) => {
+        setDropdownVal(text);
+    }
 
     const handleClose = () => {
         setLoaded(false);
-        props.setActive(false)
+        props.setActive(false) // reset active window state back to false
     }
 
     const onSelect = (e) => {
@@ -32,8 +40,8 @@ export default function NewFeature(props) {
             let payload;
 
             const base = {
-                latitude: coords[0],
-                longitude: coords[1],
+                latitude: coords.lng,
+                longitude: coords.lat,
                 rating: 0
             };
 
@@ -44,6 +52,7 @@ export default function NewFeature(props) {
             if (!payload) {
                 throw new Error('Null payload?');
             }
+            handleClose();
         } catch (e) {
           throw new Error('Something went wrong with posting a new feature... ' + e);
         }
@@ -62,13 +71,10 @@ export default function NewFeature(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="modal-text">
-                    <div>
-                        <img src='../styles/addimage.png' alt="add image button"></img>
-                    </div>
-                    <DropdownButton id="dropdown-basic-button" title="Feature type" onSelect={onSelect}>
-                        <Dropdown.Item eventKey="ramp">Ramp</Dropdown.Item>
-                        <Dropdown.Item eventKey="elevator">Elevator</Dropdown.Item>
-                        <Dropdown.Item eventKey="automatic-door">Automatic Door</Dropdown.Item>
+                    <DropdownButton id="dropdown-feature-type" title={dropdownVal} onSelect={onSelect}>
+                        <Dropdown.Item eventKey="ramp" onClick={(e) => dropdownHandler(e.target.textContent)}>Ramp</Dropdown.Item>
+                        <Dropdown.Item eventKey="elevator" onClick={(e) => dropdownHandler(e.target.textContent)}>Elevator</Dropdown.Item>
+                        <Dropdown.Item eventKey="automatic-door" onClick={(e) => dropdownHandler(e.target.textContent)}>Automatic Door</Dropdown.Item>
                     </DropdownButton>
                     <Button onClick={handleSubmit} type="submit" variant="primary">
                         Submit

@@ -81,14 +81,15 @@ export default function Map(props) {
         zoomHandler()
     });
 
-    async function addMarker(e) {
+    function addMarker(e) {
         let currZoom = map.current.getZoom();
         if(currZoom >= ZOOM_THRESHOLD) { // only allow new markers at zoom threshold
             if(!(checkMarker(e))){ // if marker already exists, do not create new one
                 let coords = e.lngLat;
+                setNewFeatureCoords(coords)
                 flyTo(coords)
 
-                await newFeatureHandler(coords);
+                newFeatureHandler(coords);
 
                 let newMarker = document.createElement('div');
                 newMarker.classList.add('accessibility-marker');
@@ -142,6 +143,7 @@ export default function Map(props) {
 
     async function featureInfoHandler(e) {
         const featureID = e.currentTarget.id;
+        console.log(featureID);
 
         // open the modal
         setFeatureInfoID(featureID);
