@@ -18,7 +18,6 @@ export default function BuildingInfo(props) {
     const locationID = props.locationID;
     const showBuildingInfo = props.showBuildingInfo;
 
-    const [isLoading, setLoading] = useState(true);
     const [buildingPayload, setBuildingPayload] = useState();
     const [buildingImageUrls, setBuildingImageUrls] = useState();
 
@@ -116,7 +115,7 @@ export default function BuildingInfo(props) {
                     <div>
                         <div className="building-info-image">
                             {
-                                (!buildingImageUrls) 
+                                (!buildingImageUrls || buildingImageUrls.length == 0) 
                                 ? <img src={require('../images/blank_image.jpg')} />
                                 : <img src={buildingImageUrls[0]} />
                             }
