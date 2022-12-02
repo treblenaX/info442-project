@@ -1,0 +1,22 @@
+/* .radio-button {
+    position: relative;
+}
+  
+.radio-button::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+} */
+.checked-radio-button {
+    background-color: red !important;
+}
+.radio-button img {
+    /* position: absolute; */
+    width: 100%;
+    height: 100%;
+    /* object-fit: cover; */
+}
+
+.radio-container {
+    width: 20rem;
+}

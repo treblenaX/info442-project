@@ -1,23 +1,29 @@
 import '../styles/BuildingInfo.css';
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { ReviewList } from './ReviewList';
 import LocationService from '../services/LocationService';
 import { toast } from 'react-toastify';
 import { ReviewTypes } from '../constants/ReviewTypes';
 import ImageService from '../services/ImageService';
 import { ImageType } from '../constants/ImageTypes';
+import RatingForm from './RatingForm';
+import Loading from './Loading';
+import RatingUtil from '../utils/RatingUtil';
 
 export default function BuildingInfo(props) {
+    const handleSetShowBuildingInfo = props.handleSetShowBuildingInfo;
+    const handleSetBuildingInfoRefresh = props.handleSetBuildingInfoRefresh;
+    const buildingInfoRefresh = props.buildingInfoRefresh;
     const locationID = props.locationID;
+    const showBuildingInfo = props.showBuildingInfo;
 
-    const [isLoaded, setLoaded] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const [buildingPayload, setBuildingPayload] = useState();
     const [buildingImageUrls, setBuildingImageUrls] = useState();
 
     const handleClose = () => {
-        setBuildingPayload();
-        setLoaded(false);
+        handleSetShowBuildingInfo(false);
     }
 
     // @TODO take out for prod
@@ -37,6 +43,8 @@ export default function BuildingInfo(props) {
         }
     }
 
+    const refreshBuildingInfoModal = () => handleSetBuildingInfoRefresh(true);
+
     const loadData = async () => {
         try {
             const locationPayload = await LocationService.findLocation({
@@ -50,44 +58,59 @@ export default function BuildingInfo(props) {
             });
             setBuildingImageUrls(imagesPayload);
 
-            setLoaded(true);
+            handleSetBuildingInfoRefresh(false);
+            toast.dismiss();
         } catch (e) {
             throw new Error('Cannot load review data: ' + e);
         }
     }
 
     useEffect(() => {
-        loadData()
+        if (buildingInfoRefresh) loadData()
             .catch((e) => {
                 toast.error('' + e.message);
             });
-    }, [locationID])
+    }, [buildingInfoRefresh])
 
     return (
         <div>
-            <Modal show={isLoaded} onHide={handleClose}>
+            <Modal show={showBuildingInfo && !buildingInfoRefresh} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title className="top-modal modal-text">
-                        <h1 className="top-modal-item">
-                            <strong>
+                    <Modal.Title 
+                        className="top-modal modal-text center-text"
+                        as={Row}
+                        style={{
+                            width: '100%'
+                        }}
+                    >
+                        <Col className='m-auto'>
+                            <h1 className="top-modal-item">
+                                <strong>
+                                    {
+                                        buildingInfoRefresh
+                                        ? 'Loading...'
+                                        : buildingPayload.name
+                                    }
+                                </strong>
+                            </h1>
+                        </Col>
+                        <Col className='m-auto'>
+                            <div className="m-auto top-modal-item top-modal-rating-icon">
                                 {
-                                    isLoaded
-                                    ? buildingPayload.name
-                                    : 'Loading...'
+                                    buildingInfoRefresh
+                                    ? 'Loading...'
+                                    : RatingUtil.chooseAverageRatingFace(buildingPayload)
                                 }
-                            </strong>
-                        </h1>
-                        <div className="top-modal-item top-modal-rating-icon">
-                            Insert Rating Face here
-                        </div>
+                            </div>
+                        </Col>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="modal-text">
                     <p>
                         {
-                            isLoaded
-                            ? <em>{buildingPayload.address}</em>
-                            : 'Loading...'
+                            buildingInfoRefresh
+                            ? 'Loading...'
+                            : <em>{buildingPayload.address}</em>
                         }
                     </p>
                     <div>
@@ -116,13 +139,19 @@ export default function BuildingInfo(props) {
                         </Form>
                     </div>
                     <hr/>
-                    <h3>
+                    <div >
                         {
-                            isLoaded
-                            ? `Rating: ${buildingPayload.average_rating}`
-                            : 'Loading...'
+                            buildingInfoRefresh
+                            ? <p>Loading...</p>
+                            :
+                            <RatingForm 
+                                averageRating={buildingPayload.average_rating}
+                                locationID={locationID}
+                                buildingPayload={buildingPayload}
+                                handleRefreshBuildingInfoModal={refreshBuildingInfoModal}
+                            />
                         }
-                    </h3>
+                    </div>
                     <hr/>
                     <div>
                         <ReviewList 
