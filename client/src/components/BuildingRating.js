@@ -7,7 +7,7 @@ import LocationService from '../services/LocationService';
 import '../styles/RatingForm.css';
 import RatingUtil from '../utils/RatingUtil';
 
-export default function RatingForm(props) {
+export default function BuildingRating(props) {
     const averageRating = props.averageRating;
     const locationID = props.locationID
     const buildingPayload = props.buildingPayload;

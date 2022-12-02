@@ -7,8 +7,7 @@ import { toast } from 'react-toastify';
 import { ReviewTypes } from '../constants/ReviewTypes';
 import ImageService from '../services/ImageService';
 import { ImageType } from '../constants/ImageTypes';
-import RatingForm from './RatingForm';
-import Loading from './Loading';
+import BuildingRating from './BuildingRating';
 import RatingUtil from '../utils/RatingUtil';
 
 export default function BuildingInfo(props) {
@@ -143,7 +142,7 @@ export default function BuildingInfo(props) {
                             buildingInfoRefresh
                             ? <p>Loading...</p>
                             :
-                            <RatingForm 
+                            <BuildingRating 
                                 averageRating={buildingPayload.average_rating}
                                 locationID={locationID}
                                 buildingPayload={buildingPayload}
