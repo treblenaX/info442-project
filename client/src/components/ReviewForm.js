@@ -4,6 +4,7 @@ import { Button, Form } from 'react-bootstrap';
 import ReviewService from '../services/ReviewService';
 import { ReviewTypes } from '../constants/ReviewTypes';
 import { CredentialsContext } from '../contexts/CredentialsContext';
+import { toast } from 'react-toastify';
 
 
 export function ReviewForm(props) {
@@ -44,6 +45,8 @@ export function ReviewForm(props) {
 
       // Refresh the display list
       handleSetListLoading(true);
+      toast.dismiss();
+      toast.info('Review has been posting!');
       setLoading(false);
     } catch (e) {
       throw new Error('Something went wrong with posting a review... ' + e);

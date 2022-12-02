@@ -28,6 +28,7 @@ export default function BuildingInfo(props) {
     const [imageFile, setImageFile] = useState();
     const handleSubmit = async (e) => {
         e.preventDefault();
+        toast.info('Uploading image...');
 
         try {
             const payload = await ImageService.uploadImage({
@@ -35,9 +36,11 @@ export default function BuildingInfo(props) {
                 image_type: ImageType.LOCATION
             }, imageFile);
 
+            toast.dismiss();
             toast.info('Image has been successfully uploaded!');
+            handleSetBuildingInfoRefresh(true);
         } catch (e) {
-            throw new Error('Cannot upload image: ' + e);
+            toast.error('Cannot upload image: ' + e);
         }
     }
 
@@ -57,17 +60,18 @@ export default function BuildingInfo(props) {
             setBuildingImageUrls(imagesPayload);
 
             handleSetBuildingInfoRefresh(false);
-            toast.dismiss();
         } catch (e) {
             throw new Error('Cannot load review data: ' + e);
         }
     }
 
     useEffect(() => {
-        if (buildingInfoRefresh) loadData()
-            .catch((e) => {
-                toast.error('' + e.message);
-            });
+        if (buildingInfoRefresh) {
+            loadData()
+                .catch((e) => {
+                    toast.error('' + e.message);
+                });
+        }
     }, [buildingInfoRefresh])
 
     return (

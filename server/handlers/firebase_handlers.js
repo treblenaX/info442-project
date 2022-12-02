@@ -128,11 +128,21 @@ export default class FirebaseHandler {
 
   static async deleteDoc(collectionName, documentID) {
     try {
-      const ref = collection(FirebaseHandler.db, collectionName);
-      const docRef = await deleteDoc(ref, documentID);
-      return docRef.id;
+      const docRef = doc(FirebaseHandler.db, collectionName, documentID);
+       await deleteDoc(docRef);
+      return true;
     } catch (e) {
       throw new Error('Error deleting document: ' + e); 
+    }
+  }
+
+  static async updateDoc(collectionName, documentID, updatedProperties) {
+    try {
+      const docRef = doc(FirebaseHandler.db, collectionName, documentID);
+      await updateDoc(docRef, updatedProperties);
+      return true;
+    } catch (e) {
+      throw new Error('Error updating document: ' + e);
     }
   }
 

@@ -1,12 +1,13 @@
 import express from 'express';
 import { __dirname } from '../../app.js';
-import { requireAuthorization } from '../../middleware/auth.js';
 import FirebaseHandler from '../../handlers/firebase_handlers.js';
 import StorageHandler from '../../handlers/storage_handlers.js';
 import { IMAGES_COLLECTION_NAME, LOCATIONS_COLLECTION_NAME } from '../../constants/collections.js';
 import { handleErrorResponse, handleSuccessFileResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
 import { Image } from '../../models/image.js';
 import { ImageType } from '../../constants/image_type.js';
+import { unlinkSync } from 'fs';
+import path from 'path';
 
 var router = express.Router();
 
@@ -52,14 +53,28 @@ router.post('/', StorageHandler.upload().single('file'), async (req, res) => {
                 error.code = 404;
                 throw error;
             } 
-            case ImageType.NULL: {
+            case ImageType.NULL || !imageType: {
                 const error = new Error('Image type cannot be NULL.')
                 error.code = 404;
                 throw error;
             }
         }
     
-        const image = FirebaseHandler.getSingleDoc(IMAGES_COLLECTION_NAME, filename.trim());
+        let docID;
+
+        const existingImageDoc = (await FirebaseHandler.getConditionedDoc(IMAGES_COLLECTION_NAME, [{
+            attributeName: 'refID',
+            comparator: '==',
+            attributeValue: refID.trim()
+        }]))[0];
+
+        // BUILDING - only allow one picture
+        if (imageType === ImageType.LOCATION && existingImageDoc) {
+            // Update the document
+            await FirebaseHandler.deleteDoc(IMAGES_COLLECTION_NAME, existingImageDoc.id);
+            // Delete the image in uploads
+            unlinkSync(path.join(__dirname, 'uploads', existingImageDoc.filename));
+        }
 
         const imageDoc = new Image({
             filename: filename,
@@ -67,8 +82,8 @@ router.post('/', StorageHandler.upload().single('file'), async (req, res) => {
             refID: refID
         }).toObject();
     
-        const docID = await FirebaseHandler.addDoc(IMAGES_COLLECTION_NAME, imageDoc);
-    
+        docID = await FirebaseHandler.addDoc(IMAGES_COLLECTION_NAME, imageDoc);
+        
         if (!docID) {
             const error = new Error('There was an error adding a image...');
             error.code = 500;

@@ -49,6 +49,7 @@ export default function BuildingRating(props) {
             setRadioValue(value);
             handleRefreshBuildingInfoModal(true);
 
+            toast.dismiss();
             toast.info('Successfully saved rating to the server... Refreshing..');
         } catch (e) {
             toast.error('' + e);
