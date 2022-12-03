@@ -53,8 +53,9 @@ export default function AccessibilityFeatureInfo(props) {
 
             const imagesPayload = await ImageService.findImages({
                 refID: featureID,
-                image_type: 'LOCATION'
+                image_type: 'FEATURE'
             });
+
             setFeatureImageUrls(imagesPayload);
             setFeatureInfoRefresh(false);
         } catch (e) {

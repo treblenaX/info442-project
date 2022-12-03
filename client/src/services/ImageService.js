@@ -5,6 +5,7 @@ export default class ImageService {
     static findImages = async (request) => {
         let urlArray = [];
 
+        console.log(IMAGES_BASEPOINT + '/metadata/filter' + LinkBuilderUtil.objectToQuery(request))
         // Look for the stored image metadata
         const metadataResponse = await fetch(
             IMAGES_BASEPOINT + '/metadata/filter' + LinkBuilderUtil.objectToQuery(request),
@@ -17,6 +18,7 @@ export default class ImageService {
         )
         // Wait for the response
         const metadataResponsePayload = await metadataResponse.json();
+
 
         if (metadataResponsePayload.error) throw new Error(metadataResponsePayload.error);
 

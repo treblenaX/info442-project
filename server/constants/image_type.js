@@ -1,5 +1,6 @@
 export const ImageType = {
     NULL: 'NULL',
     LOCATION: 'LOCATION',
-    PROFILE: 'PROFILE'
+    PROFILE: 'PROFILE',
+    FEATURE: 'FEATURE'
 }

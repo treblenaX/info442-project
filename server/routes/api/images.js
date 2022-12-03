@@ -145,6 +145,13 @@ router.get('/metadata/filter', async function(req, res, next) {
                         attributeValue: refID.trim()
                     }]);
                     break;
+                case ImageType.FEATURE:
+                    payload = await FirebaseHandler.getConditionedDoc(IMAGES_COLLECTION_NAME, [{
+                        attributeName: 'refID',
+                        comparator: '==',
+                        attributeValue: refID.trim()
+                    }]);
+                    break;
                 default:
                     break;
             }
