@@ -8,6 +8,11 @@ import { CredentialsContext } from '../contexts/CredentialsContext';
 import { FeatureRatingType } from '../constants/FeatureRatingType';
 
 export default function AccessibilityFeatureInfo(props) {
+    const setFeatureInfoRefresh = props.setFeatureInfoRefresh;
+    const setShowFeatureInfo = props.setShowFeatureInfo;
+    const showFeatureInfo = props.showFeatureInfo;
+    const featureInfoRefresh = props.featureInfoRefresh;
+
     const { credentials } = useContext(CredentialsContext);
     const [radioValue, setRadioValue] = useState();
     const [featureImageUrls, setFeatureImageUrls] = useState();
@@ -19,11 +24,10 @@ export default function AccessibilityFeatureInfo(props) {
         "automatic-door": "Automatic Door"
     }
 
-    const [isLoading, setLoading] = useState(true);
     const [featurePayload, setFeaturePayload] = useState();
     const [featureRating, setFeatureRating] = useState();
 
-    const handleClose = () => setLoading(false);
+    const handleClose = () => setShowFeatureInfo(false);
 
     const loadData = async () => {
         try {
@@ -34,23 +38,25 @@ export default function AccessibilityFeatureInfo(props) {
             setFeaturePayload(payload);
 
             // Figure out if the user has already rated
-            if (payload.upvoters.find((username) => credentials.username === username)) {
-                setRadioValue(FeatureRatingType.UP);
-            }
+            if (credentials) {
+                if (payload.upvoters.find((username) => credentials.username === username)) {
+                    setRadioValue(FeatureRatingType.UP);
+                }
 
-            if (payload.downvoters.find((username) => credentials.username === username)) {
-                setRadioValue(FeatureRatingType.DOWN);
+                if (payload.downvoters.find((username) => credentials.username === username)) {
+                    setRadioValue(FeatureRatingType.DOWN);
+                }
             }
 
             // Calculate the rating
             setFeatureRating(payload.upvoters.length - payload.downvoters.length);
 
-            setLoading(false);
             const imagesPayload = await ImageService.findImages({
                 refID: featureID,
                 image_type: 'LOCATION'
             });
             setFeatureImageUrls(imagesPayload);
+            setFeatureInfoRefresh(false);
         } catch (e) {
             throw new Error('Cannot load feature data: ' + e);
         }
@@ -86,7 +92,7 @@ export default function AccessibilityFeatureInfo(props) {
 
             // Update the local state
             setRadioValue(value);
-            setLoading(true);
+            setFeatureInfoRefresh(true);
 
             toast.dismiss();
             toast.info('Successfully saved rating to the server!');
@@ -106,7 +112,7 @@ export default function AccessibilityFeatureInfo(props) {
             await FeatureService.unrateFeature(request);
 
             setRadioValue(null);
-            setLoading(true);
+            setFeatureInfoRefresh(true);
             
             toast.dismiss();
             toast.info('Successfully cleared rating!');
@@ -116,17 +122,20 @@ export default function AccessibilityFeatureInfo(props) {
     }
 
     useEffect(() => {
-        if (isLoading) {
+        console.log(featureInfoRefresh);
+        console.log('hit');
+        if (featureInfoRefresh) {
+            console.log('hit2');
             loadData()
                 .catch((e) => {
                     toast.error('' + e.message);
                 });
         }
-    }, [isLoading])
+    }, [featureInfoRefresh])
 
     return (
         <div>
-            <Modal show={!isLoading} onHide={handleClose}>
+            <Modal show={showFeatureInfo && !featureInfoRefresh} onHide={handleClose}>
                 <Modal.Header>
                     <Modal.Title className="m-auto top-modal modal-text">
                         <Row>
@@ -134,7 +143,7 @@ export default function AccessibilityFeatureInfo(props) {
                                 <h1 className="top-modal-item">
                                     <strong>
                                         {
-                                            isLoading
+                                            featureInfoRefresh
                                             ? 'Loading...'
                                             : featureNameMap[featurePayload.type]
                                         }
@@ -144,7 +153,7 @@ export default function AccessibilityFeatureInfo(props) {
                             <Col className="m-auto">
                                 <h3 className="m-auto bold">
                                     {
-                                        isLoading
+                                        featureInfoRefresh
                                         ? 'Loading...'
                                         : featureRating
                                     }

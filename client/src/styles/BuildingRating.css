@@ -20,3 +20,7 @@
 .radio-container {
     width: 20rem;
 }
+
+.remove-rating-button {
+    padding: 10px;
+}

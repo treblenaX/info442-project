@@ -41,7 +41,6 @@ export function ReviewList(props) {
 
             setReviewCards(cards);
             setSliceState(cards.slice(0,3));
-            console.log('loading');
             setListLoading(false);
         } catch (e) {
             throw new Error('Cannot load review data: ' + e);

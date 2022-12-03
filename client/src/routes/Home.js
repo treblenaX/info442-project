@@ -7,23 +7,28 @@ import Loading from '../components/Loading';
 import Map from "../components/Map";
 import HeaderBar from '../components/HeaderBar';
 import BuildingInfo from '../components/BuildingInfo';
-import FeatureInfo from '../components/FeatureInfo';
-import NewFeature from '../components/NewFeature';
+import FeatureInfo from '../components/FeatureInfo.js';
+import NewFeature from '../components/NewFeature.js';
 
 export default function Home() {
     const [reload, setReload] = useState(1);
     const [isLoading, setLoading] = useState(true);
+
     const [locationsData, setLocationsData] = useState([]);
     const [featuresData, setFeaturesData] = useState([]);
 
     const [buildingInfoID, setBuildingInfoID] = useState();
+    const [showBuildingInfo, setShowBuildingInfo] = useState(false);
+    const [buildingInfoRefresh, setBuildingInfoRefresh] = useState(false);
+
+    const [showFeatureInfo, setShowFeatureInfo] = useState(false);
+    const [newFeatureID, setNewFeatureID] = useState();
     const [featureInfoID, setFeatureInfoID] = useState();
     const [newFeatureCoords, setNewFeatureCoords] = useState();
     const [newFeature, setNewFeature] = useState();
-    const [showBuildingInfo, setShowBuildingInfo] = useState(false);
-    const [buildingInfoRefresh, setBuildingInfoRefresh] = useState(false);
+    const [featureInfoRefresh, setFeatureInfoRefresh] = useState(false);
+
     const [searchParams, setSearchParams] = useSearchParams();
-    const [newFeatureID, setNewFeatureID] = useState();
 
     const [lng, setLng] = useState(-122.30808827297321);
     const [lat, setLat] = useState(47.656708485813695);
@@ -92,6 +97,10 @@ export default function Home() {
                                         ?
                                         <FeatureInfo
                                             featureID={featureInfoID}
+                                            setShowFeatureInfo={setShowFeatureInfo}
+                                            setFeatureInfoRefresh={setFeatureInfoRefresh}
+                                            showFeatureInfo={showFeatureInfo}
+                                            featureInfoRefresh={featureInfoRefresh}
                                         />
                                         :
                                         <></>
@@ -112,8 +121,10 @@ export default function Home() {
                                     setNewFeature={setNewFeature}
                                     locationsPayload={locationsData}
                                     handleSetBuildingInfoID={setBuildingInfoID}
+                                    handleSetShowFeatureInfo={setShowFeatureInfo}
                                     handleSetShowBuildingInfo={setShowBuildingInfo}
                                     handleSetBuildingInfoRefresh={setBuildingInfoRefresh}
+                                    handleSetFeatureInfoRefresh={setFeatureInfoRefresh}
                                     featuresPayload={featuresData}
                                     setSearchParams={setSearchParams}
                                     startLat={lat}

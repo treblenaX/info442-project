@@ -104,6 +104,16 @@ export default function BuildingInfo(props) {
                                     : RatingUtil.chooseAverageRatingFace(buildingPayload)
                                 }
                             </div>
+                            <div>
+                                {
+                                    buildingInfoRefresh
+                                    ? 'Loading...'
+                                    : 
+                                    <strong>
+                                        {buildingPayload.average_rating.toFixed(2)} <i class="bi bi-star-fill"></i> 
+                                    </strong>
+                                }
+                            </div>
                         </Col>
                     </Modal.Title>
                 </Modal.Header>

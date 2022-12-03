@@ -4,11 +4,10 @@ import { toast } from 'react-toastify';
 import { BuildingRatingType } from '../constants/BuildingRatingType';
 import { CredentialsContext } from '../contexts/CredentialsContext';
 import LocationService from '../services/LocationService';
-import '../styles/RatingForm.css';
+import '../styles/BuildingRating.css';
 import RatingUtil from '../utils/RatingUtil';
 
 export default function BuildingRating(props) {
-    const averageRating = props.averageRating;
     const locationID = props.locationID
     const buildingPayload = props.buildingPayload;
     const handleRefreshBuildingInfoModal = props.handleRefreshBuildingInfoModal;
@@ -32,7 +31,6 @@ export default function BuildingRating(props) {
             };
 
             if (radioValue) {
-                if (radioValue == value) return;    // The user clicked on the same rating they rated earlier
                 // The user has rated and clicked on another rating
                 
                 // Unrate
@@ -50,7 +48,30 @@ export default function BuildingRating(props) {
             handleRefreshBuildingInfoModal(true);
 
             toast.dismiss();
-            toast.info('Successfully saved rating to the server... Refreshing..');
+            toast.info('Successfully saved rating to the server!');
+        } catch (e) {
+            toast.error('' + e);
+        }
+    }
+
+    const handleRemoveRating = async (e) => {
+        e.preventDefault();
+
+        try {
+            toast.info('Removing rating...');
+
+            let request = {
+                location_id: locationID,
+                username: credentials.username,
+                rating_type: radioValue
+            };
+
+            setRadioValue(null);
+            await LocationService.unrateLocation(request);
+            handleRefreshBuildingInfoModal(true);
+
+            toast.dismiss();
+            toast.info('Successfully removed rating!');
         } catch (e) {
             toast.error('' + e);
         }
@@ -63,9 +84,6 @@ export default function BuildingRating(props) {
     
     return (
         <div className="m-auto">
-            {/* <h3 className="m-auto center-text">
-                <strong>{`Average Rating Value: ${averageRating}`}</strong>
-            </h3> */}
             {
                 (!credentials)
                 ? 
@@ -80,6 +98,7 @@ export default function BuildingRating(props) {
                     <ButtonGroup className="m-auto radio-container">
                         <ToggleButton
                             key='happy'
+                            name='happy'
                             type='radio'
                             id='radio-happy'
                             value={BuildingRatingType.HIGH}
@@ -94,6 +113,7 @@ export default function BuildingRating(props) {
                         </ToggleButton>
                         <ToggleButton
                             key='neutral'
+                            name='neutral'
                             type='radio'
                             id='radio-neutral'
                             value={BuildingRatingType.MED}
@@ -108,6 +128,7 @@ export default function BuildingRating(props) {
                         </ToggleButton>
                         <ToggleButton
                             key='upset'
+                            name='upset'
                             type='radio'
                             id='radio-upset'
                             value={BuildingRatingType.LOW}
@@ -121,6 +142,19 @@ export default function BuildingRating(props) {
                             <img src={require('../images/upset.png')} />
                         </ToggleButton>
                     </ButtonGroup>
+                    <div className="m-auto remove-rating-button">
+                    {
+                        (!radioValue)
+                        ? <></>
+                        :
+                        <Button
+                        variant="danger"
+                        onClick={(e) => handleRemoveRating(e)}
+                        >
+                            Remove Rating
+                        </Button>
+                    }
+                    </div>
                 </div>
             }
         </div>

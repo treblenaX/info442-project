@@ -11,7 +11,9 @@ const ZOOM_THRESHOLD = 17 // zoom threshold for accessibility points
 export default function Map(props) {
     const handleSetBuildingInfoID = props.handleSetBuildingInfoID;
     const handleSetShowBuildingInfo = props.handleSetShowBuildingInfo;
-    const handleSetBuildingInfoRefresh = props.handleSetBuildingInfoRefresh
+    const handleSetBuildingInfoRefresh = props.handleSetBuildingInfoRefresh;
+    const handleSetShowFeatureInfo = props.handleSetShowFeatureInfo;
+    const handleSetFeatureInfoRefresh = props.handleSetFeatureInfoRefresh;
     const locationsPayload = props.locationsPayload;
     const featuresPayload = props.featuresPayload;
     const setFeatureInfoID = props.setFeatureInfoID;
@@ -165,6 +167,8 @@ export default function Map(props) {
 
         // open the modal
         setFeatureInfoID(featureID);
+        handleSetShowFeatureInfo(true);
+        handleSetFeatureInfoRefresh(true);
     }
 
     async function newFeatureHandler(coords) {
