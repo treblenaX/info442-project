@@ -17,12 +17,21 @@ export default function Map(props) {
     const setFeatureInfoID = props.setFeatureInfoID;
     const setNewFeatureCoords = props.setNewFeatureCoords;
     const setNewFeature = props.setNewFeature;
+    const searchParams = props.searchParams;
+    const setSearchParams = props.setSearchParams;
 
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [lng, setLng] = useState(-122.30808827297321);
     const [lat, setLat] = useState(47.656708485813695);
     const [zoom, setZoom] = useState(14.5);
+
+    // if params exist, set map view to those params
+    if(searchParams.has("lng") && searchParams.has("lat") && searchParams.has("zoom")) {
+        //setLng(searchParams.get("lng"));
+        //setLat(searchParams.get("lat"));
+        //setZoom(searchParams.get("zoom"));
+    }
 
     // populate building points
     useEffect(() => {
@@ -48,7 +57,7 @@ export default function Map(props) {
         );
 
         // if clicked, add marker to that location
-        map.current.on('click', addMarker);
+        map.current.on('click', newFeature);
         // handler for zoom rendering changes
         map.current.on('zoom', zoomHandler);
 
@@ -82,22 +91,14 @@ export default function Map(props) {
         zoomHandler()
     });
 
-    function addMarker(e) {
+    async function newFeature(e) {
         let currZoom = map.current.getZoom();
         if(currZoom >= ZOOM_THRESHOLD) { // only allow new markers at zoom threshold
             if(!(checkMarker(e))){ // if marker already exists, do not create new one
                 let coords = e.lngLat;
-                setNewFeatureCoords(coords)
-                flyTo(coords)
-
+                flyTo(coords);
                 newFeatureHandler(coords);
-
-                let newMarker = document.createElement('div');
-                newMarker.classList.add('accessibility-marker');
-
-                newMarker.addEventListener('click', featureInfoHandler)
-
-                new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current);
+                addMarker(e);
             }
         } else {
             if(!(checkMarker(e))) {
@@ -105,6 +106,23 @@ export default function Map(props) {
             }
             return
         }
+    }
+
+    function addMarker(e) {
+        let newMarker = document.createElement('div');
+        newMarker.classList.add('accessibility-marker');
+
+        newMarker.addEventListener('click', featureInfoHandler);
+
+        let coords = e.lngLat;
+        let params = {
+            lng: coords.lng,
+            lat: coords.lat,
+            zoom: map.current.getZoom()
+        }
+
+        setSearchParams(params);
+        new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current);
     }
 
     // helper function, returns true if marker already exists at event location
@@ -151,7 +169,6 @@ export default function Map(props) {
 
     async function featureInfoHandler(e) {
         const featureID = e.currentTarget.id;
-        console.log(featureID);
 
         // open the modal
         setFeatureInfoID(featureID);

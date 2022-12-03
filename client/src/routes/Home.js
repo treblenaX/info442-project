@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import LocationService from '../services/LocationService';
 import FeatureService from '../services/FeatureService';
@@ -21,6 +22,8 @@ export default function Home() {
     const [newFeature, setNewFeature] = useState();
     const [showBuildingInfo, setShowBuildingInfo] = useState(false);
     const [buildingInfoRefresh, setBuildingInfoRefresh] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [newFeatureID, setNewFeatureID] = useState();
 
     const loadAllData = async () => {
         try {
@@ -87,11 +90,14 @@ export default function Home() {
                                         coords={newFeatureCoords}
                                         active={newFeature}
                                         setActive={setNewFeature}
+                                        setNewFeatureID={setNewFeatureID}
                                     />
                                 </div>
                                 <Map
                                     setBuildingInfoID={setBuildingInfoID}
                                     setFeatureInfoID={setFeatureInfoID}
+                                    featureID={featureInfoID}
+                                    newFeatureID={newFeatureID}
                                     setNewFeatureCoords={setNewFeatureCoords}
                                     setNewFeature={setNewFeature}
                                     locationsPayload={locationsData}
@@ -99,6 +105,8 @@ export default function Home() {
                                     handleSetShowBuildingInfo={setShowBuildingInfo}
                                     handleSetBuildingInfoRefresh={setBuildingInfoRefresh}
                                     featuresPayload={featuresData}
+                                    searchParams={searchParams}
+                                    setSearchParams={setSearchParams}
                                 />
                             </div>
                         </main>

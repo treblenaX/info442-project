@@ -64,7 +64,9 @@ export default function NewFeature(props) {
             if (!payload) {
                 throw new Error('Null payload?');
             }
+            props.setNewFeatureID(payload.id);
             handleClose();
+            window.location.reload();
         } catch (e) {
             throw new Error('Something went wrong with posting a new feature... ' + e);
         }
