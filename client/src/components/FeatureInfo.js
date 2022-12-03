@@ -2,6 +2,7 @@ import '../styles/BuildingInfo.css';
 import React, { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import FeatureService from '../services/FeatureService';
+import ImageService from '../services/ImageService';
 import { Button, ButtonGroup, Col, Modal, Row, ToggleButton } from 'react-bootstrap';
 import { CredentialsContext } from '../contexts/CredentialsContext';
 import { FeatureRatingType } from '../constants/FeatureRatingType';
@@ -9,6 +10,7 @@ import { FeatureRatingType } from '../constants/FeatureRatingType';
 export default function AccessibilityFeatureInfo(props) {
     const { credentials } = useContext(CredentialsContext);
     const [radioValue, setRadioValue] = useState();
+    const [featureImageUrls, setFeatureImageUrls] = useState();
 
     const featureID = props.featureID;
     const featureNameMap = {
@@ -44,6 +46,11 @@ export default function AccessibilityFeatureInfo(props) {
             setFeatureRating(payload.upvoters.length - payload.downvoters.length);
 
             setLoading(false);
+            const imagesPayload = await ImageService.findImages({
+                refID: featureID,
+                image_type: 'LOCATION'
+            });
+            setFeatureImageUrls(imagesPayload);
         } catch (e) {
             throw new Error('Cannot load feature data: ' + e);
         }
@@ -147,8 +154,12 @@ export default function AccessibilityFeatureInfo(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="modal-text">
-                    <div class="feature-img">
-                        <img></img>
+                    <div className="building-info-image">
+                            {
+                                (!featureImageUrls || featureImageUrls.length == 0) 
+                                ? <img src={require('../images/blank_image.jpg')} />
+                                : <img src={featureImageUrls[0]} />
+                            }
                     </div>
                     {
                         (!credentials)
