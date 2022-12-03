@@ -94,4 +94,50 @@ export default class FeatureService {
             throw new Error(responsePayload.error);
         }
     }
+
+    static rateFeature = async (request) => {
+        const response = await fetch(
+            FEATURE_BASEPOINT + '/rate',
+            {
+                method: 'POST',
+                body: JSON.stringify(request),
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        // Notice the 'await' function here
+        const responsePayload = await response.json();
+
+        // Notice the error handling
+        if (!responsePayload.error) {
+            return responsePayload.payload;
+        } else {
+            throw new Error(responsePayload.error);
+        }
+    }
+
+    static unrateFeature = async (request) => {
+        const response = await fetch(
+            FEATURE_BASEPOINT + '/unrate',
+            {
+                method: 'POST',
+                body: JSON.stringify(request),
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        // Notice the 'await' function here
+        const responsePayload = await response.json();
+
+        // Notice the error handling
+        if (!responsePayload.error) {
+            return responsePayload.payload;
+        } else {
+            throw new Error(responsePayload.error);
+        }
+    }
 }

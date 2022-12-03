@@ -54,7 +54,6 @@ export default function NewFeature(props) {
             const base = {
                 latitude: coords.lng,
                 longitude: coords.lat,
-                rating: 0
             };
 
             payload = await FeatureService.postNewFeature({

@@ -2,11 +2,13 @@ import '../styles/BuildingInfo.css';
 import React, { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import FeatureService from '../services/FeatureService';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, ButtonGroup, Col, Modal, Row, ToggleButton } from 'react-bootstrap';
 import { CredentialsContext } from '../contexts/CredentialsContext';
+import { FeatureRatingType } from '../constants/FeatureRatingType';
 
 export default function AccessibilityFeatureInfo(props) {
     const { credentials } = useContext(CredentialsContext);
+    const [radioValue, setRadioValue] = useState();
 
     const featureID = props.featureID;
     const featureNameMap = {
@@ -15,91 +17,186 @@ export default function AccessibilityFeatureInfo(props) {
         "automatic-door": "Automatic Door"
     }
 
-    const [isLoaded, setLoaded] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const [featurePayload, setFeaturePayload] = useState();
+    const [featureRating, setFeatureRating] = useState();
 
-    const handleClose = () => setLoaded(false);
+    const handleClose = () => setLoading(false);
 
     const loadData = async () => {
         try {
+            // Load feature data
             const payload = await FeatureService.findFeature({
                 feature_id: featureID
             });
             setFeaturePayload(payload);
 
-            setLoaded(true);
+            // Figure out if the user has already rated
+            if (payload.upvoters.find((username) => credentials.username === username)) {
+                setRadioValue(FeatureRatingType.UP);
+            }
+
+            if (payload.downvoters.find((username) => credentials.username === username)) {
+                setRadioValue(FeatureRatingType.DOWN);
+            }
+
+            // Calculate the rating
+            setFeatureRating(payload.upvoters.length - payload.downvoters.length);
+
+            setLoading(false);
         } catch (e) {
             throw new Error('Cannot load feature data: ' + e);
         }
     }
 
-    function rating(change) {
-        if(!credentials) {
-            toast.error("You must be logged in to rate features!");
-        } else {
-            let newRating = featurePayload.rating + change;
-            console.log(newRating)
+    const handleRadioClick = async (e) => {
+        try {
+            // Don't allow the user to spam requests
+            // setButtonLock(true);
+            toast.info('Loading data from the server...');
 
-            try {
-                let payload;
+            const value = e.currentTarget.value;
+            const username = credentials.username;
 
-                const base = {
-                    rating: newRating
-                };
+            // Send the request to the server
+            let request = {
+                feature_id: featureID,
+                username: username
+            };
 
-                payload = FeatureService.postReview({
-                    ...base,
-                    feature_id: featureID,
-                });
+            if (radioValue) {
+                if (radioValue == value) return;    // The user clicked on the same rating they rated earlier
+                // The user has rated and clicked on another rating
+                
+                // Unrate
+                request.rating_type = radioValue;
+                await FeatureService.unrateFeature(request);
+            } 
 
-                if (!payload) {
-                    throw new Error('Null payload?');
-                }
-            } catch (e) {
-                throw new Error('Something went wrong with posting a review... ' + e);
-            }
+            // Rate
+            request.rating_type = value;
+            await FeatureService.rateFeature(request);
+
+            // Update the local state
+            setRadioValue(value);
+            setLoading(true);
+
+            toast.dismiss();
+            toast.info('Successfully saved rating to the server!');
+        } catch (e) {
+            toast.error('' + e);
+        }
+    }
+
+    const handleRatingRemove = async () => {
+        try {
+            let request = {
+                feature_id: featureID,
+                username: credentials.username,
+                rating_type: radioValue
+            };
+
+            await FeatureService.unrateFeature(request);
+
+            setRadioValue(null);
+            setLoading(true);
+            
+            toast.dismiss();
+            toast.info('Successfully cleared rating!');
+        } catch (e) {
+            toast.error('' + e);
         }
     }
 
     useEffect(() => {
-        loadData()
-            .catch((e) => {
-                toast.error('' + e.message);
-            });
-    }, [featureID])
+        if (isLoading) {
+            loadData()
+                .catch((e) => {
+                    toast.error('' + e.message);
+                });
+        }
+    }, [isLoading])
 
     return (
         <div>
-            <Modal show={isLoaded} onHide={handleClose}>
+            <Modal show={!isLoading} onHide={handleClose}>
                 <Modal.Header>
-                    <Modal.Title className="top-modal modal-text">
-                        <h1 className="top-modal-item">
-                            <strong>
-                                {
-                                    isLoaded
-                                    ? featureNameMap[featurePayload.type]
-                                    : 'Loading...'
-                                }
-                            </strong>
-                        </h1>
+                    <Modal.Title className="m-auto top-modal modal-text">
+                        <Row>
+                            <Col>
+                                <h1 className="top-modal-item">
+                                    <strong>
+                                        {
+                                            isLoading
+                                            ? 'Loading...'
+                                            : featureNameMap[featurePayload.type]
+                                        }
+                                    </strong>
+                                </h1>
+                            </Col>
+                            <Col className="m-auto">
+                                <h3 className="m-auto bold">
+                                    {
+                                        isLoading
+                                        ? 'Loading...'
+                                        : featureRating
+                                    }
+                                </h3>
+                            </Col>
+                        </Row>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="modal-text">
                     <div class="feature-img">
                         <img></img>
                     </div>
-                    <div class="rating-container">
-                        <Button onClick={() => rating(-1)}>-</Button>
-                        <h3 className="bold">
-                            {
-                                isLoaded
-                                ? featurePayload.rating
-                                : 'Loading...'
-                            }
-                        </h3>
-                        <Button onClick={() => rating(1)}>+</Button>
-                    </div>
-                    
+                    {
+                        (!credentials)
+                        ? <></>
+                        :
+                        <div class="rating-container">
+                            <ButtonGroup className="m-auto radio-container">
+                                <ToggleButton
+                                    key='+'
+                                    type='radio'
+                                    id='radio-+'
+                                    value={FeatureRatingType.UP}
+                                    checked={radioValue == FeatureRatingType.UP}
+                                    onChange={(e) => handleRadioClick(e)}
+                                    className='radio-button'
+                                >
+                                    <strong>+</strong>
+                                </ToggleButton>
+                                <ToggleButton
+                                    key='-'
+                                    type='radio'
+                                    id='radio--'
+                                    value={FeatureRatingType.DOWN}
+                                    checked={radioValue == FeatureRatingType.DOWN}
+                                    onChange={(e) => handleRadioClick(e)}
+                                    className='radio-button'
+                                    style={{
+                                        border: 'none'
+                                    }}
+                                >
+                                    <strong>-</strong>
+                                </ToggleButton>
+                            </ButtonGroup>
+                            <div>
+                                {
+                                    (!radioValue)
+                                    ? <></>
+                                    :
+                                    <Button
+                                        variant="danger"
+                                        onClick={handleRatingRemove}
+                                    >
+                                        Remove Rating
+                                    </Button>
+                                }
+                            </div>
+                        </div>
+                    }        
                 </Modal.Body>
                 <Modal.Footer>
                     <Button 
