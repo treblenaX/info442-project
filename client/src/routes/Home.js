@@ -25,6 +25,10 @@ export default function Home() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [newFeatureID, setNewFeatureID] = useState();
 
+    const [lng, setLng] = useState(-122.30808827297321);
+    const [lat, setLat] = useState(47.656708485813695);
+    const [zoom, setZoom] = useState(14.5);
+
     const loadAllData = async () => {
         try {
             // Locations Data + feature data for map
@@ -40,6 +44,12 @@ export default function Home() {
     }
 
     useEffect(() => {
+        // if params exist, set map view to those params
+        if(searchParams.has("lng") && searchParams.has("lat") && searchParams.has("zoom")) {
+            setLng(searchParams.get("lng"));
+            setLat(searchParams.get("lat"));
+            setZoom(searchParams.get("zoom"));
+        }
         loadAllData()
             .catch((e) => {
                 toast.error('' + e.message);
@@ -105,8 +115,10 @@ export default function Home() {
                                     handleSetShowBuildingInfo={setShowBuildingInfo}
                                     handleSetBuildingInfoRefresh={setBuildingInfoRefresh}
                                     featuresPayload={featuresData}
-                                    searchParams={searchParams}
                                     setSearchParams={setSearchParams}
+                                    startLat={lat}
+                                    startLng={lng}
+                                    startZoom={zoom}
                                 />
                             </div>
                         </main>

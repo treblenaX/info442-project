@@ -17,24 +17,17 @@ export default function Map(props) {
     const setFeatureInfoID = props.setFeatureInfoID;
     const setNewFeatureCoords = props.setNewFeatureCoords;
     const setNewFeature = props.setNewFeature;
-    const searchParams = props.searchParams;
     const setSearchParams = props.setSearchParams;
 
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const [lng, setLng] = useState(-122.30808827297321);
-    const [lat, setLat] = useState(47.656708485813695);
-    const [zoom, setZoom] = useState(14.5);
-
-    // if params exist, set map view to those params
-    if(searchParams.has("lng") && searchParams.has("lat") && searchParams.has("zoom")) {
-        //setLng(searchParams.get("lng"));
-        //setLat(searchParams.get("lat"));
-        //setZoom(searchParams.get("zoom"));
-    }
+    const zoom = props.startZoom;
+    const lng = props.startLng;
+    const lat = props.startLat;
 
     // populate building points
     useEffect(() => {
+
         // initialize map with defaults
         if (map.current) return; // initialize map only once
         map.current = new mapboxgl.Map({
