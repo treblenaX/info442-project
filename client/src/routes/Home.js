@@ -7,8 +7,8 @@ import Loading from '../components/Loading';
 import Map from "../components/Map";
 import HeaderBar from '../components/HeaderBar';
 import BuildingInfo from '../components/BuildingInfo';
-import FeatureInfo from '../components/FeatureInfo';
-import NewFeature from '../components/NewFeature';
+import FeatureInfo from '../components/FeatureInfo.js';
+import NewFeature from '../components/NewFeature.js';
 
 export default function Home() {
     const [reload, setReload] = useState(1);
