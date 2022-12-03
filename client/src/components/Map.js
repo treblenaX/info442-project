@@ -117,7 +117,6 @@ export default function Map(props) {
         }
 
         setSearchParams(params);
-        new mapboxgl.Marker(newMarker).setLngLat(e.lngLat).addTo(map.current);
     }
 
     // helper function, returns true if marker already exists at event location

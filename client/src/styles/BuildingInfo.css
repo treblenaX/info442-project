@@ -33,6 +33,7 @@
 
 .rating-container {
     display: flex;
+    padding-top:15px;
 }
 
 .top-modal-rating-icon img {
