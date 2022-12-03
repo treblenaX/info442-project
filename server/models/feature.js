@@ -5,9 +5,9 @@ export class Feature extends Model {
         return {
             latitude: '',
             longitude: '',
-            rating: 0.0,
-            type: '',
-            picture_urls: []
+            upvoters: [],
+            downvoters: [],
+            type: ''
         };
     }
 }

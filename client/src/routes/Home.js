@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import LocationService from '../services/LocationService';
 import FeatureService from '../services/FeatureService';
-
 import Loading from '../components/Loading';
 import Map from "../components/Map";
 import HeaderBar from '../components/HeaderBar';
 import BuildingInfo from '../components/BuildingInfo';
+import FeatureInfo from '../components/FeatureInfo';
+import NewFeature from '../components/NewFeature';
 
 export default function Home() {
     const [reload, setReload] = useState(1);
@@ -15,8 +17,17 @@ export default function Home() {
     const [featuresData, setFeaturesData] = useState([]);
 
     const [buildingInfoID, setBuildingInfoID] = useState();
+    const [featureInfoID, setFeatureInfoID] = useState();
+    const [newFeatureCoords, setNewFeatureCoords] = useState();
+    const [newFeature, setNewFeature] = useState();
     const [showBuildingInfo, setShowBuildingInfo] = useState(false);
     const [buildingInfoRefresh, setBuildingInfoRefresh] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [newFeatureID, setNewFeatureID] = useState();
+
+    const [lng, setLng] = useState(-122.30808827297321);
+    const [lat, setLat] = useState(47.656708485813695);
+    const [zoom, setZoom] = useState(14.5);
 
     const loadAllData = async () => {
         try {
@@ -33,6 +44,12 @@ export default function Home() {
     }
 
     useEffect(() => {
+        // if params exist, set map view to those params
+        if(searchParams.has("lng") && searchParams.has("lat") && searchParams.has("zoom")) {
+            setLng(searchParams.get("lng"));
+            setLat(searchParams.get("lat"));
+            setZoom(searchParams.get("zoom"));
+        }
         loadAllData()
             .catch((e) => {
                 toast.error('' + e.message);
@@ -70,14 +87,38 @@ export default function Home() {
                                         :
                                         <></>
                                     }
-                                    
+                                    {
+                                        (featureInfoID)
+                                        ?
+                                        <FeatureInfo
+                                            featureID={featureInfoID}
+                                        />
+                                        :
+                                        <></>
+                                    }
+                                    <NewFeature
+                                        coords={newFeatureCoords}
+                                        active={newFeature}
+                                        setActive={setNewFeature}
+                                        setNewFeatureID={setNewFeatureID}
+                                    />
                                 </div>
-                                <Map 
+                                <Map
+                                    setBuildingInfoID={setBuildingInfoID}
+                                    setFeatureInfoID={setFeatureInfoID}
+                                    featureID={featureInfoID}
+                                    newFeatureID={newFeatureID}
+                                    setNewFeatureCoords={setNewFeatureCoords}
+                                    setNewFeature={setNewFeature}
+                                    locationsPayload={locationsData}
                                     handleSetBuildingInfoID={setBuildingInfoID}
                                     handleSetShowBuildingInfo={setShowBuildingInfo}
                                     handleSetBuildingInfoRefresh={setBuildingInfoRefresh}
-                                    locationsPayload={locationsData} 
                                     featuresPayload={featuresData}
+                                    setSearchParams={setSearchParams}
+                                    startLat={lat}
+                                    startLng={lng}
+                                    startZoom={zoom}
                                 />
                             </div>
                         </main>

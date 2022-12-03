@@ -92,6 +92,5 @@ export default class LocationService {
         } else {
             throw new Error(responsePayload.error);
         }
-
     }
 }

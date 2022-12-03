@@ -4,6 +4,7 @@ import { FEATURES_COLLECTION_NAME } from '../../constants/collections.js';
 import { handleErrorResponse, handleSuccessResponse } from '../../handlers/response_handlers.js';
 import FirebaseHandler from '../../handlers/firebase_handlers.js';
 import { requireAuthorization } from '../../middleware/auth.js';
+import { FeatureRatingType } from '../../constants/feature_rating_type.js';
 
 var router = express.Router();
 
@@ -28,7 +29,7 @@ router.get('/filter', async function(req, res, next) {
 
         let payload;
         
-        if (locationID) {  // Get the single rating document
+        if (featureID) {  // Get the single rating document
             payload = await FirebaseHandler.getSingleDoc(FEATURES_COLLECTION_NAME, featureID.trim());
         } else {    // ERROR - No query details provided
             const error = new Error('The queries are invalid.');
@@ -36,9 +37,9 @@ router.get('/filter', async function(req, res, next) {
             throw error;
         } 
 
-        handleSuccessResponse(res, 'Location data successfully fetched.', payload);
+        handleSuccessResponse(res, 'Feature data successfully fetched.', payload);
     } catch (e) {
-        handleErrorResponse(res, e, 'There was an error getting the location...');
+        handleErrorResponse(res, e, 'There was an error getting the feature...');
     }
 });
 
@@ -48,15 +49,15 @@ router.get('/filter', async function(req, res, next) {
  * 
  * */
 router.post('/', requireAuthorization, async function(req, res, next) {
-    const body = req.body;  
+    const body = req.body;
 
     try {
         const featureDoc = new Feature({
-            latitude: '',
-            longitude: '',
-            rating: 0.0,
-            type: '',
-            picture_urls: [] // @TODO handle image shit
+            latitude: body.latitude,
+            longitude: body.longitude,
+            upvoters: [],
+            downvoters: [],
+            type: body.type
         }).toObject();
 
         const docID = await FirebaseHandler.addDoc(FEATURES_COLLECTION_NAME, featureDoc);
@@ -71,6 +72,102 @@ router.post('/', requireAuthorization, async function(req, res, next) {
         handleSuccessResponse(res, 'New feature information successfully saved!', { id: docID });
     } catch (e) {
         handleErrorResponse(res, e, 'There was an error adding a feature...');
+    }
+});
+
+router.post('/rate', requireAuthorization, async function(req, res, next) {
+    const body = req.body;
+
+    try {
+        // ERROR - no body query
+        if (!body) {
+            const error = new Error('No queries were provided.');
+            error.code = 400;
+            throw error;
+        }
+
+        const featureID = body.feature_id.trim();
+        const username = body.username.trim();
+        const ratingType = FeatureRatingType[body.rating_type];
+
+        let featureRatingType;
+
+        switch (ratingType) {
+            case FeatureRatingType.UP:
+                featureRatingType = 'upvoters';
+                break;
+            case FeatureRatingType.DOWN:
+                featureRatingType = 'downvoters';
+                break;
+        }
+    
+        // ERROR - user has already liked the feature
+        const featureDoc = await FirebaseHandler.getSingleDoc(FEATURES_COLLECTION_NAME, featureID);
+
+        if (featureDoc[featureRatingType].includes(username)) {
+            const error = new Error('User has already rated the feature.');
+            error.code = 400;
+            throw error;
+        }
+
+        await FirebaseHandler.addValueToDocArray(
+            FEATURES_COLLECTION_NAME,
+            featureID,
+            featureRatingType,
+            username
+        );
+        
+        handleSuccessResponse(res, 'Rating on the feature successfully submitted.');
+    } catch (e) {
+        handleErrorResponse(res, e, 'There was an error liking a location...');
+    }
+});
+
+router.post('/unrate', requireAuthorization, async function(req, res, next) {
+    const body = req.body;
+
+    try {
+        // ERROR - no body query
+        if (!body) {
+            const error = new Error('No queries were provided.');
+            error.code = 400;
+            throw error;
+        }
+
+        const featureID = body.feature_id.trim();
+        const username = body.username.trim();
+        const ratingType = FeatureRatingType[body.rating_type];
+
+        let featureRatingType;
+
+        switch (ratingType) {
+            case FeatureRatingType.UP:
+                featureRatingType = 'upvoters';
+                break;
+            case FeatureRatingType.DOWN:
+                featureRatingType = 'downvoters';
+                break;
+        }
+    
+        // ERROR - user has already downvoted the feature
+        const featureDoc = await FirebaseHandler.getSingleDoc(FEATURES_COLLECTION_NAME, featureID);
+
+        if (!featureDoc[featureRatingType].includes(username)) {
+            const error = new Error('User did not rate the feature.');
+            error.code = 400;
+            throw error;
+        }
+
+        await FirebaseHandler.removeValueToDocArray(
+            FEATURES_COLLECTION_NAME,
+            featureID,
+            featureRatingType,
+            username
+        );
+        
+        handleSuccessResponse(res, 'Rating on the feature successfully submitted.');
+    } catch (e) {
+        handleErrorResponse(res, e, 'There was an error liking a location...');
     }
 });
 
