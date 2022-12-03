@@ -7,8 +7,7 @@ import { toast } from 'react-toastify';
 import { ReviewTypes } from '../constants/ReviewTypes';
 import ImageService from '../services/ImageService';
 import { ImageType } from '../constants/ImageTypes';
-import RatingForm from './RatingForm';
-import Loading from './Loading';
+import BuildingRating from './BuildingRating';
 import RatingUtil from '../utils/RatingUtil';
 
 export default function BuildingInfo(props) {
@@ -29,6 +28,7 @@ export default function BuildingInfo(props) {
     const [imageFile, setImageFile] = useState();
     const handleSubmit = async (e) => {
         e.preventDefault();
+        toast.info('Uploading image...');
 
         try {
             const payload = await ImageService.uploadImage({
@@ -36,9 +36,11 @@ export default function BuildingInfo(props) {
                 image_type: ImageType.LOCATION
             }, imageFile);
 
+            toast.dismiss();
             toast.info('Image has been successfully uploaded!');
+            handleSetBuildingInfoRefresh(true);
         } catch (e) {
-            throw new Error('Cannot upload image: ' + e);
+            toast.error('Cannot upload image: ' + e);
         }
     }
 
@@ -58,17 +60,18 @@ export default function BuildingInfo(props) {
             setBuildingImageUrls(imagesPayload);
 
             handleSetBuildingInfoRefresh(false);
-            toast.dismiss();
         } catch (e) {
             throw new Error('Cannot load review data: ' + e);
         }
     }
 
     useEffect(() => {
-        if (buildingInfoRefresh) loadData()
-            .catch((e) => {
-                toast.error('' + e.message);
-            });
+        if (buildingInfoRefresh) {
+            loadData()
+                .catch((e) => {
+                    toast.error('' + e.message);
+                });
+        }
     }, [buildingInfoRefresh])
 
     return (
@@ -143,7 +146,7 @@ export default function BuildingInfo(props) {
                             buildingInfoRefresh
                             ? <p>Loading...</p>
                             :
-                            <RatingForm 
+                            <BuildingRating 
                                 averageRating={buildingPayload.average_rating}
                                 locationID={locationID}
                                 buildingPayload={buildingPayload}
@@ -156,10 +159,13 @@ export default function BuildingInfo(props) {
                         <ReviewList 
                             locationID={locationID} 
                             reviewType={ReviewTypes.BUILDING}
+                            handleRefreshBuildingInfoModal={refreshBuildingInfoModal}
                         />
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer
+                    className='modal-footer'
+                >
                     <Button 
                         variant="secondary"
                         onClick={handleClose}

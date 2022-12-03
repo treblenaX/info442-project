@@ -7,10 +7,10 @@ export default class StorageHandler {
     static initStorageHandler() {
         this.storage = multer.diskStorage({
             destination: function (req, file, callback) {
-                callback(null, `uploads`);  // @TODO choose the destination
+                callback(null, `uploads`); 
             },
             filename: function (req, file, callback) {
-                callback(null, `${Date.now()}-${file.originalname}.${file.mimetype.split('/')[1]}`);
+                callback(null, `${Date.now()}-${file.originalname}`);
             }
         });
 
@@ -20,9 +20,9 @@ export default class StorageHandler {
                 fileSize: 10000000  // 10 MB
             },
             fileFilter(req, file, cb) {
-                if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+                if (!file.originalname.match(/\.(jpeg|jpg|png|heic)$/)) {
                     // upload only png and jpg format
-                    return cb(new Error('Please upload only an image as .png or .jpg format under 10 MB.'))
+                    return cb(new Error('Please upload only an image under 10 MB.'));
                 }
                 cb(undefined, true)
             }

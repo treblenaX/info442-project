@@ -7,7 +7,7 @@ import LocationService from '../services/LocationService';
 import '../styles/RatingForm.css';
 import RatingUtil from '../utils/RatingUtil';
 
-export default function RatingForm(props) {
+export default function BuildingRating(props) {
     const averageRating = props.averageRating;
     const locationID = props.locationID
     const buildingPayload = props.buildingPayload;
@@ -49,6 +49,7 @@ export default function RatingForm(props) {
             setRadioValue(value);
             handleRefreshBuildingInfoModal(true);
 
+            toast.dismiss();
             toast.info('Successfully saved rating to the server... Refreshing..');
         } catch (e) {
             toast.error('' + e);
@@ -62,14 +63,20 @@ export default function RatingForm(props) {
     
     return (
         <div className="m-auto">
-            <h3 className="m-auto center-text">
-                <strong>{`Rating: ${averageRating}`}</strong>
-            </h3>
+            {/* <h3 className="m-auto center-text">
+                <strong>{`Average Rating Value: ${averageRating}`}</strong>
+            </h3> */}
             {
                 (!credentials)
-                ? <></>
+                ? 
+                <p className="center-text">
+                    <em>Please log in to rate the accessibility of this building.</em>
+                </p>
                 :
                 <div className="m-auto center-text">
+                    <div>
+                        <p>How would you rate the overall accessibility of this building?</p>
+                    </div>
                     <ButtonGroup className="m-auto radio-container">
                         <ToggleButton
                             key='happy'

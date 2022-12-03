@@ -6,12 +6,15 @@ import { ReviewCard } from './ReviewCard';
 import { ReviewForm } from './ReviewForm';
 
 export function ReviewList(props) {
+    const handleRefreshBuildingInfoModal = props.handleRefreshBuildingInfoModal;
+
     const locationID = props.locationID;
     const reviewType = props.reviewType;
 
     const [isListLoading, setListLoading] = useState(true);
     const [reviewCards, setReviewCards] = useState([]);
     const [sliceState, setSliceState] = useState([]);
+    const [toggleMoreLoad, setToggleMoreLoad] = useState(false);
 
     const loadData = async () => {
         try {
@@ -38,6 +41,7 @@ export function ReviewList(props) {
 
             setReviewCards(cards);
             setSliceState(cards.slice(0,3));
+            console.log('loading');
             setListLoading(false);
         } catch (e) {
             throw new Error('Cannot load review data: ' + e);
@@ -46,22 +50,32 @@ export function ReviewList(props) {
     
     useEffect(() => {
         // Load the data
-        loadData()
-            .catch((e) => {
-                toast.error('' + e.message);
-            });
+        if (isListLoading) {
+            loadData()
+                .catch((e) => {
+                    toast.error('' + e.message);
+                });
+        }
     }, [isListLoading]);
   
     return (
         <div>
-            <h3><strong>Reviews:</strong></h3>
             <div>
                 <div>
-                {
-                    (isListLoading)
-                    ? 'Loading...'
-                    : sliceState
-                }
+                    <ReviewForm 
+                        locationID={locationID}
+                        formType={reviewType}
+                        handleSetListLoading={setListLoading}
+                    />
+                </div>
+                <hr></hr>
+                <div>
+                    <p className='center-text'>This is what the community thinks about this location!</p>
+                    {
+                        (isListLoading)
+                        ? 'Loading...'
+                        : sliceState
+                    }
                 </div>
                 <div>
                     {
@@ -76,11 +90,19 @@ export function ReviewList(props) {
                                 (reviewCards.length < 3)
                                 ? <></>
                                 :
-                                <Button // @TODO: Handle the toggle thing
-                                    onClick={() => setSliceState((prev) => (prev.length == 3) ? reviewCards : reviewCards.slice(0,3))}
+                                <Button
+                                    className="m-auto"
+                                    onClick={() => setSliceState((prev) => {
+                                        if (prev.length == 3) {
+                                            setToggleMoreLoad(true);
+                                            return reviewCards;
+                                        }
+                                        setToggleMoreLoad(false);
+                                        return reviewCards.slice(0,3);
+                                    })}
                                 >
                                     {
-                                        (sliceState.length >= 3)
+                                        (!toggleMoreLoad)
                                         ? 'Load More Reviews'
                                         : 'Collapse Reviews'
                                     }
@@ -89,13 +111,6 @@ export function ReviewList(props) {
                         </div>
                     }
                 </div>
-            </div>
-            <div>
-                <ReviewForm 
-                    locationID={locationID}
-                    formType={reviewType}
-                    setListLoading={setListLoading}
-                />
             </div>
         </div>
     )
