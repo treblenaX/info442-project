@@ -1,7 +1,7 @@
 {
   "name": "mapable",
   "homepage": ".",
-  "proxy": "https://mapable.netlify.app/",
+  "proxy": "https://mapable-info442.herokuapp.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
