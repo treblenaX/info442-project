@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = false;
 
 const DEBUG_URI = 'http://localhost:3000/';
 const PROD_URI = 'https://mapable-info442.herokuapp.com/';
