@@ -36,21 +36,6 @@ export default function NewFeature(props) {
         setFeatureType(e);
     }
 
-    const handleImageSubmit = async (e, id) => {
-        e.preventDefault();
-
-        try {
-            const payload = await ImageService.uploadImage({
-                refID: id,
-                image_type: ImageType.FEATURE
-            }, imageFile);
-
-            toast.info('Image has been successfully uploaded!');
-        } catch (e) {
-            throw new Error('Cannot upload image: ' + e);
-        }
-    }
-
     const handleSubmit = async (e) => {
         setCoords(props.coords);
         e.preventDefault();
@@ -77,10 +62,16 @@ export default function NewFeature(props) {
                 ...base,
                 type: featureType
             });
+
+            const imagePayload = await ImageService.uploadImage({
+                refID: payload.id,
+                image_type: ImageType.FEATURE
+            }, imageFile);
+
             if (!payload) {
                 throw new Error('Null payload?');
             }
-            handleImageSubmit(e, payload.id);
+
             handleClose();
             window.location.reload();
         } catch (e) {
@@ -108,7 +99,7 @@ export default function NewFeature(props) {
                         <div>
                             <div>
                                 <p>Please upload images that are .jpg, .jpeg, or .png under 10 MB!</p>
-                                <Form onSubmit={handleImageSubmit}>
+                                <Form>
                                     <Form.Group controlId="formFileLg" className="mb-3">
                                         <Form.Control 
                                             type="file" 

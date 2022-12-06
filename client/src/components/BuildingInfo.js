@@ -135,7 +135,6 @@ export default function BuildingInfo(props) {
                         </div>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="formFileLg" className="mb-3">
-                                <Form.Label>@TODO take out - image upload for building</Form.Label>
                                 <Form.Control 
                                     type="file" 
                                     size="sm" 

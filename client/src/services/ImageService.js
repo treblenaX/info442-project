@@ -30,6 +30,7 @@ export default class ImageService {
     static uploadImage = async (request, image) => {
         const formData = new FormData();
         formData.append('file', image);
+        console.log(IMAGES_BASEPOINT + '/');
         
         for (let item in request) {
             formData.append(item, request[item]);
