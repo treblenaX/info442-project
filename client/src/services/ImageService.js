@@ -4,8 +4,6 @@ import LinkBuilderUtil from "../utils/LinkBuilderUtil";
 export default class ImageService {
     static findImages = async (request) => {
         let urlArray = [];
-
-        console.log(IMAGES_BASEPOINT + '/metadata/filter' + LinkBuilderUtil.objectToQuery(request))
         // Look for the stored image metadata
         const metadataResponse = await fetch(
             IMAGES_BASEPOINT + '/metadata/filter' + LinkBuilderUtil.objectToQuery(request),

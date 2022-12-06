@@ -110,7 +110,7 @@ export default function BuildingInfo(props) {
                                     ? 'Loading...'
                                     : 
                                     <strong>
-                                        {buildingPayload.average_rating.toFixed(2)} <i class="bi bi-star-fill"></i> 
+                                        {buildingPayload.average_rating.toFixed(2)} <i className="bi bi-star-fill"></i> 
                                     </strong>
                                 }
                             </div>
