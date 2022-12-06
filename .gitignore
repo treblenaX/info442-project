@@ -1,7 +1,6 @@
 # server .gitignore
 # dependencies
 /server/node_modules
-/server/uploads/*
 /server/.pnp
 .pnp.js
 
