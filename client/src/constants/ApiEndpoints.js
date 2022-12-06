@@ -1,6 +1,6 @@
-const DEBUG = false;
+const DEBUG = true;
 
-const DEBUG_URI = 'http://localhost:3000';
+const DEBUG_URI = 'http://localhost:3000/';
 const PROD_URI = 'https://mapable-info442.herokuapp.com/';
 const API_URI = 'api';
 

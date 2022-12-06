@@ -8,7 +8,6 @@ import { ImageType } from '../constants/ImageTypes';
 import { toast } from 'react-toastify';
 
 export default function NewFeature(props) {
-
     const { credentials } = useContext(CredentialsContext);
     const [isLoaded, setLoaded] = useState();
     const [coords, setCoords] = useState();
@@ -102,40 +101,48 @@ export default function NewFeature(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="modal-text">
-                    <div>
-                        <Form onSubmit={handleImageSubmit}>
-                            <Form.Group controlId="formFileLg" className="mb-3">
-                                <Form.Control 
-                                    type="file" 
-                                    size="sm" 
-                                    onChange={(e) => setImageFile(e.target.files[0])}
-                                />
-                            </Form.Group>
-                        </Form>
-                    </div>
-                    <div>
-                        <Row>
-                            <Col>
-                                <DropdownButton 
-                                    id="dropdown-feature-type" 
-                                    title={dropdownVal} 
-                                    onSelect={onSelect}
-                                    style={{
-                                        height: '15rem'
-                                    }}
-                                >
-                                    <Dropdown.Item eventKey="ramp" onClick={(e) => dropdownHandler(e.target.textContent)}>Ramp</Dropdown.Item>
-                                    <Dropdown.Item eventKey="elevator" onClick={(e) => dropdownHandler(e.target.textContent)}>Elevator</Dropdown.Item>
-                                    <Dropdown.Item eventKey="automatic-door" onClick={(e) => dropdownHandler(e.target.textContent)}>Automatic Door</Dropdown.Item>
-                                </DropdownButton>
-                            </Col>
-                            <Col>
-                                <Button onClick={handleSubmit} type="submit" variant="primary">
-                                    Submit
-                                </Button>
-                            </Col>
-                        </Row>
-                    </div>
+                    {
+                        (!credentials)
+                        ? <p>Please log in to add a feature!</p>
+                        :
+                        <div>
+                            <div>
+                                <p>Please upload images that are .jpg, .jpeg, or .png under 10 MB!</p>
+                                <Form onSubmit={handleImageSubmit}>
+                                    <Form.Group controlId="formFileLg" className="mb-3">
+                                        <Form.Control 
+                                            type="file" 
+                                            size="sm" 
+                                            onChange={(e) => setImageFile(e.target.files[0])}
+                                        />
+                                    </Form.Group>
+                                </Form>
+                            </div>
+                            <div>
+                                <Row>
+                                    <Col>
+                                        <DropdownButton 
+                                            id="dropdown-feature-type" 
+                                            title={dropdownVal} 
+                                            onSelect={onSelect}
+                                            style={{
+                                                height: '15rem'
+                                            }}
+                                        >
+                                            <Dropdown.Item eventKey="ramp" onClick={(e) => dropdownHandler(e.target.textContent)}>Ramp</Dropdown.Item>
+                                            <Dropdown.Item eventKey="elevator" onClick={(e) => dropdownHandler(e.target.textContent)}>Elevator</Dropdown.Item>
+                                            <Dropdown.Item eventKey="automatic-door" onClick={(e) => dropdownHandler(e.target.textContent)}>Automatic Door</Dropdown.Item>
+                                        </DropdownButton>
+                                    </Col>
+                                    <Col>
+                                        <Button onClick={handleSubmit} type="submit" variant="primary">
+                                            Submit
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+                    }
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
