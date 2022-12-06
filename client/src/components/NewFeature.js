@@ -1,6 +1,6 @@
 import '../styles/BuildingInfo.css';
 import React, { useEffect, useState, useContext } from 'react';
-import { Button, Modal, DropdownButton, Dropdown, Form } from 'react-bootstrap';
+import { Button, Modal, DropdownButton, Dropdown, Form, Row, Col } from 'react-bootstrap';
 import FeatureService from '../services/FeatureService';
 import { CredentialsContext } from '../contexts/CredentialsContext';
 import ImageService from '../services/ImageService';
@@ -113,14 +113,29 @@ export default function NewFeature(props) {
                             </Form.Group>
                         </Form>
                     </div>
-                    <DropdownButton id="dropdown-feature-type" title={dropdownVal} onSelect={onSelect}>
-                        <Dropdown.Item eventKey="ramp" onClick={(e) => dropdownHandler(e.target.textContent)}>Ramp</Dropdown.Item>
-                        <Dropdown.Item eventKey="elevator" onClick={(e) => dropdownHandler(e.target.textContent)}>Elevator</Dropdown.Item>
-                        <Dropdown.Item eventKey="automatic-door" onClick={(e) => dropdownHandler(e.target.textContent)}>Automatic Door</Dropdown.Item>
-                    </DropdownButton>
-                    <Button onClick={handleSubmit} type="submit" variant="primary">
-                        Submit
-                    </Button>
+                    <div>
+                        <Row>
+                            <Col>
+                                <DropdownButton 
+                                    id="dropdown-feature-type" 
+                                    title={dropdownVal} 
+                                    onSelect={onSelect}
+                                    style={{
+                                        height: '15rem'
+                                    }}
+                                >
+                                    <Dropdown.Item eventKey="ramp" onClick={(e) => dropdownHandler(e.target.textContent)}>Ramp</Dropdown.Item>
+                                    <Dropdown.Item eventKey="elevator" onClick={(e) => dropdownHandler(e.target.textContent)}>Elevator</Dropdown.Item>
+                                    <Dropdown.Item eventKey="automatic-door" onClick={(e) => dropdownHandler(e.target.textContent)}>Automatic Door</Dropdown.Item>
+                                </DropdownButton>
+                            </Col>
+                            <Col>
+                                <Button onClick={handleSubmit} type="submit" variant="primary">
+                                    Submit
+                                </Button>
+                            </Col>
+                        </Row>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
