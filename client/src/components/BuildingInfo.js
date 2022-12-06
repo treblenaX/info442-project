@@ -110,7 +110,7 @@ export default function BuildingInfo(props) {
                                     ? 'Loading...'
                                     : 
                                     <strong>
-                                        {buildingPayload.average_rating.toFixed(2)} <i class="bi bi-star-fill"></i> 
+                                        {buildingPayload.average_rating.toFixed(2)} <i className="bi bi-star-fill"></i> 
                                     </strong>
                                 }
                             </div>
@@ -135,7 +135,6 @@ export default function BuildingInfo(props) {
                         </div>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="formFileLg" className="mb-3">
-                                <Form.Label>@TODO take out - image upload for building</Form.Label>
                                 <Form.Control 
                                     type="file" 
                                     size="sm" 

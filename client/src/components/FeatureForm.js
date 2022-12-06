@@ -35,8 +35,6 @@ export function ReviewForm(props) {
         case ReviewTypes.FEATURE:
           break;
       }
-
-      console.log(payload);
       if (!payload) {
         throw new Error('Null payload?');
       }

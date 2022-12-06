@@ -123,10 +123,7 @@ export default function AccessibilityFeatureInfo(props) {
     }
 
     useEffect(() => {
-        console.log(featureInfoRefresh);
-        console.log('hit');
         if (featureInfoRefresh) {
-            console.log('hit2');
             loadData()
                 .catch((e) => {
                     toast.error('' + e.message);
@@ -175,7 +172,7 @@ export default function AccessibilityFeatureInfo(props) {
                         (!credentials)
                         ? <></>
                         :
-                        <div class="rating-container">
+                        <div className="rating-container">
                             <ButtonGroup className="m-auto radio-container">
                                 <ToggleButton
                                     key='+'
