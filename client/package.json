@@ -1,7 +1,7 @@
 {
   "name": "mapable",
-  "homepage": "https://mapable-info442.web.app/",
-  "proxy": "http://localhost:3001",
+  "homepage": ".",
+  "proxy": "https://mapable-info442.herokuapp.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

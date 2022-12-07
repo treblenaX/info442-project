@@ -19,7 +19,7 @@ export const __dirname = dirname(__filename);
 
 dotenv.config();
 
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://mapable-info442.web.app/'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://mapable-info442.herokuapp.com/'];
 var app = express();
 
 app.use(logger('dev'));
@@ -30,11 +30,11 @@ app.use(cors({
         // allow requests with no origin 
         // (like mobile apps or curl requests)
         if(!origin) return callback(null, true);
-        if(allowedOrigins.indexOf(origin) === -1){
-        var msg = 'The CORS policy for this site does not ' +
-                    'allow access from the specified Origin.';
-        return callback(new Error(msg), false);
-        }
+        // if(allowedOrigins.indexOf(origin) === -1){
+        // var msg = 'The CORS policy for this site does not ' +
+        //             'allow access from the specified Origin.';
+        // return callback(new Error(msg), false);
+        // }
         return callback(null, true);
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],

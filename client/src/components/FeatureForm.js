@@ -24,10 +24,7 @@ export function ReviewForm(props) {
         username: credentials.username,
         blurb: reviewText
       };
-
-      console.log(formType);
-      console.log(base);
-
+      
       switch (formType) {
         case ReviewTypes.BUILDING:
           payload = await ReviewService.postReview({
@@ -38,8 +35,6 @@ export function ReviewForm(props) {
         case ReviewTypes.FEATURE:
           break;
       }
-
-      console.log(payload);
       if (!payload) {
         throw new Error('Null payload?');
       }
