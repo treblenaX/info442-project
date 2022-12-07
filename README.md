@@ -1,12 +1,122 @@
-# Project Apollo (Name TBD)
-### Keith Ellingwood, Elbert Cheng, Brian Park, Jonathan Trinh, Christopher Kim
+# Mapable
+### An application to increase visibility of accessibility information
+Created by Keith Ellingwood, Elbert Cheng, Brian Park, Jonathan Trinh, Christopher Kim
 
-## The Problem we wish to focus on
+### Link to deployed website
+https://mapable-info442.herokuapp.com/
+___
 
-Our understanding of the issue can be found within the American Disability Act’s attention towards accessibility is “complex and uneven” (Pulrang, 2021). According to our research “Enforcement is inconsistent, and advocacy is stigmatized”; “Accessibility complaints and lawsuits are often portrayed as greedy, unfair, or dishonest.” and we “[wait for] periods for businesses that have not yet made necessary accessibility changes'' (Pulrang). In addition, it was highlighted how important universal design is, in regards towards the ignorant design of an “$41.5 million public library in Long Island City ” where there were inaccessible areas of the building towards those who are mobility disabled (Otterman, 2019). it was emphasized how “important is it towards ”allowing everyone to independently enjoy spaces..[and asking someone] else to help you is, at worst, demeaning, and at best, a limiting experience” (Otterman). These sources all lead to the reality of the lack of reliable information to aid the mobily-disable community and the development of barriers that hinders the lives of many individuals of that community.
+## Introduction
 
-From our current understanding of the problem, we have deduced a primary cause: A lack of reliable and accessible information on resources and pathways for mobility-disabled people. There is no concrete and updatable source of information that mobility-disabled and wheel-needed individuals can reliably use. Some information may not be available or fully detailed enough to be effectively utilized to create an easy commuting experience. This type of absence and needed information makes it harder to avoid or overcome commuting challenges found within the lives of individuals in mobility-impaired communities. In addition, many businesses do not fully account for the needs of mobility-disabled and wheel-needed individuals, creating barriers for this community that need to be addressed and fixed. According to a Forbes article, “Businesses with barriers today mostly seem to ignore the problem, either out of indifference, or a vague sense of guilt and helplessness…Others outsource the problem to architects and consultants … some of whom actually try to improve accessibility, while others apply their skills to more sophisticated forms of avoidance.” (Pulrang). On top of ignoring the problem, they also try to blame others. “Susan Prokop, PVA’s National Advocacy Director, says that newly-opened businesses that receive accessibility complaints will often say, ‘... our building code inspector signed off on this and didn’t say anything about accessibility’” (Pulrang). Through our project, we aim to tackle the issue of businesses and city planners ignoring their responsibility of creating an accessible infrastructure. Using an accessibility first design, we will start the advocacy for making accessibility an required necessity.
+This project was created for INFO 442 Au 2022, Cooperative Software Development, at the University of Washington. For this project, we had to create an application to address one of the UN's Sustainable Development Goals (SDGs), and for the SDG we chose to focus on, we had a few in mind, but ultimately settled on Goal 10, Reduced Inequalities. Specifically, we want to focus on improving the lives of those with mobility impairments. In an ever developing modern world, the consideration of those with mobile disabilities and incorporating inclusive design in urban infrastructure is becoming more and more important. Thus, we aim to tackle a common problem of noninclusive design by making information about accessible areas easier to access and use.
 
-## How we want to address it
+For our problem statement, we want to know: **How might we improve the commute experience of mobility-impaired individuals by cultivating the accessibility information regarding urban areas?**
 
-To address this problem, we want to create an interactive application that allows users to find, view and rate accessibility data of public locations much easier and more efficiently. In this application, we will have a map that allows users to view locations, as well as certain accessibility landmarks within these locations (ramps, elevators, ect). When the user clicks on these landmarks/locations, they have the ability to rate locations based on accessibility features and uploade written reviews of points of interest with accessible features at said location. This will empower our users to crowdsource accessibility data and lead to a more reliable source of accessibility data. Finally, we are interested in creating a public API that others can use to pull accessibility data from our project to use with their projects, expanding the availability of accessibility data even further.
+To address this problem, we want to create an interactive application that allows users to find, view and rate accessibility data of public locations much easier and more efficiently. In this application, we will have a map that allows users to view locations, as well as certain accessibility landmarks within these locations (ramps, elevators, ect). When the user clicks on these landmarks/locations, they have the ability to rate locations based on accessibility features and uploade written reviews of points of interest with accessible features at said location. This will empower our users to crowdsource accessibility data and lead to a more reliable source of accessibility data.
+
+___
+
+## Requirements and Architecture
+
+To provide a thorough Minimal Viable Product to start addressing our problem space, we have implemented these P0 (highest priority) requirements:
+- Interactive, geographic map
+- Interactive pins
+- User login/signup
+- Ability to create text reviews for buildings
+- Ability to see and give rating feedback
+- Building information (details) page
+- Ability to upload, store, and show photos
+
+### Technical Dependencies
+
+**Frontend:**
+- React.JS
+- Mapbox GL JS
+- React-Bootstrap
+
+**Backend:**
+- Express JS
+- Google Firebase Firestore (Database Hosting)
+- Heroku Hosting (Backend API Hosting & web domain hosting all in one)
+
+**Other:**
+- Node.JS (Package Modules)
+- Github (Version Control)
+- Nodemon (Development Tool)
+- VSCode Debugger (Development Tool)
+
+
+### Architecture Diagram
+
+![architecture diagram](diagram.png)
+
+### Data Model
+
+![data erd](erd.PNG)
+
+___
+
+## User Profiling and Testing
+
+### User Personas
+
+![user persona 1](user-persona-1.PNG)
+
+![user persona 2](user-persona-2.PNG)
+
+### Testing Protocol
+
+**Login verification**
+- Type in the username and password
+- If the username and password do not match, show error message
+- If the username and password do match, continue to main home page
+
+**Buttons displaying the correct overlay**
+- Have correct information and layout pop up for the corresponding button that has been clicked
+- Make sure the button does what it says its going to do
+
+**Rating system from the accessibility points correctly calculating the average rating for the building.**
+- Click on the building
+- Scroll to ratings section
+- Check math to take the average rating and correlating that to the correct type of smiley face
+
+**The building information displaying the correct information from the database**
+- Click on the building icon
+- Check if the name, information, address, etc, for the building is correct
+- Make sure the rating is correct as well
+
+**Ratings and Reviews are saved for the building review for other users to see**
+- Click the building icon
+- Scroll to the ratings section
+- See if you can see all of the reviews made for the building
+
+**Zoom in feature for accessibility locations and features**
+- Zoom in on the building and see if the correct accessibility feature icons show up in the correct locations
+
+**Reactive Design**
+- Use Google Chrome's window resize tool in inspect element to simulate mobile screen sizes
+- Confirm that functionality and design are perserved when changing screen size
+- Test application on both iPhone and Android
+
+**General Accessibility**
+- Use Google Chrome's colorblindness emulator to ensure accessible visual design
+- Use screenreader to test ARIA labels on web elements
+
+___
+
+## Deployment
+
+**Backend server:**
+
+In /server folder, run `npm install` to install dependencies, then run `npm debug start`
+
+**Frontend client:**
+
+In /client folder, run `npm install` to install dependencies, then run `npm run start`
+
+___
+
+## Attributions
+
+- John3 on TopPNG for our automatic door icon base https://toppng.com/door-sensor-alarmed-ico-PNG-free-PNG-Images_240184
+- The Accessible Icon Project for our ramp icon base https://accessibleicon.org/
